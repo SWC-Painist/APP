@@ -2,12 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/nav_menu_group_info"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_menu_info"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/nav_menu_info" />
+    </group>
+    <group
+        android:id="@+id/nav_menu_group_musics"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_menu_history"
             android:icon="@drawable/ic_menu_gallery"
@@ -20,6 +25,10 @@
             android:id="@+id/nav_menu_recommend"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/nav_menu_recommend" />
+    </group>
+    <group
+        android:id="@+id/nav_menu_group_plan"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_menu_plan"
             android:icon="@drawable/ic_menu_slideshow"
@@ -28,6 +37,10 @@
             android:id="@+id/nav_menu_statistic"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/nav_menu_statistic" />
+    </group>
+    <group
+        android:id="@+id/nav_menu_group_tools"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_menu_calibration"
             android:icon="@drawable/ic_menu_slideshow"
