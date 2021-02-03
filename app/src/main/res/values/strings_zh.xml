@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_menu_info">我的资料</string>
+    <string name="nav_menu_history">近期练习</string>
+    <string name="nav_menu_favorite">乐谱收藏</string>
+    <string name="nav_menu_recommend">猜你想练</string>
+    <string name="nav_menu_plan">我的计划</string>
+    <string name="nav_menu_statistic">我的收获</string>
+    <string name="nav_menu_calibration">乐器校准</string>
+    <string name="nav_menu_toolbox">辅助工具</string>
+</resources>
