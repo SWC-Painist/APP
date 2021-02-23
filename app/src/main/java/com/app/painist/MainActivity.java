@@ -3,9 +3,11 @@ package com.app.painist;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -14,6 +16,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -44,20 +48,34 @@ public class MainActivity extends AppCompatActivity {
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
-        BottomNavigationView navView = findViewById(R.id.bottom_nav_view);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
+                R.id.navigation_home, R.id.navigation_scorelist, R.id.navigation_profile)
                 .build();
         NavController bottomNavController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, bottomNavController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, bottomNavController);
+        NavigationUI.setupWithNavController(bottomNavigationView, bottomNavController);
 
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_scorelist:
+                        Intent intent = new Intent(MainActivity.this, Scorelist.class);
+                        startActivity(intent);
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_scorelist, R.id.nav_profile)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, nav_host_fragment);
@@ -97,5 +115,14 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public static class MusicScoreFragment extends Fragment {
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState)
+        {
+            return inflater.inflate(R.layout.fragment_music_score_list, container, false);
+        }
     }
 }

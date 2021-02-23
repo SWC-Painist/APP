@@ -1,4 +1,4 @@
-package com.app.painist.ui.gallery;
+package com.app.painist.ui.scorelist;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.app.painist.R;
 
-public class GalleryFragment extends Fragment {
+public class ScorelistFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
+    private ScorelistViewModel scorelistViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                new ViewModelProvider(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
-        final TextView textView = root.findViewById(R.id.text_gallery);
-        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        scorelistViewModel =
+                new ViewModelProvider(this).get(ScorelistViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_scorelist, container, false);
+        final TextView textView = root.findViewById(R.id.text_scorelist);
+        scorelistViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
