@@ -60,9 +60,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.nav_scorelist:
+                    case R.id.navigation_scorelist:
                         Intent intent = new Intent(MainActivity.this, Scorelist.class);
                         startActivity(intent);
+
                         break;
                     default:
                         break;
