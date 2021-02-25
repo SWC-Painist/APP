@@ -24,6 +24,18 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.app.painist.ui.fragments.ScoretabFragment"
+        tools:layout="@layout/fragment_scoretab"/>
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.app.painist.ui.fragments.ScoreitemFragment"
+        tools:layout="@layout/fragment_scoreitem"/>
+
     <TextView
         android:id="@+id/text_scorelist"
         android:layout_width="match_parent"
@@ -32,7 +44,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:textSize="20sp"
-        android:text="Score List"
+        android:text="This is Score List"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
