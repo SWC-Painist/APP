@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="using_categories_in_root_screen"
+    android:summary="Using Preference Categories"
     android:layout_height="match_parent"
-    tools:context=".ui.scorelist.ScorelistFragment">
-
-    <TextView
-        android:id="@+id/text_profile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Score List"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</LinearLayout>
+    android:layout_width="match_parent"
+    android:title="Categories">
+    <Preference
+        android:key="key_prerence"
+        android:title="Preferece"
+        android:summary="Preference Demo"
+        />
+</PreferenceScreen>

@@ -1,4 +1,4 @@
-package com.app.painist.ui.profile;
+package com.app.painist.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.app.painist.R;
+import com.app.painist.ui.profile.ProfileViewModel;
 
 public class ProfileFragment extends Fragment {
 
@@ -23,13 +24,6 @@ public class ProfileFragment extends Fragment {
         profileViewModel =
                 new ViewModelProvider(this).get(ProfileViewModel.class);
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
-        final TextView textView = root.findViewById(R.id.text_profile);
-        profileViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
         return root;
     }
 }
