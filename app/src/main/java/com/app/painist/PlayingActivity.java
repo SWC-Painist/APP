@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.view.Display;
+import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,4 +34,20 @@ public class PlayingActivity extends AppCompatActivity {
         setContentView(new PlayingView(this));
     }
 
+    public float getScreenRotation() {
+        WindowManager windowManager = getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+
+        int screenRotation = display.getRotation();
+        if (Surface.ROTATION_0 == screenRotation) {
+            return 0f;
+        } else if (Surface.ROTATION_90 == screenRotation) {
+            return 90f;
+        } else if (Surface.ROTATION_180 == screenRotation) {
+            return 180f;
+        } else if (Surface.ROTATION_270 == screenRotation) {
+            return 270f;
+        }
+        return 0f;
+    }
 }
