@@ -8,8 +8,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Painist.NoActionBar">
-        <activity android:name=".Scorelist"></activity>
+        android:theme="@style/Theme.Painist.NoActionBar"
+        android:hardwareAccelerated="false">
+        <activity android:name=".PlayingActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

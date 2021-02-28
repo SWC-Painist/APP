@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.app.painist.ui.fragments.HomeFragment;
@@ -115,6 +116,18 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
                 return true;
+            }
+        });
+
+        /*
+         * 给拍照按钮添加一个到画图页面的跳转 用于测试画图页面
+         */
+        Button photoButton = (Button) findViewById(R.id.photo_button);
+        photoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, PlayingActivity.class);
+                startActivity(intent);
             }
         });
     }
