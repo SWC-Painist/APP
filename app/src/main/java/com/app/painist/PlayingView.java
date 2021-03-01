@@ -173,14 +173,6 @@ class PlayingView extends View {
                 accel -= velocity * (1 - 1 / (constraint + 1));
                 accel -= Math.abs(velocity) * constraint * 0.05 / velocity;
             }
-
-            // 限制最大加速度
-//            if (accel > 500 * constraint) {
-//                accel = 500 * constraint;
-//            }
-//            if (accel < -500 * constraint) {
-//                accel = -500 * constraint;
-//            }
         }
 
         private void updateVelocity(float deltaTime) {
