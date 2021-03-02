@@ -10,6 +10,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +19,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import org.jetbrains.annotations.NotNull;
+import org.jfugue.integration.MusicXmlParser;
+import org.jfugue.integration.MusicXmlParserListener;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import nu.xom.ParsingException;
+
+import org.apache.commons.io.*;
 
 import static java.lang.Float.NaN;
 
@@ -50,29 +65,32 @@ class PlayingView extends View {
 
         attachedActivity = (PlayingActivity) activity;
         setLayerType(LAYER_TYPE_SOFTWARE, mPaint);
+
+        Log.d("Debug:", "FLAG");
+        mainScoreRenderer.parse();
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        int action = event.getAction();
-        float x = event.getX();
-        float y = event.getY();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                mainScoreRenderer.setHoldingState(true);
-                break;
-            case MotionEvent.ACTION_UP:
-                mainScoreRenderer.setHoldingState(false);
-                lastTouchPos = NaN;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (!Float.isNaN(lastTouchPos))
-                    mainScoreRenderer.setHoldingOffset(y - lastTouchPos);
-                lastTouchPos = y;
-                break;
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        int action = event.getAction();
+//        float x = event.getX();
+//        float y = event.getY();
+//        switch (action) {
+//            case MotionEvent.ACTION_DOWN:
+//                mainScoreRenderer.setHoldingState(true);
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                mainScoreRenderer.setHoldingState(false);
+//                lastTouchPos = NaN;
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                if (!Float.isNaN(lastTouchPos))
+//                    mainScoreRenderer.setHoldingOffset(y - lastTouchPos);
+//                lastTouchPos = y;
+//                break;
+//        }
+//        return true;
+//    }
 
     @Override @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void onDraw(Canvas canvas) {
@@ -80,8 +98,6 @@ class PlayingView extends View {
 
         mWidth = getWidth();
         mHeight = getHeight();
-
-        mainScoreRenderer.renderMainScore(canvas, mWidth / 2, mHeight / 2);
 
 //        float screenRotation = attachedActivity.getScreenRotation();
 //        if (screenRotation == 0f || screenRotation == 180f) {
@@ -119,119 +135,57 @@ class PlayingView extends View {
     }
 
     class MainScoreRenderer {
-        private Bitmap mainScore;
 
-        // 交互属性
-        private boolean mHolding;   // 是否正在拖拽（按住）图片位置
-        private int holdingOffset;  // 上一次拖拽的位移
-
-        // 渲染最大最小偏移量，取决于图片尺寸
-        private int minOffset;
-        private int maxOffset;
-
-        // 运动属性：用于决定渲染偏移量mOffset
-        private long lastUpdateTime;
-
-        private int offset;
-        private double velocity;
-        private double accel;
-
-        private double constraint;  // 在松手时的滑动摩擦力
-        private double rebound;     // 在边界处的回弹力
+        protected MusicXmlParser musicXmlParser;
+        protected ScoreRenderer scoreRenderer;
 
         public MainScoreRenderer() {
-            // 暂时使用oneline_score图片代替
-            mainScore = BitmapFactory.decodeResource(getResources(), R.mipmap.oneline_score);
+            // 初始化parser
+            try {
+                musicXmlParser = new MusicXmlParser();
+            } catch (ParserConfigurationException e) {
+                Log.d("Error", "Configuration Exception");
+                e.printStackTrace();
+                return;
+            }
+            scoreRenderer = new ScoreRenderer();
 
-            minOffset = 0;
-            maxOffset = mainScore.getWidth();
-            Log.d("MaxOffset", String.valueOf(maxOffset));
-
-            lastUpdateTime = System.currentTimeMillis();
-            offset = 0;
-            velocity = 0;
-            accel = 0;
-
-            constraint = 9;
-            rebound = 1;
+            musicXmlParser.addParserListener(scoreRenderer);
         }
 
-        public void setHoldingState(boolean isHolding) {
-            mHolding = isHolding;
-        }
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        public void parse() {
+            // 临时使用本地文件做读取样例，TODO: 替换为后端传来的MUSICXML文件
 
-        public void setHoldingOffset(float holdingOffset) {
-            if (mHolding)
-                this.holdingOffset = (int) holdingOffset;
-        }
+            String xmlString = "";
+            try {
+                InputStream inputStream = attachedActivity.getApplicationContext().getAssets().open("data/test.musicxml");
+                StringWriter writer = new StringWriter();
+                xmlString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 
-        private void updateAccel(float deltaTime) {
-            accel = 0;
-
-            // 计算滑动摩擦加速度
-            if (velocity != 0 && !mHolding) {
-                accel -= velocity * (1 - 1 / (constraint + 1));
-                accel -= Math.abs(velocity) * constraint * 0.05 / velocity;
-            }
-        }
-
-        private void updateVelocity(float deltaTime) {
-            updateAccel(deltaTime);
-            if (Math.abs(accel) > Math.abs(velocity)) {
-                velocity = 0;
-            }
-            else {
-                velocity += accel * deltaTime;
-            }
-        }
-
-        private void updateOffset(float deltaTime) {
-            if (mHolding) {
-                velocity = 0;
-                updateVelocity(deltaTime);
-                velocity += holdingOffset;
-                holdingOffset = 0;
-                offset += velocity;
-            }
-            else {
-                updateVelocity(deltaTime);
-                offset += velocity;
+            } catch (IOException e) {
+                Log.d("Error", "Path Error");
+                e.printStackTrace();
             }
 
-            if (-offset < minOffset) {
-                offset = -minOffset;
-                velocity = 0;
-                accel = 0;
+            try {
+                Log.d("Debug:", "XML Start Rendering");
+                musicXmlParser.parse(xmlString);
+            } catch (IOException e) {
+                Log.d("Error", "FileIO Exception");
+                e.printStackTrace();
+                return;
+            } catch (nu.xom.ValidityException e) {
+                Log.d("Error", "Validity Exception");
+                e.printStackTrace();
+                return;
+            } catch (ParsingException e) {
+                Log.d("Error", "Parsing Exception");
+                e.printStackTrace();
+                return;
             }
-            if (-offset > maxOffset) {
-                offset = -maxOffset;
-                velocity = 0;
-                accel = 0;
-            }
-        }
 
-        public void renderMainScore(Canvas canvas, float dx, float dy) {
-            long nowTime = System.currentTimeMillis();
-            updateOffset((nowTime - lastUpdateTime) / 1000f);
-            lastUpdateTime = nowTime;
-
-            Matrix matrix = new Matrix();
-            matrix.postTranslate(-mainScore.getWidth() / 2f, -mainScore.getHeight() / 2f);
-            matrix.postRotate(90);
-            matrix.postScale(1.5f, 1.5f);
-            matrix.postTranslate(dx, dy + maxOffset / 2 + offset);
-
-            canvas.drawBitmap(mainScore, matrix, null);
-
-            mPaint.setColor(Color.BLACK);
-            mPaint.setTextSize(50f);
-            mPaint.setStyle(Paint.Style.FILL);
-
-            canvas.drawText("offset: "+String.valueOf(offset), mWidth - 500f, 100f, mPaint);
-            canvas.drawText("velocity: "+String.valueOf(velocity), mWidth - 500f, 200f, mPaint);
-            canvas.drawText("accel: "+String.valueOf(accel), mWidth - 500f, 300f, mPaint);
-
-            matrix.reset();
+            Log.d("Debug:", "Finished!");
         }
     }
 }

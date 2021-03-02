@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         HomeFragment homeFragment = new HomeFragment();
         ScorelistFragment scorelistFragment = new ScorelistFragment();
-        transaction.add(R.id.main_fragment, homeFragment);
+        transaction.add(R.id.navigation_home, homeFragment);
         transaction.commit();
 
     }
