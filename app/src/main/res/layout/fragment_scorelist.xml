@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -33,10 +33,10 @@
 
     <fragment
         android:id="@+id/scoreitem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:name="com.app.painist.ui.fragments.ScoreitemFragment"
-        tools:layout="@layout/fragment_scoreitem"/>
+        android:layout_width="match_parent"
+        android:layout_height="268dp"
+        tools:layout="@layout/fragment_scoreitem" />
 
     <TextView
         android:id="@+id/text_scorelist"
@@ -52,4 +52,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout >
+</LinearLayout >
