@@ -1,7 +1,5 @@
 package com.app.painist;
-
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,8 +10,10 @@ import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.app.painist.ui.fragments.HomeFragment;
+
 import com.app.painist.ui.fragments.ScoreitemFragment;
+import com.app.painist.ui.home.HomeFragment;
+import com.app.painist.ui.profile.ProfileFragment;
 import com.app.painist.ui.scorelist.ScorelistFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -24,7 +24,9 @@ import com.google.android.material.tabs.TabLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -41,13 +43,13 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
 
     private void initFragment() {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-
-        HomeFragment homeFragment = new HomeFragment();
-        ScorelistFragment scorelistFragment = new ScorelistFragment();
-        transaction.add(R.id.main_fragment, homeFragment);
-        transaction.commit();
+//        FragmentManager manager = getFragmentManager();
+//        FragmentTransaction transaction = manager.beginTransaction();
+//
+//        HomeFragment homeFragment = new HomeFragment();
+//        ScorelistFragment scorelistFragment = new ScorelistFragment();
+//        transaction.add(R.id.main_fragment, homeFragment);
+//        transaction.commit();
 
     }
 
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 //        initFragment();
+
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -85,8 +88,39 @@ public class MainActivity extends AppCompatActivity {
 //                return true;
 //            }
 //        });
-
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = manager.beginTransaction();
+        fragmentTransaction.add(R.id.main_fragment,new HomeFragment()).commit();
         NavigationView navigationView = findViewById(R.id.nav_view);
+//        NavigationView homeNavigationView = findViewById(R.id.bottom_nav_view);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {//底部导航点击事件
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+                        FragmentManager manager1 = getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction1 = manager1.beginTransaction();
+                        fragmentTransaction1.replace(R.id.main_fragment,new HomeFragment()).commit();
+//                        fragmentTransaction.commit();
+                        break;
+                    case R.id.navigation_scorelist:
+                        FragmentManager manager2 = getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction2 = manager2.beginTransaction();
+                        ScorelistFragment scoreFragment = new ScorelistFragment();
+                        fragmentTransaction2.replace(R.id.main_fragment,(androidx.fragment.app.Fragment) scoreFragment).commit();
+//                        fragmentTransaction.commit();
+                        break;
+                    case R.id.navigation_profile:
+                        FragmentManager manager3 = getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction3 = manager3.beginTransaction();
+                        fragmentTransaction3.replace(R.id.main_fragment,new ProfileFragment()).commit();
+//                        fragmentTransaction.commit();
+                        break;
+                }
+//                fragmentTransaction.commit();
+                return true;
+            }
+        });
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -106,8 +140,9 @@ public class MainActivity extends AppCompatActivity {
                         /*
                         跳转样例，
                         从Intent的前一项链接到Intent的后一项
-                        @startActivity 启动跳转
+                        *@startActivity 启动跳转
                         */
+                        
                         Intent intent = new Intent(MainActivity.this,MainActivity.class);
                         startActivity(intent);
                         break;

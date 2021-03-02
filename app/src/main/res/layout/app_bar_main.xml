@@ -16,13 +16,14 @@
     android:gravity="top"
     tools:context=".MainActivity">
 
-    <fragment
+    <FrameLayout
         android:id="@+id/main_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:name="com.app.painist.ui.fragments.HomeFragment"
-        tools:layout="@layout/fragment_home"/>
+        android:name="com.app.painist.ui.home.HomeFragment"
+        tools:layout="@layout/fragment_home">
+    </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav_view"
