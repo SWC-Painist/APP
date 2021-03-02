@@ -15,39 +15,23 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import org.jetbrains.annotations.NotNull;
-import org.jfugue.integration.MusicXmlParser;
-import org.jfugue.integration.MusicXmlParserListener;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import nu.xom.ParsingException;
-
-import org.apache.commons.io.*;
-
-import static java.lang.Float.NaN;
-
+/* class Playing View
+ * 用于绘制PlayingActivity窗口下的界面
+ * onDraw中绘制窗口，在每次更新窗口或使用invalidate函数时会自动调用
+ * 关联PlayingViewRenderer，用于绘制主要图像；本类自带方法drawUI仅用于绘制界面跳转逻辑相关UI
+ **************
+ * by Criheacy
+ * last-edit: 2021/3/2 20:35
+ */
 class PlayingView extends View {
-
-    protected PlayingActivity attachedActivity;
-    protected MainScoreRenderer mainScoreRenderer;
-
     protected Paint mPaint;
 
     protected float mWidth;
     protected float mHeight;
-
-    // 上一次触摸位置（用于跟踪偏移量）
-    private float lastTouchPos;
 
     public PlayingView(@NotNull Activity activity) {
         super(activity.getBaseContext());
@@ -56,18 +40,11 @@ class PlayingView extends View {
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(10f);
 
-        mainScoreRenderer = new MainScoreRenderer();
-
         mWidth = 0f;
         mHeight = 0f;
 
-        lastTouchPos = NaN;
-
-        attachedActivity = (PlayingActivity) activity;
         setLayerType(LAYER_TYPE_SOFTWARE, mPaint);
 
-        Log.d("Debug:", "FLAG");
-        mainScoreRenderer.parse();
     }
 
 //    @Override
@@ -99,14 +76,8 @@ class PlayingView extends View {
         mWidth = getWidth();
         mHeight = getHeight();
 
-//        float screenRotation = attachedActivity.getScreenRotation();
-//        if (screenRotation == 0f || screenRotation == 180f) {
-//            Log.d("ScreenRotation", "screen rotation false");
-//            drawRotationSuggestion(canvas);
-//        }
 
         invalidate();
-//        Log.d("tmp", String.valueOf(System.currentTimeMillis()));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -132,60 +103,5 @@ class PlayingView extends View {
         Rect dist = new Rect(((int)mWidth / 2 - 150), ((int)mHeight / 2 - 225),
                 ((int)(mWidth / 2) + 150), ((int)mHeight / 2 + 75));
         canvas.drawBitmap(tRotateIcon, src, dist, tPaint);
-    }
-
-    class MainScoreRenderer {
-
-        protected MusicXmlParser musicXmlParser;
-        protected ScoreRenderer scoreRenderer;
-
-        public MainScoreRenderer() {
-            // 初始化parser
-            try {
-                musicXmlParser = new MusicXmlParser();
-            } catch (ParserConfigurationException e) {
-                Log.d("Error", "Configuration Exception");
-                e.printStackTrace();
-                return;
-            }
-            scoreRenderer = new ScoreRenderer();
-
-            musicXmlParser.addParserListener(scoreRenderer);
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-        public void parse() {
-            // 临时使用本地文件做读取样例，TODO: 替换为后端传来的MUSICXML文件
-
-            String xmlString = "";
-            try {
-                InputStream inputStream = attachedActivity.getApplicationContext().getAssets().open("data/test.musicxml");
-                StringWriter writer = new StringWriter();
-                xmlString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-
-            } catch (IOException e) {
-                Log.d("Error", "Path Error");
-                e.printStackTrace();
-            }
-
-            try {
-                Log.d("Debug:", "XML Start Rendering");
-                musicXmlParser.parse(xmlString);
-            } catch (IOException e) {
-                Log.d("Error", "FileIO Exception");
-                e.printStackTrace();
-                return;
-            } catch (nu.xom.ValidityException e) {
-                Log.d("Error", "Validity Exception");
-                e.printStackTrace();
-                return;
-            } catch (ParsingException e) {
-                Log.d("Error", "Parsing Exception");
-                e.printStackTrace();
-                return;
-            }
-
-            Log.d("Debug:", "Finished!");
-        }
     }
 }

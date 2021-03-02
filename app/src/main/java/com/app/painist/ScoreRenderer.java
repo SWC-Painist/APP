@@ -15,24 +15,16 @@ import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-class ScoreRenderer extends MusicXmlParserListener {
+/* class ScoreRenderer
+ * 用于按照drawScore函数发来的要求绘制五线谱及谱上的音符
+ * 谱的内容是ScoreParserListener通过addScoreNote添加的；当添加完成后可以根据需求渲染界面
+ * 存放主要的渲染逻辑
+ **************
+ * by Criheacy
+ * last-edit: 2021/3/2 20:50
+ */
+
+class ScoreRenderer {
     protected List<String> renderList;
-
-    @Override
-    public void beforeParsingStarts() {
-        super.beforeParsingStarts();
-        Log.d("Parser", "Start");
-    }
-
-    @Override
-    public void afterParsingFinished() {
-        super.afterParsingFinished();
-        Log.d("Parser", "Finished");
-    }
-
-    @Override
-    public void onNoteParsed(Note note) {
-        super.onNoteParsed(note);
-        Log.d("Parser", "Note:"+note.getOctave()+" "+note.getValue());
-    }
+    
 }
