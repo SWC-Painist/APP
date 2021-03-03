@@ -1,6 +1,7 @@
 package com.app.painist.ui.scorelist;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,12 +41,18 @@ public class ScorelistFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         TabLayout tabLayout = getActivity().findViewById(R.id.layout_scoretab);
+
         //添加tab
         for (int i = 0; i < tabNames.length; i++) {
             tabLayout.addTab(tabLayout.newTab().setText(tabNames[i]));
         }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 }

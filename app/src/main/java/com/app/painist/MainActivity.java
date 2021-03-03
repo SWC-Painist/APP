@@ -34,6 +34,9 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
+import java.util.ArrayList;
 
 import static com.app.painist.R.id.nav_host_fragment;
 
@@ -41,7 +44,8 @@ import static com.app.painist.R.id.nav_host_fragment;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-
+    private String[] tabNames = {"Histories", "Favorites", "Recommends"};
+    private ArrayList<Fragment> fragments = new ArrayList<>();
     private void initFragment() {
 //        FragmentManager manager = getFragmentManager();
 //        FragmentTransaction transaction = manager.beginTransaction();
@@ -152,6 +156,18 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        //tablayout
+
+//        TabLayout tabLayout = findViewById(R.id.layout_scoretab);
+//        ViewPager viewPager = findViewById(R.id.tab_ViewPager);
+//        //添加tab
+//        for (int i = 0; i < tabNames.length; i++) {
+//            fragments.add(new ScoreitemFragment());
+//            tabLayout.addTab(tabLayout.newTab().setText(tabNames[i]));
+//        }
+//        tabLayout.setupWithViewPager(viewPager,false);
+
     }
 
     @Override
