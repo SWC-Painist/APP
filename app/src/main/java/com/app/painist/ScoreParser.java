@@ -26,8 +26,9 @@ import nu.xom.ParsingException;
  */
 public class ScoreParser {
 
+    protected Score score;
     protected MusicXmlParser musicXmlParser;
-    protected ScoreRenderer scoreRenderer;
+    protected ScoreParserListener scoreParserListener;
 
     public ScoreParser() {
         // 初始化parser
@@ -38,43 +39,36 @@ public class ScoreParser {
             e.printStackTrace();
             return;
         }
-        scoreRenderer = new ScoreRenderer();
-
-        musicXmlParser.addParserListener(scoreRenderer);
+        score = new Score();
+        scoreParserListener = new ScoreParserListener();
+        scoreParserListener.setScore(score);
+        musicXmlParser.addParserListener(scoreParserListener);
     }
 
-//    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-//    public void parse() {
-//        // 临时使用本地文件做读取样例，TODO: 替换为后端传来的MUSICXML文件
-//
-//        String xmlString = "";
-//        try {
-//            InputStream inputStream = attachedActivity.getApplicationContext().getAssets().open("data/test.musicxml");
-//            StringWriter writer = new StringWriter();
-//            xmlString = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-//
-//        } catch (IOException e) {
-//            Log.d("Error", "Path Error");
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            Log.d("Debug:", "XML Start Rendering");
-//            musicXmlParser.parse(xmlString);
-//        } catch (IOException e) {
-//            Log.d("Error", "FileIO Exception");
-//            e.printStackTrace();
-//            return;
-//        } catch (nu.xom.ValidityException e) {
-//            Log.d("Error", "Validity Exception");
-//            e.printStackTrace();
-//            return;
-//        } catch (ParsingException e) {
-//            Log.d("Error", "Parsing Exception");
-//            e.printStackTrace();
-//            return;
-//        }
-//
-//        Log.d("Debug:", "Finished!");
-//    }
+    public Score getScore() {
+        return score;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void parse(String xmlString) {
+
+        try {
+            Log.d("Debug:", "XML Start Rendering");
+            musicXmlParser.parse(xmlString);
+        } catch (IOException e) {
+            Log.d("Error", "FileIO Exception");
+            e.printStackTrace();
+            return;
+        } catch (nu.xom.ValidityException e) {
+            Log.d("Error", "Validity Exception");
+            e.printStackTrace();
+            return;
+        } catch (ParsingException e) {
+            Log.d("Error", "Parsing Exception");
+            e.printStackTrace();
+            return;
+        }
+
+        Log.d("Debug:", "Finished!");
+    }
 }

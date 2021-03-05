@@ -28,6 +28,8 @@ import org.jetbrains.annotations.NotNull;
  * last-edit: 2021/3/2 20:35
  */
 class PlayingView extends View {
+    protected PlayingViewRenderer playingViewRenderer;
+
     protected Paint mPaint;
 
     protected float mWidth;
@@ -35,6 +37,9 @@ class PlayingView extends View {
 
     public PlayingView(@NotNull Activity activity) {
         super(activity.getBaseContext());
+
+        playingViewRenderer = new PlayingViewRenderer();
+
         mPaint = new Paint();
         mPaint.setColor(Color.BLUE);
         mPaint.setStyle(Paint.Style.STROKE);
@@ -45,6 +50,10 @@ class PlayingView extends View {
 
         setLayerType(LAYER_TYPE_SOFTWARE, mPaint);
 
+    }
+
+    public PlayingViewRenderer getPlayingViewRenderer() {
+        return playingViewRenderer;
     }
 
 //    @Override

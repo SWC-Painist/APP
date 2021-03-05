@@ -25,6 +25,13 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 
 class ScoreRenderer {
-    protected List<String> renderList;
-    
+    protected Score mScore;
+
+    public ScoreRenderer() {
+        // DO NOT initialize the score
+    }
+
+    public void setScore(Score score) {
+        mScore = score;
+    }
 }

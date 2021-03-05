@@ -10,5 +10,13 @@ package com.app.painist;
  * last-edit: 2021/3/2 20:53
  */
 public class PlayingViewRenderer {
+    protected ScoreRenderer scoreRenderer;
 
+    public PlayingViewRenderer() {
+        scoreRenderer = new ScoreRenderer();
+    }
+
+    public ScoreRenderer getScoreRenderer() {
+        return scoreRenderer;
+    }
 }

@@ -15,7 +15,15 @@ import java.util.List;
  * last-edit: 2021/3/2 20:47
  */
 class ScoreParserListener extends MusicXmlParserListener {
-    protected List<String> renderList;
+    protected Score mScore;
+
+    public Score getScore() {
+        return mScore;
+    }
+
+    public void setScore(Score score) {
+        mScore = score;
+    }
 
     @Override
     public void beforeParsingStarts() {
@@ -30,8 +38,23 @@ class ScoreParserListener extends MusicXmlParserListener {
     }
 
     @Override
+    public void onKeySignatureParsed(byte key, byte scale) {
+        super.onKeySignatureParsed(key, scale);
+        Log.d("Parser", "key:"+key+" scale:"+scale);
+    }
+
+    @Override
     public void onNoteParsed(Note note) {
         super.onNoteParsed(note);
-        Log.d("Parser", "Note:"+note.getOctave()+" "+note.getValue());
+        Log.d("Parser",
+                "NOTE: value="+note.getValue()+
+                        " octave="+note.getOctave()+
+                        " decorator="+note.getDecoratorString()+
+                        " original="+note.getOriginalString()+
+                        " duration="+note.getDuration()+
+                        " onVelocity="+note.getOnVelocity()+
+                        " offVelocity="+note.getOffVelocity()+
+                        " pattern="+note.getPattern()+
+                        " firstNote="+note.isFirstNote());
     }
 }
