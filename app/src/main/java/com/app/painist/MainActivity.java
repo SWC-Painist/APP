@@ -1,8 +1,13 @@
 package com.app.painist;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +72,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
@@ -95,8 +104,13 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         fragmentTransaction.add(R.id.main_fragment,new HomeFragment()).commit();
+
         NavigationView navigationView = findViewById(R.id.nav_view);
-//        NavigationView homeNavigationView = findViewById(R.id.bottom_nav_view);
+        navigationView.setItemTextColor(getColorStateList(R.color.white));
+//        navigationView.setItemIconPadding(1);
+        navigationView.setItemIconSize(50);
+        navigationView.setItemBackground(getDrawable(R.drawable.piano_key_background));
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {//底部导航点击事件
@@ -156,17 +170,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        //tablayout
-
-//        TabLayout tabLayout = findViewById(R.id.layout_scoretab);
-//        ViewPager viewPager = findViewById(R.id.tab_ViewPager);
-//        //添加tab
-//        for (int i = 0; i < tabNames.length; i++) {
-//            fragments.add(new ScoreitemFragment());
-//            tabLayout.addTab(tabLayout.newTab().setText(tabNames[i]));
-//        }
-//        tabLayout.setupWithViewPager(viewPager,false);
 
     }
 
