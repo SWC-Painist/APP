@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_scorelist, R.id.navigation_profile)
                 .build();
@@ -97,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setItemIconSize(50);
         navigationView.setItemBackground(getDrawable(R.drawable.piano_key_background));
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {//底部导航点击事件
