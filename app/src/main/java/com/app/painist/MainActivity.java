@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 
@@ -44,8 +45,8 @@ import static com.app.painist.R.id.nav_host_fragment;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private String[] tabNames = {"Histories", "Favorites", "Recommends"};
-    private ArrayList<Fragment> fragments = new ArrayList<>();
+
+
     private void initFragment() {
 //        FragmentManager manager = getFragmentManager();
 //        FragmentTransaction transaction = manager.beginTransaction();
@@ -157,16 +158,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //tablayout
-
-//        TabLayout tabLayout = findViewById(R.id.layout_scoretab);
-//        ViewPager viewPager = findViewById(R.id.tab_ViewPager);
-//        //添加tab
-//        for (int i = 0; i < tabNames.length; i++) {
-//            fragments.add(new ScoreitemFragment());
-//            tabLayout.addTab(tabLayout.newTab().setText(tabNames[i]));
-//        }
-//        tabLayout.setupWithViewPager(viewPager,false);
 
     }
 
