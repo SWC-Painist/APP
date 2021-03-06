@@ -51,25 +51,11 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private String[] tabNames = {"Histories", "Favorites", "Recommends"};
     private ArrayList<Fragment> fragments = new ArrayList<>();
-    private void initFragment() {
-//        FragmentManager manager = getFragmentManager();
-//        FragmentTransaction transaction = manager.beginTransaction();
-//
-//        HomeFragment homeFragment = new HomeFragment();
-//        ScorelistFragment scorelistFragment = new ScorelistFragment();
-//        transaction.add(R.id.main_fragment, homeFragment);
-//        transaction.commit();
 
-    }
-
-//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        initFragment();
-
 
         setContentView(R.layout.activity_main);
 
