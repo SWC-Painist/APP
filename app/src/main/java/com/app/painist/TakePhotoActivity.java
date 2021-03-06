@@ -28,6 +28,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.app.painist.Utils.UploadFileUtil;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -140,5 +142,7 @@ public class TakePhotoActivity extends AppCompatActivity {
             return;
         }
         picture.setImageBitmap(BitmapFactory.decodeFile(filePath));
+        UploadFileUtil uploadFileUtil = new UploadFileUtil();
+        uploadFileUtil.uploadFile(filePath,"file","http://127.0.0.1",null);
     }
 }
