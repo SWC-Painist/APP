@@ -173,8 +173,8 @@ class PlayingView extends View {
         drawPlayingState(canvas);
 
         PlayingNote c = new PlayingNote();
-        c.flatOrSharp = "b";
-        c.value = "C";
+        c.flatOrSharp = "";
+        c.value = "F";
         c.octave = "4";
 
         PlayingNote d = new PlayingNote();
@@ -197,13 +197,14 @@ class PlayingView extends View {
         g.value = "E";
         g.octave = "5";
 
-        PlayingNote[] playingNotes = new PlayingNote[2];
+        PlayingNote[] playingNotes = new PlayingNote[1];
         playingNotes[0] = c;
-        playingNotes[1] = d;
+//        playingNotes[1] = d;
 //        playingNotes[2] = e;
 //        playingNotes[3] = f;
 //        playingNotes[4] = g;
 
+        drawScore(canvas);
         drawHintNotes(canvas, playingNotes);
         invalidate();
     }
@@ -212,7 +213,7 @@ class PlayingView extends View {
     private void drawHintNotes(@NonNull Canvas canvas, PlayingNote[] notes)
     {
         Paint tPaint = new Paint();
-        tPaint.setColor((playingState.textBackColor & 0x00FFFFFF) | 0xC0000000);
+        tPaint.setColor((playingState.textBackColor & 0x00FFFFFF) | 0xF0000000);
 
         final float margin = 60;
         final float padding = 40;
@@ -298,6 +299,23 @@ class PlayingView extends View {
 
         tPaint.setTextSize(boxSize * 0.5f);
         canvas.drawText(note.octave, rl + (rr - rl) * 0.87f, rt + boxSize * 0.9f, tPaint);
+    }
+
+    private void drawScore(@NotNull Canvas canvas) {
+        Bitmap score = BitmapFactory.decodeResource(getResources(), R.mipmap.test_score);
+        Rect src = new Rect(0, 0, score.getWidth(), score.getHeight());
+        Rect dist = new Rect((int)(rLeft), (int)(rTop + 150),
+                (int)(rLeft + score.getWidth() * 4f), (int)(rTop + 150 + score.getHeight() * 4f));
+        canvas.drawBitmap(score, src, dist, null);
+
+        dist = new Rect((int)(rLeft + score.getWidth() * 4f), (int)(rTop + 150),
+                (int)(rLeft + score.getWidth() * 8f), (int)(rTop + 150 + score.getHeight() * 4f));
+        canvas.drawBitmap(score, src, dist, null);
+
+        dist = new Rect((int)(rLeft + score.getWidth() * 8f), (int)(rTop + 150),
+                (int)(rLeft + score.getWidth() * 12f), (int)(rTop + 150 + score.getHeight() * 4f));
+        canvas.drawBitmap(score, src, dist, null);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
