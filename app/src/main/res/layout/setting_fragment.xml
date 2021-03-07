@@ -15,8 +15,8 @@
 
         android:textColor="@color/black"
         android:gravity="center|left"
-        android:drawableLeft=""
-        android:drawableRight=""/>
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
 
     <View  android:layout_height="1px"
         android:layout_width="match_parent"
@@ -29,8 +29,8 @@
         android:textSize="30dp"
         android:textColor="@color/black"
         android:gravity="center|left"
-        android:drawableLeft=" "
-        android:drawableRight=""
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"
         />
     <View  android:layout_height="1px"
         android:layout_width="match_parent"
@@ -43,8 +43,8 @@
         android:textSize="30dp"
         android:textColor="@color/black"
         android:gravity="center|left"
-        android:drawableLeft=" "
-        android:drawableRight=""/>
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
     <View  android:layout_height="20px"
         android:layout_width="match_parent"
         android:background="#ECEAEA" />
@@ -55,8 +55,8 @@
         android:textSize="30dp"
         android:textColor="@color/black"
         android:gravity="center|left"
-        android:drawableLeft=" "
-        android:drawableRight=""/>
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
 
     <View  android:layout_height="1px"
         android:layout_width="match_parent"
@@ -68,8 +68,8 @@
         android:textSize="30dp"
         android:textColor="@color/black"
         android:gravity="center|left"
-        android:drawableLeft=" "
-        android:drawableRight=""/>
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
     <View  android:layout_height="20px"
         android:layout_width="match_parent"
         android:background="#ECEAEA" />
@@ -80,8 +80,8 @@
         android:textSize="30dp"
         android:textColor="@color/black"
         android:gravity="center|left"
-        android:drawableLeft=" "
-        android:drawableRight=""/>
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
     <View  android:layout_height="1px"
         android:layout_width="match_parent"
         android:background="#352D2D" />
@@ -92,8 +92,8 @@
         android:textSize="30dp"
         android:textColor="@color/black"
         android:gravity="center|left"
-        android:drawableLeft=" "
-        android:drawableRight=""/>
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
     <View  android:layout_height="1px"
         android:layout_width="match_parent"
         android:background="#352D2D" />
@@ -104,8 +104,8 @@
         android:textSize="30dp"
         android:textColor="@color/black"
         android:gravity="center|left"
-        android:drawableLeft=" "
-        android:drawableRight=""/>
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
 
     <View
         android:layout_width="match_parent"
@@ -118,6 +118,6 @@
         android:textSize="30dp"
         android:textColor="@color/black"
         android:gravity="center|left"
-        android:drawableLeft=" "
-        android:drawableRight=""/>
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
 </LinearLayout>
