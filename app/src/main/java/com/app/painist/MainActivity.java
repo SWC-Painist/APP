@@ -67,25 +67,7 @@ public class MainActivity extends AppCompatActivity {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_scorelist, R.id.navigation_profile)
                 .build();
-//        NavController bottomNavController = Navigation.findNavController(this, R.id.bottom_nav_view);
-//        NavigationUI.setupActionBarWithNavController(this, bottomNavController, appBarConfiguration);
-//        NavigationUI.setupWithNavController(bottomNavigationView, bottomNavController);
-//
-//        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.navigation_scorelist:
-//                        Intent intent = new Intent(MainActivity.this, Scorelist.class);
-//                        startActivity(intent);
-//
-//                        break;
-//                    default:
-//                        break;
-//                }
-//                return true;
-//            }
-//        });
+
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         fragmentTransaction.add(R.id.main_fragment,new HomeFragment()).commit();

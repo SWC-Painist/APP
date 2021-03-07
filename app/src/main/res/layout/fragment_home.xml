@@ -32,6 +32,7 @@
             android:typeface="normal"
             android:layout_marginBottom="10dp"/>
         <ImageView
+            android:id="@+id/photo_button"
             android:layout_width="242.4dp"
             android:layout_height="256.4dp"
             android:background="@mipmap/photo_button" />
