@@ -9,10 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Painist.NoActionBar">
-        <activity android:name=".PlayingActivity"
-            android:screenOrientation="landscape">
-
-        </activity>
+        <activity
+            android:name=".EvaluationActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".PlayingActivity"
+            android:screenOrientation="landscape" />
         <activity android:name=".Scorelist" />
         <activity
             android:name=".MainActivity"
@@ -20,7 +22,6 @@
             android:theme="@style/Theme.Painist.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

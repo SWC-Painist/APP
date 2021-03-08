@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.app.painist.EvaluationActivity;
+import com.app.painist.EvaluationView;
 import com.app.painist.MainActivity;
 import com.app.painist.PlayingActivity;
 import com.app.painist.R;
@@ -50,7 +52,7 @@ public class HomeFragment extends Fragment {
         photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), PlayingActivity.class);
+                Intent intent = new Intent(getContext(), EvaluationActivity.class);
                 startActivity(intent);
             }
         });
