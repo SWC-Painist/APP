@@ -1,30 +1,28 @@
 package com.app.painist;
 
+import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.os.Environment;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
+import kotlin.HashCodeKt;
 
 import static java.lang.Float.NaN;
 import static java.lang.Float.isNaN;
@@ -43,7 +41,7 @@ class PlayingState {
 
     public static int previewState = 1;
     public static int exerciseState = 2;
-    public static int preformingState = 3;
+    public static int performingState = 3;
 
     public int state;
     public String text;
@@ -83,7 +81,7 @@ class PlayingState {
             0xff683d00
     );
     protected static PlayingState performing = new PlayingState(
-            preformingState,
+            performingState,
             "演奏模式",
             0xff0d9c68,
             0xff106f52,
@@ -103,46 +101,47 @@ class PlayingView extends View {
 
     protected PlayingState playingState;
 
+    protected Button button;
+
     protected float mWidth;
     protected float mHeight;
 
-    protected float rLeft;
-    protected float rRight;
-    protected float rTop;
-    protected float rBottom;
+    protected float mCenterX;
+    protected float mCenterY;
 
-    protected float rCenterX;
-    protected float rCenterY;
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public PlayingView(@NotNull Activity activity) {
         super(activity.getBaseContext());
+//        View inflate = inflate(activity.getBaseContext(), R.layout.playing_view, );
+
         mWidth = NaN;
         mHeight = NaN;
 
+//        final LinearLayout layout = new LinearLayout(activity.getBaseContext());
+//        layout.setId(getRootView().hashCode());
+//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT);
+//        layout.setOrientation(LinearLayout.VERTICAL);
+//        activity.addContentView(layout, params);
     }
 
 
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        int action = event.getAction();
-//        float x = event.getX();
-//        float y = event.getY();
-//        switch (action) {
-//            case MotionEvent.ACTION_DOWN:
-//                mainScoreRenderer.setHoldingState(true);
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                mainScoreRenderer.setHoldingState(false);
-//                lastTouchPos = NaN;
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                if (!Float.isNaN(lastTouchPos))
-//                    mainScoreRenderer.setHoldingOffset(y - lastTouchPos);
-//                lastTouchPos = y;
-//                break;
-//        }
-//        return true;
-//    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int action = event.getAction();
+        float x = event.getX();
+        float y = event.getY();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+        }
+        return true;
+    }
 
     @Override @RequiresApi(api = Build.VERSION_CODES.O)
     protected void onDraw(Canvas canvas) {
@@ -152,17 +151,17 @@ class PlayingView extends View {
         if (isNaN(mWidth) && isNaN(mHeight)) {
             mWidth = getWidth();
             mHeight = getHeight();
-            rLeft = mWidth / 2 - mHeight / 2;
-            rRight = mWidth / 2 + mHeight / 2;
-            rTop = mHeight / 2 - mWidth / 2;
-            rBottom = mHeight / 2 + mWidth / 2;
+//            rLeft = mWidth / 2 - mHeight / 2;
+//            rRight = mWidth / 2 + mHeight / 2;
+//            rTop = mHeight / 2 - mWidth / 2;
+//            rBottom = mHeight / 2 + mWidth / 2;
 
-            rCenterX = (rLeft + rRight) / 2;
-            rCenterY = (rTop + rBottom) / 2;
+            mCenterX = mWidth / 2;
+            mCenterY = mHeight / 2;
         }
-        if (!(isNaN(mWidth) && isNaN(mHeight))) {
-            canvas.rotate(90, mWidth / 2, mHeight / 2);
-        }
+//        if (!(isNaN(mWidth) && isNaN(mHeight))) {
+//            canvas.rotate(90, mWidth / 2, mHeight / 2);
+//        }
 
         playingState = PlayingState.preview;
 
@@ -170,7 +169,7 @@ class PlayingView extends View {
 
 //        canvas.setMatrix(null); // reset canvas transform
 
-        drawPlayingState(canvas);
+//        drawPlayingState(canvas);
 
         PlayingNote c = new PlayingNote();
         c.flatOrSharp = "";
@@ -218,12 +217,12 @@ class PlayingView extends View {
         final float margin = 60;
         final float padding = 40;
 
-        float len = (rBottom - rTop - margin * 3) / 2;
-        canvas.drawRect(rLeft + margin, rTop + margin, rLeft + margin + len, rTop + margin + len, tPaint);
-        canvas.drawRect(rLeft + margin, rBottom - margin - len, rLeft + margin + len, rBottom - margin, tPaint);
+        float len = (mHeight - margin * 3) / 2;
+        canvas.drawRect(margin, margin, margin + len, margin + len, tPaint);
+        canvas.drawRect(margin, mHeight - margin - len, margin + len, mHeight - margin, tPaint);
 
-        drawNotesInBox(canvas, notes, rLeft + margin, rLeft + margin + len, rTop + margin, rTop + margin + len, padding);
-        drawNotesInBox(canvas, notes, rLeft + margin, rLeft + margin + len, rBottom - margin - len, rBottom - margin, padding);
+        drawNotesInBox(canvas, notes, margin, margin + len, margin, margin + len, padding);
+        drawNotesInBox(canvas, notes, margin, margin + len, mHeight - margin - len, mHeight - margin, padding);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -304,16 +303,16 @@ class PlayingView extends View {
     private void drawScore(@NotNull Canvas canvas) {
         Bitmap score = BitmapFactory.decodeResource(getResources(), R.mipmap.test_score);
         Rect src = new Rect(0, 0, score.getWidth(), score.getHeight());
-        Rect dist = new Rect((int)(rLeft), (int)(rTop + 150),
-                (int)(rLeft + score.getWidth() * 4f), (int)(rTop + 150 + score.getHeight() * 4f));
+        Rect dist = new Rect(0, 150,
+                (int)(score.getWidth() * 4f), (int)(150 + score.getHeight() * 4f));
         canvas.drawBitmap(score, src, dist, null);
 
-        dist = new Rect((int)(rLeft + score.getWidth() * 4f), (int)(rTop + 150),
-                (int)(rLeft + score.getWidth() * 8f), (int)(rTop + 150 + score.getHeight() * 4f));
+        dist = new Rect((int)(score.getWidth() * 4f), 150,
+                (int)(score.getWidth() * 8f), (int)(150 + score.getHeight() * 4f));
         canvas.drawBitmap(score, src, dist, null);
 
-        dist = new Rect((int)(rLeft + score.getWidth() * 8f), (int)(rTop + 150),
-                (int)(rLeft + score.getWidth() * 12f), (int)(rTop + 150 + score.getHeight() * 4f));
+        dist = new Rect((int)(score.getWidth() * 8f), 150,
+                (int)(score.getWidth() * 12f), (int)(150 + score.getHeight() * 4f));
         canvas.drawBitmap(score, src, dist, null);
 
     }
@@ -324,12 +323,14 @@ class PlayingView extends View {
 
         tPaint.setColor(playingState.textBackColor);
         tPaint.setStyle(Paint.Style.FILL);
-        canvas.drawRoundRect(rCenterX - 180, rTop - 15, rCenterX + 180, rTop + 105, 15, 15, tPaint);
+        canvas.drawRoundRect(mCenterX - 180, 0 - 15, mCenterX + 180, 0 + 105, 15, 15, tPaint);
+
+        // Set Listener
 
         tPaint.setColor(playingState.textColor);
         tPaint.setTextSize(75);
         tPaint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(playingState.text, rCenterX, rTop + 80, tPaint);
+        canvas.drawText(playingState.text, mCenterX, 0 + 80, tPaint);
     }
 
 /*    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

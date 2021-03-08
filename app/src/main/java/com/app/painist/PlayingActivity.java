@@ -18,6 +18,8 @@ import android.view.Surface;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,17 +28,21 @@ import java.nio.charset.StandardCharsets;
 
 public class PlayingActivity extends AppCompatActivity {
 
+    public Button playingStateButton;
+
     private PlayingView playingView;
 
-    @Override @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override @RequiresApi(api = Build.VERSION_CODES.O)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         playingView = new PlayingView(this);
-
         setFullScreen();
 
-        setContentView(playingView);
+        setContentView(R.layout.playing_view);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        addContentView(playingView, params);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
