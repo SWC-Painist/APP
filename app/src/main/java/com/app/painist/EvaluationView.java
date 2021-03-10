@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+import java.util.Random;
+
 import static java.lang.Float.NaN;
 import static java.lang.Float.isNaN;
 
@@ -58,11 +60,12 @@ class BonusStarAttributes {
 
         alphaAnimator.setIntValues(0, 150, 255, 255);
         sizeAnimator.setFloatValues(0.1f, 0.3f, 0.4f);
+        //sizeAnimator.setInterpolator(new QuadraticInterpolator());
         positionAnimator.setFloatValues(-700, 0);
         positionAnimator.setInterpolator(new QuadraticInterpolator());
 
         for (ValueAnimator animator : animators) {
-            animator.setDuration(800);
+            animator.setDuration(700);
             animator.setStartDelay(delay);
         }
 
@@ -102,20 +105,79 @@ class BonusStarAttributes {
     }
 
     public Rect getTransformRect() {
-        Log.d("DEBUG", "x = "+anchorX+" y = "+anchorY);
         return new Rect((int)(anchorX - scaleX * size / 2), (int)(anchorY - scaleY * size / 2 - position),
                 (int)(anchorX + scaleX * size / 2), (int)(anchorY + scaleY * size / 2 - position));
     }
+
+    public Rect getFinalTransformRect() {
+        return new Rect((int)(anchorX - scaleX * 0.4f / 2), (int)(anchorY - scaleY * 0.4f / 2),
+                (int)(anchorX + scaleX * 0.4f / 2), (int)(anchorY + scaleY * 0.4f / 2));
+    }
+
 
     public int getAlpha() {
         return alpha;
     }
 }
 
+class BonusStar {
+    protected Bitmap bonusStar;
+    protected Bitmap bonusStarDisabled;
+    protected BonusStarAttributes attribute;
+
+    BonusStar(Activity activity) {
+        bonusStar = BitmapFactory.decodeResource(activity.getResources(), R.mipmap.bonus_star);
+        bonusStarDisabled = BitmapFactory.decodeResource(activity.getResources(), R.mipmap.bonus_star_disable);
+    }
+
+    public void Initialize(float positionX, float positionY, long delay) {
+        attribute = new BonusStarAttributes(positionX,
+                positionY,
+                bonusStar.getWidth(),
+                bonusStar.getHeight(),
+                delay);
+        attribute.startAnimation();
+    }
+
+    public void Draw(Canvas canvas) {
+        Paint tPaint = new Paint();
+        @SuppressLint("DrawAllocation")
+        Rect dsrc = new Rect(0, 0, bonusStarDisabled.getWidth(), bonusStarDisabled.getHeight());
+        tPaint.setAlpha(255);
+        canvas.drawBitmap(bonusStarDisabled, dsrc, attribute.getFinalTransformRect(), tPaint);
+
+        @SuppressLint("DrawAllocation")
+        Rect src = new Rect(0, 0, bonusStar.getWidth(), bonusStar.getHeight());
+        tPaint.setAlpha(attribute.getAlpha());
+        canvas.drawBitmap(bonusStar, src, attribute.getTransformRect(), tPaint);
+
+    }
+}
+// Implement Later
+class DecorateParticles {
+    protected Bitmap[] resources;
+
+    protected int size;
+
+    protected float fromX;
+    protected float fromY;
+    protected float toX;
+    protected float toY;
+
+    protected float[] offestX;
+    protected float[] offsetY;
+
+    protected ValueAnimator heightAnimation;
+    protected ValueAnimator alphaAnimation;
+    protected ValueAnimator rotationAnimation;
+
+    DecorateParticles(int size, float fromX, float fromY, float toX, float toY, float diff) {
+    }
+}
+
 public class EvaluationView extends View {
 
-    protected Bitmap bonusStar;
-    protected BonusStarAttributes[] attributes;
+    protected BonusStar[] stars;
 
     protected float mWidth;
     protected float mHeight;
@@ -127,17 +189,10 @@ public class EvaluationView extends View {
         super(activity.getBaseContext());
         mWidth = NaN;
         mHeight = NaN;
-        bonusStar = BitmapFactory.decodeResource(getResources(), R.mipmap.bonus_star);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        for (int i = 0; i < attributes.length; i++) {
-            attributes[i].restartAnimation();
+        stars = new BonusStar[3];
+        for (int i=0; i<stars.length; i++) {
+            stars[i] = new BonusStar(activity);
         }
-
-        return super.onTouchEvent(event);
     }
 
     @Override @SuppressLint("DrawAllocation")
@@ -151,32 +206,17 @@ public class EvaluationView extends View {
             mCenterX = mWidth / 2;
             mCenterY = mHeight / 2;
 
-            attributes = new BonusStarAttributes[3];
-            for (int i = 0; i < attributes.length; i++) {
-                attributes[i] = new BonusStarAttributes(mCenterX,
-                        mCenterY - 100,
-                        bonusStar.getWidth(),
-                        bonusStar.getHeight(),
-                        i * 700 + 200);
-                attributes[i].startAnimation();
+            for (int i=0; i<stars.length; i++) {
+                stars[i].Initialize(mCenterX, mCenterY - 100, i * 800 + 200);
             }
-
         }
 
-        Paint tPaint = new Paint();
-
-        @SuppressLint("DrawAllocation")
-        Rect src = new Rect(0, 0, bonusStar.getWidth(), bonusStar.getHeight());
-
-        tPaint.setAlpha(attributes[0].getAlpha());
-
-        canvas.drawBitmap(bonusStar, src, attributes[1].getTransformRect(), tPaint);
-
+        stars[1].Draw(canvas);
         canvas.rotate(-12, mCenterX, mHeight * 3);
-        canvas.drawBitmap(bonusStar, src, attributes[0].getTransformRect(), tPaint);
-
+        stars[0].Draw(canvas);
         canvas.rotate(24, mCenterX, mHeight * 3);
-        canvas.drawBitmap(bonusStar, src, attributes[2].getTransformRect(), tPaint);
+        stars[2].Draw(canvas);
+        canvas.rotate(-12, mCenterX, mHeight * 3);
 
         invalidate();
     }
