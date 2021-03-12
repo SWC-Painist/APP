@@ -45,7 +45,7 @@ public class RecordUtil {
             mMediaRecorder = new MediaRecorder();
         try {
             /* ②setAudioSource/setVedioSource */
-            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);// 设置麦克风
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);// 设置麦克风,自带Mic降噪
             /*
              * ②设置输出文件的格式：THREE_GPP/MPEG-4/RAW_AMR/Default THREE_GPP(3gp格式
              * ，H263视频/ARM音频编码)、MPEG-4、RAW_AMR(只支持音频且音频编码要求为AMR_NB)
@@ -57,9 +57,8 @@ public class RecordUtil {
             if(fileName==null)
                 fileName = DateFormat.format("yyyyMMdd_HHmmss", Calendar.getInstance(Locale.CHINA)) + ".mp4";
             if(filePath==null)
-                filePath = Environment.getExternalStorageState()+ "/test/";
+                filePath = Environment.getExternalStorageState()+ "/test/"+fileName;
 
-            filePath = audioSaveDir + fileName;
             /* ③准备 */
             mMediaRecorder.setOutputFile(filePath);
             mMediaRecorder.prepare();
@@ -74,10 +73,6 @@ public class RecordUtil {
 
     public void setFileName(String fileName) {//设置文件名称
         this.fileName = fileName;
-    }
-
-    public void setAudioSaveDir(String audioSaveDir) {//设置存放目录
-        this.audioSaveDir = audioSaveDir;
     }
 
     public void setFilePath(String filePath) {//设置完整地址
