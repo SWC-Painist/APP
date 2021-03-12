@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.app.painist.Utils.RecordUtil;
 import com.app.painist.Utils.UploadFileUtil;
 
 import java.io.File;
@@ -42,6 +43,7 @@ public class TakePhotoActivity extends AppCompatActivity {
     private ImageView picture;
     private Uri imageUri;
     private final String filePath = Environment.getExternalStorageDirectory() + File.separator + "output_image.jpg";
+    RecordUtil recordUtil = new RecordUtil();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,8 +52,8 @@ public class TakePhotoActivity extends AppCompatActivity {
         picture = findViewById(R.id.picture);
         takePhotoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                //动态请求相机权限
-                requestPermission();  //在其中若用户给予权限则请求相机拍照
+                //请求相机权限
+                requestPermission();
             }
         });
         //设置默认图片
@@ -115,7 +117,7 @@ public class TakePhotoActivity extends AppCompatActivity {
 
     }
 
-    //处理返回结果的函数，下面是隐示Intent的返回结果的处理方式，具体见以前我所发的intent讲解
+    //处理返回结果的函数
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -133,6 +135,7 @@ public class TakePhotoActivity extends AppCompatActivity {
             default:
                 break;
         }
+
     }
 
     //设置保存拍照图片——>再次关闭app重新打开显示为上次拍照照片
@@ -143,6 +146,6 @@ public class TakePhotoActivity extends AppCompatActivity {
         }
         picture.setImageBitmap(BitmapFactory.decodeFile(filePath));
         UploadFileUtil uploadFileUtil = new UploadFileUtil();
-        uploadFileUtil.uploadFile(filePath,"file","http://10.0.2.2:8080/upload",null);
+        uploadFileUtil.uploadFile(filePath,"file","http://121.5.30.197:8080/BooksAdministration/upload",null);
     }
 }
