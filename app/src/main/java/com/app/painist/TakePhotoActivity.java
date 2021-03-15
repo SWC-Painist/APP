@@ -146,6 +146,6 @@ public class TakePhotoActivity extends AppCompatActivity {
         }
         picture.setImageBitmap(BitmapFactory.decodeFile(filePath));
         UploadFileUtil uploadFileUtil = new UploadFileUtil();
-        uploadFileUtil.uploadFile(filePath,"file","http://121.5.30.197:8080/BooksAdministration/upload",null);
+        uploadFileUtil.uploadFile(filePath,"file","http://101.76.217.74:8000/user/upload/picture/",null);
     }
 }
