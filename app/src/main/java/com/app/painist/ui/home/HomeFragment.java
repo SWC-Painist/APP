@@ -17,11 +17,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.app.painist.MainActivity;
 import com.app.painist.R;
 import com.app.painist.TakePhotoActivity;
+import com.app.painist.Utils.AudioRecordUtil;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    private Button TakePhotoButton;
+    private Button TakePhotoButton,beginaudio,endaudio;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
@@ -39,6 +40,25 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), TakePhotoActivity.class);
                 startActivity(intent);
+            }
+        });
+        AudioRecordUtil.verifyAudioPermissions(getActivity());
+        AudioRecordUtil audioRecordUtil = AudioRecordUtil.getInstance();
+
+        beginaudio = getActivity().findViewById(R.id.begin);
+        endaudio = getActivity().findViewById(R.id.end);
+        beginaudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                audioRecordUtil.startRecord();
+                audioRecordUtil.recordData();
+            }
+        });
+        endaudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                audioRecordUtil.stopRecord();
+                audioRecordUtil.convertWaveFile();
             }
         });
     }

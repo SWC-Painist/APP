@@ -74,7 +74,18 @@
             android:text="Take Photo"
             android:textSize="30sp">
         </Button>
-
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开始录音"
+            android:id="@+id/begin"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="结束录音"
+            android:id="@+id/end"
+            />
     </LinearLayout>
 
 </FrameLayout >
