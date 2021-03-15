@@ -66,7 +66,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
+
         <Button
             android:id="@+id/takephoto"
             android:layout_width="200dp"
@@ -86,6 +88,15 @@
             android:text="结束录音"
             android:id="@+id/end"
             />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取图片"
+            android:id="@+id/getimg"
+            />
+
+
+
     </LinearLayout>
 
 </FrameLayout >

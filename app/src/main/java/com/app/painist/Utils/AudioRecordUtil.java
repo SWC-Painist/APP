@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- *  录音三部曲
+ *  录音四部曲
  *  1、开启权限
  *  2、开始录音
  *  3、开启存文件线程
