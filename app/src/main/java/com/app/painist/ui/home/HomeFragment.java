@@ -51,14 +51,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        TakePhotoButton = getActivity().findViewById(R.id.takephoto);
-        TakePhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), TakePhotoActivity.class);
-                startActivity(intent);
-            }
-        });
 
         AudioRecordUtil.verifyAudioPermissions(getActivity());
         AudioRecordUtil audioRecordUtil = AudioRecordUtil.getInstance();

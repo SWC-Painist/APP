@@ -45,6 +45,31 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="180dp"
+        android:gravity="center"
+        android:orientation="vertical">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开始录音"
+            android:id="@+id/begin"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="结束录音"
+            android:id="@+id/end"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获取图片"
+            android:id="@+id/getimg"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
         android:orientation="vertical"
         android:layout_gravity="bottom">
         <LinearLayout
@@ -154,7 +179,7 @@
             </LinearLayout>
         </LinearLayout>
 
-
+    </LinearLayout>
 <!--    <com.google.android.material.appbar.AppBarLayout-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"-->
@@ -172,41 +197,6 @@
 
 <!--    </com.google.android.material.appbar.AppBarLayout>-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/takephoto"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:text="Take Photo"
-            android:textSize="30sp">
-        </Button>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="开始录音"
-            android:id="@+id/begin"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="结束录音"
-            android:id="@+id/end"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="获取图片"
-            android:id="@+id/getimg"
-            />
-
-
-
-    </LinearLayout>
 
 </FrameLayout >
