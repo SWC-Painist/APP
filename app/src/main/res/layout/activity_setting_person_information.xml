@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+     >
+    <TextView
+        android:id="@+id/information"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text=" 头像"
+        android:textSize="30dp"
+
+        android:textColor="@color/black"
+        android:gravity="center|left"
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"
+        />
+
+    <View  android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="#352D2D" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text=" 昵称"
+        android:textSize="30dp"
+
+        android:textColor="@color/black"
+        android:gravity="center|left"
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
+
+    <View  android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="#352D2D" />
+    <View  android:layout_height="30px"
+        android:layout_width="match_parent"
+        android:background="#ECEAEA" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text=" 性别"
+        android:textSize="30dp"
+
+        android:textColor="@color/black"
+        android:gravity="center|left"
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
+
+    <View  android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="#352D2D" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text=" 出生日期"
+        android:textSize="30dp"
+
+        android:textColor="@color/black"
+        android:gravity="center|left"
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
+
+    <View  android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="#352D2D" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text=" 星座"
+        android:textSize="30dp"
+
+        android:textColor="@color/black"
+        android:gravity="center|left"
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
+
+    <View  android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="#352D2D" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text=" 职业"
+        android:textSize="30dp"
+
+        android:textColor="@color/black"
+        android:gravity="center|left"
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
+
+    <View  android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="#352D2D" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text=" 地址"
+        android:textSize="30dp"
+
+        android:textColor="@color/black"
+        android:gravity="center|left"
+        android:drawableLeft="@color/design_default_color_background"
+        android:drawableRight="@color/design_default_color_background"/>
+
+    <View  android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="#352D2D" />
+    
+</LinearLayout>
