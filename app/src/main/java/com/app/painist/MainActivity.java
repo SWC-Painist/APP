@@ -1,8 +1,13 @@
 package com.app.painist;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,59 +50,36 @@ import static com.app.painist.R.id.nav_host_fragment;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private String[] tabNames = {"Histories", "Favorites", "Recommends"};
+    private ArrayList<Fragment> fragments = new ArrayList<>();
 
-
-    private void initFragment() {
-//        FragmentManager manager = getFragmentManager();
-//        FragmentTransaction transaction = manager.beginTransaction();
-//
-//        HomeFragment homeFragment = new HomeFragment();
-//        ScorelistFragment scorelistFragment = new ScorelistFragment();
-//        transaction.add(R.id.main_fragment, homeFragment);
-//        transaction.commit();
-
-    }
-
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        initFragment();
-
-
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_scorelist, R.id.navigation_profile)
                 .build();
-//        NavController bottomNavController = Navigation.findNavController(this, R.id.bottom_nav_view);
-//        NavigationUI.setupActionBarWithNavController(this, bottomNavController, appBarConfiguration);
-//        NavigationUI.setupWithNavController(bottomNavigationView, bottomNavController);
-//
-//        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.navigation_scorelist:
-//                        Intent intent = new Intent(MainActivity.this, Scorelist.class);
-//                        startActivity(intent);
-//
-//                        break;
-//                    default:
-//                        break;
-//                }
-//                return true;
-//            }
-//        });
+
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         fragmentTransaction.add(R.id.main_fragment,new HomeFragment()).commit();
+
         NavigationView navigationView = findViewById(R.id.nav_view);
-//        NavigationView homeNavigationView = findViewById(R.id.bottom_nav_view);
+        navigationView.setItemTextColor(getColorStateList(R.color.white));
+//        navigationView.setItemIconPadding(1);
+        navigationView.setItemIconSize(50);
+        navigationView.setItemBackground(getDrawable(R.drawable.piano_key_background));
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {//底部导航点击事件
@@ -157,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
 
     }
 

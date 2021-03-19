@@ -10,72 +10,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal"
-        android:padding="15dp">
-
+        android:orientation="vertical">
         <ImageView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:background="@drawable/rounded_retangle">
-
-        </ImageView>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="[USER_NAME]"
-                android:textSize="30sp">
-            </TextView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PracticeTime: 20h"
-                android:textSize="25sp">
-            </TextView>
-        </LinearLayout>
-
+            android:id="@+id/menu_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@mipmap/menu" />
     </LinearLayout>
-
-
-<!--    <com.google.android.material.appbar.AppBarLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:theme="@style/Theme.Painist.AppBarOverlay">-->
-
-<!--        <androidx.appcompat.widget.Toolbar-->
-<!--            android:id="@+id/toolbar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="?attr/actionBarSize"-->
-<!--            android:background="?attr/colorPrimary"-->
-<!--            android:gravity="center_horizontal"-->
-<!--            android:textAlignment="center"-->
-<!--            app:title="MAIN FRAGMENT"-->
-<!--            app:popupTheme="@style/Theme.Painist.PopupOverlay"/>-->
-
-<!--    </com.google.android.material.appbar.AppBarLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="拍照识谱"
+            android:textSize="35sp"
+            android:typeface="normal"
+            android:layout_marginBottom="10dp"/>
+        <ImageView
+            android:id="@+id/photo_button"
+            android:layout_width="242.4dp"
+            android:layout_height="256.4dp"
+            android:background="@mipmap/photo_button" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="100dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
         android:gravity="center"
         android:orientation="vertical">
-
-        <Button
-            android:id="@+id/takephoto"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:text="Take Photo"
-            android:textSize="30sp">
-        </Button>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,9 +65,138 @@
             android:text="获取图片"
             android:id="@+id/getimg"
             />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:orientation="vertical"
+        android:layout_gravity="bottom">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left"
+                android:background="@drawable/down_bar">
+            </LinearLayout>
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="12dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@mipmap/down_arrow">
+            </ImageView>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="right"
+                android:background="@drawable/down_bar">
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="继续上次的练习..."
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:textSize="22sp">
 
+        </TextView>
+
+        <LinearLayout
+            android:id="@+id/music_score_1"
+            android:layout_width="fill_parent"
+            android:layout_height="120dp"
+            android:layout_margin="7dp"
+            android:padding="10dp"
+            android:orientation="horizontal"
+            android:gravity="start">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:background="#1070D0"
+                    android:layout_gravity="center">
+                </ImageView>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginLeft="0dp">
+                    <LinearLayout
+                        android:layout_width="10dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:background="#1070D0">
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="10dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:background="#1070D0">
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+
+                        android:text="A Comme Amoure"
+                        android:textSize="18dp">
+
+                    </TextView>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="ASDFASDFASDFASDFASDFA
+                    SDFAASDFASDFASDFASDASDFASDFASDFASDF
+                    ASDFASDFASDFASDFASDFASDFF">
+
+                </TextView>
+            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
+<!--    <com.google.android.material.appbar.AppBarLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:theme="@style/Theme.Painist.AppBarOverlay">-->
+
+<!--        <androidx.appcompat.widget.Toolbar-->
+<!--            android:id="@+id/toolbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="?attr/actionBarSize"-->
+<!--            android:background="?attr/colorPrimary"-->
+<!--            android:gravity="center_horizontal"-->
+<!--            android:textAlignment="center"-->
+<!--            app:title="MAIN FRAGMENT"-->
+<!--            app:popupTheme="@style/Theme.Painist.PopupOverlay"/>-->
+
+<!--    </com.google.android.material.appbar.AppBarLayout>-->
+
+
 
 </FrameLayout >
