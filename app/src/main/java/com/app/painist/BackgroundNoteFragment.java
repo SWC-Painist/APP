@@ -40,12 +40,11 @@ public class BackgroundNoteFragment extends Fragment {
     private final float anchorX = 0f;
     private final float anchorY = -250f;
 
-    private final float moveDistanceFrom = 480f;
+    private final float moveDistanceFrom = 450f;
 
     private ImageView[] notes = new ImageView[noteNumber];
     private float[] noteTimeOffset = new float[noteNumber];
     private boolean[] noteHasStarted = new boolean[noteNumber];
-    private float[] noteRotateFactor = new float[noteNumber];
     private float[] noteAlphaFactor = new float[noteNumber];
     private float[] noteMoveAngle = new float[noteNumber];
     private float[] noteMoveDistance = new float[noteNumber];
@@ -109,7 +108,7 @@ public class BackgroundNoteFragment extends Fragment {
         for(int i=0; i<noteNumber; i++) {
             noteTimeOffset[i] = (float) (Math.random() * cycleTime);
             noteHasStarted[i] = false;
-            noteAlphaFactor[i] = (float) (Math.random() * 0.4f + 0.6f);
+            noteAlphaFactor[i] = (float) (Math.random() * 0.3f + 0.6f);
             noteMoveAngle[i] = (float) (Math.random() * 240f + 150f);
             noteMoveDistance[i] = 600f;
         }
@@ -141,9 +140,9 @@ public class BackgroundNoteFragment extends Fragment {
 
                     float fixedTime = (nowTime - noteTimeOffset[i] + cycleTime) % cycleTime;
 
-                    if (fixedTime < 0.05f)
+                    if (fixedTime < 0.02f)
                     {
-                        noteAlphaFactor[i] = (float) (Math.random() * 0.4f + 0.6f);
+                        noteAlphaFactor[i] = (float) (Math.random() * 0.3f + 0.6f);
                         noteMoveAngle[i] = (float) (Math.random() * 240f + 150f);
                         noteMoveDistance[i] = 600f;
                     }

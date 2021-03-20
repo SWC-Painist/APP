@@ -34,8 +34,8 @@
         android:gravity="center">
         <ImageView
             android:id="@+id/photo_button"
-            android:layout_width="324.72dp"
-            android:layout_height="328.24dp"
+            android:layout_width="259.7dp"
+            android:layout_height="262.6dp"
             android:background="@mipmap/photo_button" />
         <LinearLayout
             android:layout_width="0dp"
@@ -69,8 +69,10 @@
     </LinearLayout>-->
 
     <LinearLayout
+        android:id="@+id/continue_practice_notification"
         android:layout_width="match_parent"
         android:layout_height="180dp"
+        android:paddingTop="500dp"
         android:orientation="vertical"
         android:layout_gravity="bottom">
         <LinearLayout
@@ -78,27 +80,28 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:orientation="horizontal">
-            <LinearLayout
+            <ImageView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_gravity="left"
-                android:background="@drawable/down_bar">
-            </LinearLayout>
+                android:src="@drawable/down_bar">
+            </ImageView>
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="12dp"
+                android:id="@+id/span_button"
+                android:layout_width="20dp"
+                android:layout_height="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:background="@mipmap/down_arrow">
+                android:src="@mipmap/down_arrow">
             </ImageView>
-            <LinearLayout
+            <ImageView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_gravity="right"
-                android:background="@drawable/down_bar">
-            </LinearLayout>
+                android:src="@drawable/down_bar">
+            </ImageView>
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"

@@ -1,10 +1,12 @@
 package com.app.painist.ui.home;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.view.Gravity;
 import android.os.Environment;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,6 +46,15 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private Button TakePhotoButton,beginaudio,endaudio,getimg;
     private ImageView myimg;
+
+    private final float paddingMin = 0;
+    private final float paddingMax = 470f;
+    private final float duration = 0.6f;
+    private boolean isSpan;
+    private ValueAnimator bottomSpanAnimator;
+    private LinearLayout bottomSpan;
+    private ImageView spanButton;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
@@ -96,6 +108,43 @@ public class HomeFragment extends Fragment {
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         fragmentTransaction.add(R.id.background_note_fragment,new BackgroundNoteFragment()).commit();
 
+        bottomSpan = getActivity().findViewById(R.id.continue_practice_notification);
+
+        bottomSpanAnimator = new ValueAnimator();
+
+        isSpan = true;
+        bottomSpanAnimator.setDuration((long) (duration * 1000));
+        bottomSpanAnimator.setStartDelay(1500);
+        bottomSpanAnimator.setFloatValues(paddingMax, paddingMin);
+        bottomSpanAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                bottomSpan.setPadding(0, (int)value, 0, 0);
+            }
+        });
+        bottomSpanAnimator.start();
+
+        spanButton = getActivity().findViewById(R.id.span_button);
+        spanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bottomSpanAnimator.isRunning()) return;
+                bottomSpanAnimator.setStartDelay(0);
+                if (isSpan) {
+                    bottomSpanAnimator.setFloatValues(paddingMin, paddingMax);
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.up_arrow);
+                    spanButton.setImageBitmap(bitmap);
+                }
+                else {
+                    bottomSpanAnimator.setFloatValues(paddingMax, paddingMin);
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.down_arrow);
+                    spanButton.setImageBitmap(bitmap);
+                }
+                isSpan = !isSpan;
+                bottomSpanAnimator.start();
+            }
+        });
 
         // Button To Open Left-Navigation Menu
         ImageView menuButton = getActivity().findViewById(R.id.menu_button);
