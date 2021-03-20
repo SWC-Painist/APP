@@ -287,7 +287,7 @@ class PlayingView extends View {
         tPaint.setColor(playingState.textColor);
         tPaint.setTextAlign(Paint.Align.CENTER);
         tPaint.setTextSize(boxSize * 0.9f);
-        tPaint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/FZCuYuan.TTF"));
+//        tPaint.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/FZCuYuan.TTF"));
 
         canvas.drawText(note.value, (rl + rr) / 2 - boxSize * 0.05f, (rt + rb) / 2 + boxSize * 0.32f, tPaint);
 

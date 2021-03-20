@@ -20,9 +20,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.app.painist.BackgroundNoteFragment;
 import com.app.painist.EvaluationActivity;
 import com.app.painist.EvaluationView;
 import com.app.painist.MainActivity;
@@ -55,7 +58,7 @@ public class HomeFragment extends Fragment {
         AudioRecordUtil.verifyAudioPermissions(getActivity());
         AudioRecordUtil audioRecordUtil = AudioRecordUtil.getInstance();
 
-        beginaudio = getActivity().findViewById(R.id.begin);
+        /*beginaudio = getActivity().findViewById(R.id.begin);
         endaudio = getActivity().findViewById(R.id.end);
 
         beginaudio.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +90,13 @@ public class HomeFragment extends Fragment {
                     }
                 }).start();
             }
-        });
+        });*/
+
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = manager.beginTransaction();
+        fragmentTransaction.add(R.id.background_note_fragment,new BackgroundNoteFragment()).commit();
+
+
         // Button To Open Left-Navigation Menu
         ImageView menuButton = getActivity().findViewById(R.id.menu_button);
         menuButton.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +111,7 @@ public class HomeFragment extends Fragment {
         photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), EvaluationActivity.class);
+                Intent intent = new Intent(getContext(), TakePhotoActivity.class);
                 startActivity(intent);
             }
         });
