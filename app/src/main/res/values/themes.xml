@@ -26,6 +26,13 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="EditText" parent="Theme.Painist">
+        <item name="colorControlNormal">#A0A0A0</item>
+        <item name="colorControlActivated">#808080</item>
+        <item name="colorControlHighlight">#808080</item>
+    </style>
+
     <style name="Theme.Painist.NoActionBar.AppBarOverlay"
         parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.Painist.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

@@ -126,22 +126,15 @@ public class BackgroundNoteFragment extends Fragment {
         globalTimer.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                Log.d("AnimationUpdate", "Update");
-
                 float nowTime = (float) globalTimer.getAnimatedValue();
 
                 for(int i=0; i<noteNumber; i++) {
-
-                    if (!noteHasStarted[i])
-                    {
+                    if (!noteHasStarted[i]) {
                         if (nowTime > noteTimeOffset[i]) noteHasStarted[i] = true;
                         else continue;
                     }
-
                     float fixedTime = (nowTime - noteTimeOffset[i] + cycleTime) % cycleTime;
-
-                    if (fixedTime < 0.02f)
-                    {
+                    if (fixedTime < 0.02f) {
                         noteAlphaFactor[i] = (float) (Math.random() * 0.3f + 0.6f);
                         noteMoveAngle[i] = (float) (Math.random() * 240f + 150f);
                         noteMoveDistance[i] = 600f;
@@ -149,10 +142,8 @@ public class BackgroundNoteFragment extends Fragment {
 
                     float distance = (fixedTime * 1000f / globalTimer.getDuration())
                             * noteMoveDistance[i] + moveDistanceFrom;
-
                     float positionX = (float) Math.cos(noteMoveAngle[i] * Math.PI / 180f) * distance;
                     float positionY = (float) Math.sin(noteMoveAngle[i] * Math.PI / 180f) * distance;
-
                     float alpha = (float) noteAlphaFactor[i] *
                         (1 - fixedTime * 1000f / globalTimer.getDuration());
 
@@ -167,10 +158,6 @@ public class BackgroundNoteFragment extends Fragment {
         }
 
         globalTimer.start();
-        Log.d("AnimationUpdate", "Start");
-
-        /*transformImage(notes[0], 100, 100);
-        transformImage(notes[1], -300, -300);*/
     }
 
     @Override
@@ -187,11 +174,6 @@ public class BackgroundNoteFragment extends Fragment {
         else paddingR = (int) -positionX;
         if (positionY > 0) paddingT = (int) positionY;
         else paddingB = (int) -positionY;
-
-        /*Bitmap bitmap = image.getImage
-        matrix.setRotate(routeAngle);//设置反转角度
-        bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
-        image.setImageBitmap(bitmap);*/
 
         image.setPadding(paddingL, paddingT, paddingR, paddingB);
         image.setAlpha(alpha);
