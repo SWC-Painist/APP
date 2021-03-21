@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/round_button_loading" android:duration="1000" />
-    <item android:drawable="@drawable/round_button_complete" android:duration="1000" />
+    <item android:drawable="@drawable/round_button_loading" android:duration="1" />
+    <item android:drawable="@drawable/round_button_complete" android:duration="1000000" />
 </animation-list>

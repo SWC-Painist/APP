@@ -10,17 +10,16 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.Painist.AppBarOverlay">
+        android:theme="@style/Theme.Painist.TitleBar">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
             android:gravity="center_horizontal"
             android:textAlignment="center"
-            app:title="SCORELIST FRAGMENT"
-            app:popupTheme="@style/Theme.Painist.PopupOverlay"/>
+            app:popupTheme="@style/Theme.Painist.TitleBar"
+            app:title="我的曲谱" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
