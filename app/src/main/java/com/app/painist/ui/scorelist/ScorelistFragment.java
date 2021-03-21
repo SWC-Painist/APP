@@ -22,7 +22,7 @@ public class ScorelistFragment extends Fragment {
 
     private ScorelistViewModel scorelistViewModel;
 
-    private String[] tabNames = {"Histories", "Favorites", "Recommends"};
+    private String[] tabNames = {"历史曲谱", "我的收藏", "猜你想练"};
     private ScoreitemFragment scoreitemFragment;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -30,13 +30,13 @@ public class ScorelistFragment extends Fragment {
         scorelistViewModel =
                 new ViewModelProvider(this).get(ScorelistViewModel.class);
         View root = inflater.inflate(R.layout.fragment_scorelist, container, false);
-        final TextView textView = root.findViewById(R.id.text_scorelist);
+        /*final TextView textView = root.findViewById(R.id.text_scorelist);
         scorelistViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
-        });
+        });*/
         return root;
     }
 

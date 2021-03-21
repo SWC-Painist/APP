@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/music_score_2"
+    android:layout_width="fill_parent"
+    android:layout_height="120dp"
+    android:layout_margin="7dp"
+    android:padding="10dp"
+    android:background="@drawable/rounded_retangle"
+    android:orientation="horizontal"
+    android:gravity="start">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:background="#E0E0E0"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="8dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp">
+            <LinearLayout
+                android:layout_width="5dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="#606060"/>
+            <LinearLayout
+                android:layout_width="5dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="#606060"/>
+            <LinearLayout
+                android:layout_width="5dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="#606060"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:text="秋日私语"
+                android:textSize="20dp"
+                android:textColor="#606060"
+                android:textStyle="bold">
+
+            </TextView>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="5dp"
+            android:text=" - 距上一次练习已有3天"
+            android:textSize="15dp">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="5dp"
+            android:text=" - 熟练度只有65% 加油~"
+            android:textSize="15dp">
+        </TextView>
+    </LinearLayout>
+</LinearLayout>

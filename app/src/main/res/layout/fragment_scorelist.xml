@@ -7,21 +7,32 @@
     android:orientation="vertical"
     tools:context=".ui.scorelist.ScorelistFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <RelativeLayout
+        android:id="@+id/score_list_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/Theme.Painist.TitleBar">
+        android:layout_height="?attr/actionBarSize">
+        <ImageView
+            android:id="@+id/menu_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:src="@mipmap/menu"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="我的曲谱"
+            android:textSize="22sp"
+            style="@style/TextAppearance.AppCompat.Title" />
+    </RelativeLayout>
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:gravity="center_horizontal"
-            android:textAlignment="center"
-            app:popupTheme="@style/Theme.Painist.TitleBar"
-            app:title="我的曲谱" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+<!--    <ImageView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:src="@drawable/verticle_line"-->
+<!--        android:alpha="0.3"/>-->
 
     <fragment
         android:id="@+id/coretab"
@@ -34,21 +45,8 @@
         android:id="@+id/scoreitem"
         android:name="com.app.painist.ui.fragments.ScoreitemFragment"
         android:layout_width="match_parent"
-        android:layout_height="268dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         tools:layout="@layout/fragment_scoreitem" />
-
-    <TextView
-        android:id="@+id/text_scorelist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textSize="20sp"
-        android:text="This is Score List"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </LinearLayout >

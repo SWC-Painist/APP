@@ -23,7 +23,8 @@
             android:id="@+id/menu_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginLeft="15dp"
             android:background="@mipmap/menu" />
     </LinearLayout>
 
@@ -110,78 +111,11 @@
             android:layout_marginLeft="15dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="5dp"
-            android:textSize="22sp">
+            android:textSize="18sp">
 
         </TextView>
 
-        <LinearLayout
-            android:id="@+id/music_score_1"
-            android:layout_width="fill_parent"
-            android:layout_height="120dp"
-            android:layout_margin="7dp"
-            android:padding="10dp"
-            android:orientation="horizontal"
-            android:gravity="start">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center">
-                <ImageView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/rounded_retangle"
-                    android:layout_gravity="center">
-                </ImageView>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_marginLeft="8dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginLeft="0dp">
-                    <LinearLayout
-                        android:layout_width="10dp"
-                        android:layout_height="30dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:background="#606060">
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="10dp"
-                        android:layout_height="30dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:background="#606060">
-                    </LinearLayout>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="5dp"
-
-                        android:text="A Comme Amoure"
-                        android:textSize="18dp">
-
-                    </TextView>
-                </LinearLayout>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="ASDFASDFASDFASDFASDFA
-                    SDFAASDFASDFASDFASDASDFASDFASDFASDF
-                    ASDFASDFASDFASDFASDFASDFF">
-
-                </TextView>
-            </LinearLayout>
-        </LinearLayout>
+        <include layout="@layout/scoreitem_sample"/>
 
     </LinearLayout>
 <!--    <com.google.android.material.appbar.AppBarLayout-->
