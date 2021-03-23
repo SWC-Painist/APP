@@ -141,10 +141,6 @@ class BonusStar {
 
     public void Draw(Canvas canvas) {
         Paint tPaint = new Paint();
-        @SuppressLint("DrawAllocation")
-        Rect dsrc = new Rect(0, 0, bonusStarDisabled.getWidth(), bonusStarDisabled.getHeight());
-        tPaint.setAlpha(255);
-        canvas.drawBitmap(bonusStarDisabled, dsrc, attribute.getFinalTransformRect(), tPaint);
 
         @SuppressLint("DrawAllocation")
         Rect src = new Rect(0, 0, bonusStar.getWidth(), bonusStar.getHeight());

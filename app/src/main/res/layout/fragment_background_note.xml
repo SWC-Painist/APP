@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BackgroundNoteFragment">
+    <ImageView
+        android:id="@+id/note_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_1"
+        android:paddingBottom="140dp"
+        android:scaleType="centerInside"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_2"
+        android:paddingBottom="140dp"
+        android:scaleType="centerInside"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_3"
+        android:paddingBottom="140dp"
+        android:scaleType="centerInside"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_4"
+        android:paddingBottom="140dp"
+        android:scaleType="centerInside"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+
+    <ImageView
+        android:id="@+id/note_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_5"
+        android:paddingBottom="140dp"
+        android:scaleType="centerInside"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_6"
+        android:paddingBottom="140dp"
+        android:scaleType="centerInside"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_7"
+        android:paddingBottom="140dp"
+        android:scaleType="centerInside"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_8"
+        android:paddingBottom="140dp"
+        android:scaleType="centerInside"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_9"
+        android:paddingBottom="140dp"
+        android:scaleType="centerInside"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_10"
+        android:paddingBottom="140dp"
+        android:scaleType="centerInside"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_11"
+        android:paddingBottom="140dp"
+        android:scaleType="centerInside"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_12"
+        android:paddingBottom="140dp"
+        android:scaleType="centerInside"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_13"
+        android:paddingBottom="140dp"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_14"
+        android:paddingBottom="140dp"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_15"
+        android:paddingBottom="140dp"
+        android:layout_centerInParent="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/note_16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/note_16"
+        android:paddingBottom="140dp"
+        android:layout_centerInParent="true">
+    </ImageView>
+</RelativeLayout>

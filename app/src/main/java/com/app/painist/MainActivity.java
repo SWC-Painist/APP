@@ -4,6 +4,8 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,9 +44,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import static com.app.painist.R.id.nav_host_fragment;
+import static com.app.painist.ui.home.HomeFragment.TAKE_PHOTO;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -60,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
@@ -162,5 +166,28 @@ public class MainActivity extends AppCompatActivity {
         {
             return inflater.inflate(R.layout.fragment_scoreitem, container, false);
         }
+    }
+
+    //处理返回结果的函数
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        Log.d("ActivityResult", "Enter");
+
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("ActivityResult", "requestCode="+requestCode);
+        Log.d("ActivityResult", "resultCode="+resultCode);
+        switch (requestCode) {
+            case TAKE_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    Log.d("ActivityResult", "Intent");
+                    Intent intent = new Intent(MainActivity.this, LoadingActivity.class);
+                    startActivity(intent);
+                }
+                break;
+            default:
+                break;
+        }
+
     }
 }

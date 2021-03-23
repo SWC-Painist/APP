@@ -1,26 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".TakePhotoActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+        <ImageView
+            android:id="@+id/reject_photo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@mipmap/check_false"
+            android:layout_margin="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:contentDescription="Reject" />
+
+        <ImageView
+            android:id="@+id/accept_photo"
+            android:layout_width="45dp"
+            android:layout_height="38dp"
+            android:background="@mipmap/check_true"
+            android:layout_margin="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="Accept" />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/picture"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
-         />
+        android:layout_height="600dp" />
 
     <Button
         android:id="@+id/takephotodone"
         android:layout_width="wrap_content"
         android:layout_height="97dp"
         android:layout_below="@id/picture"
-        android:layout_marginLeft="160dp"
-        android:layout_marginTop="600dp"
         android:text="拍照"
 
 
         />
-</FrameLayout>
+</RelativeLayout>
