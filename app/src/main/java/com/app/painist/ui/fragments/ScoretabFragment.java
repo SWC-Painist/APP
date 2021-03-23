@@ -22,10 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScoretabFragment extends Fragment {
+
+    private String[] tabNames = {"历史曲谱", "我的收藏", "猜你想练"};
+    private ScoreitemFragment scoreitemFragment;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //通过参数中的布局填充获取对应布局
@@ -37,6 +42,11 @@ public class ScoretabFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         TabLayout tabLayout = getActivity().findViewById(R.id.layout_scoretab);
+
+        //添加tab
+        for (int i = 0; i < tabNames.length; i++) {
+            tabLayout.addTab(tabLayout.newTab().setText(tabNames[i]));
+        }
 
         LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
         linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);

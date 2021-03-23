@@ -1,123 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.setting.SettingFragment"
     android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/information"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="我的资料"
+            android:textSize="20sp"
+            android:paddingLeft="15dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:gravity="center|left"
+            android:drawableLeft="@color/design_default_color_background"
+            android:drawableRight="@color/design_default_color_background"/>
 
-    <TextView
-        android:id="@+id/information"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text=" 我的资料"
-        android:textSize="30dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/vertical_line_light">
+        </LinearLayout>
 
-        android:textColor="@color/black"
-        android:gravity="center|left"
-        android:drawableLeft="@color/design_default_color_background"
-        android:drawableRight="@color/design_default_color_background"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="账号与安全"
+            android:textSize="20sp"
+            android:paddingLeft="15dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:gravity="center|left"
+            android:drawableLeft="@color/design_default_color_background"
+            android:drawableRight="@color/design_default_color_background"/>
 
-    <View  android:layout_height="1px"
-        android:layout_width="match_parent"
-        android:background="#352D2D" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/vertical_line_light">
+        </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text=" 账号与安全"
-        android:textSize="30dp"
-        android:textColor="@color/black"
-        android:gravity="center|left"
-        android:drawableLeft="@color/design_default_color_background"
-        android:drawableRight="@color/design_default_color_background"
-        />
-    <View  android:layout_height="1px"
-        android:layout_width="match_parent"
-        android:background="#352D2D" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="隐私设置"
+            android:textSize="20sp"
+            android:paddingLeft="15dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:gravity="center|left"
+            android:drawableLeft="@color/design_default_color_background"
+            android:drawableRight="@color/design_default_color_background"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text=" 隐私设置"
-        android:textSize="30dp"
-        android:textColor="@color/black"
-        android:gravity="center|left"
-        android:drawableLeft="@color/design_default_color_background"
-        android:drawableRight="@color/design_default_color_background"/>
-    <View  android:layout_height="20px"
-        android:layout_width="match_parent"
-        android:background="#ECEAEA" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text=" 练习计划"
-        android:textSize="30dp"
-        android:textColor="@color/black"
-        android:gravity="center|left"
-        android:drawableLeft="@color/design_default_color_background"
-        android:drawableRight="@color/design_default_color_background"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/vertical_line_light">
+        </LinearLayout>
 
-    <View  android:layout_height="1px"
-        android:layout_width="match_parent"
-        android:background="#352D2D" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text=" 练习收获"
-        android:textSize="30dp"
-        android:textColor="@color/black"
-        android:gravity="center|left"
-        android:drawableLeft="@color/design_default_color_background"
-        android:drawableRight="@color/design_default_color_background"/>
-    <View  android:layout_height="20px"
-        android:layout_width="match_parent"
-        android:background="#ECEAEA" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text=" 相关条款"
-        android:textSize="30dp"
-        android:textColor="@color/black"
-        android:gravity="center|left"
-        android:drawableLeft="@color/design_default_color_background"
-        android:drawableRight="@color/design_default_color_background"/>
-    <View  android:layout_height="1px"
-        android:layout_width="match_parent"
-        android:background="#352D2D" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text=" 关于"
-        android:textSize="30dp"
-        android:textColor="@color/black"
-        android:gravity="center|left"
-        android:drawableLeft="@color/design_default_color_background"
-        android:drawableRight="@color/design_default_color_background"/>
-    <View  android:layout_height="1px"
-        android:layout_width="match_parent"
-        android:background="#352D2D" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text=" 版本"
-        android:textSize="30dp"
-        android:textColor="@color/black"
-        android:gravity="center|left"
-        android:drawableLeft="@color/design_default_color_background"
-        android:drawableRight="@color/design_default_color_background"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="练习计划"
+            android:textSize="20sp"
+            android:paddingLeft="15dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:gravity="center|left"
+            android:drawableLeft="@color/design_default_color_background"
+            android:drawableRight="@color/design_default_color_background"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="173dp"
-        android:background="#ECEAEA" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text=" 退出登录"
-        android:textSize="30dp"
-        android:textColor="@color/black"
-        android:gravity="center|left"
-        android:drawableLeft="@color/design_default_color_background"
-        android:drawableRight="@color/design_default_color_background"/>
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/vertical_line_light">
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="我的收获"
+            android:textSize="20sp"
+            android:paddingLeft="15dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:gravity="center|left"
+            android:drawableLeft="@color/design_default_color_background"
+            android:drawableRight="@color/design_default_color_background"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/vertical_line_light">
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="相关条款"
+            android:textSize="20sp"
+            android:paddingLeft="15dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:gravity="center|left"
+            android:drawableLeft="@color/design_default_color_background"
+            android:drawableRight="@color/design_default_color_background"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/vertical_line_light">
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="关于"
+            android:textSize="20sp"
+            android:paddingLeft="15dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:gravity="center|left"
+            android:drawableLeft="@color/design_default_color_background"
+            android:drawableRight="@color/design_default_color_background"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/vertical_line_light">
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="版本与更新"
+            android:textSize="20sp"
+            android:paddingLeft="15dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:gravity="center|left"
+            android:drawableLeft="@color/design_default_color_background"
+            android:drawableRight="@color/design_default_color_background"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#F0F0F0">
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="退出登录"
+            android:textSize="20sp"
+            android:textColor="#C00000"
+            android:textAlignment="center"
+            android:paddingLeft="15dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:gravity="center|left"
+            android:drawableLeft="@color/design_default_color_background"
+            android:drawableRight="@color/design_default_color_background"/>
+    </LinearLayout>
+</ScrollView>

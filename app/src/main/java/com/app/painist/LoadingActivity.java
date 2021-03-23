@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ public class LoadingActivity extends AppCompatActivity {
 
     private String processBarText;
     private float processBarValue;
+    private boolean loadingComplete;
 
     @Override @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,31 @@ public class LoadingActivity extends AppCompatActivity {
             }
         });
 
+        loadingComplete = false;
+
+        ImageView loadingButton = findViewById(R.id.process_bar);
+        loadingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (loadingComplete)
+                {
+                    // 禁止从练习界面再按返回键返回加载界面
+                    // 即将所有Activity从栈区中移除
+                    Intent intent = new Intent();
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setClass(LoadingActivity.this, PlayingActivity.class);
+                    startActivity(intent);
+                    // Check if we're running on Android 5.0 or higher
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        // Apply activity transition
+                    } else {
+                        // Swap without transition
+                    }
+
+                }
+            }
+        });
+
         /*FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         fragmentTransaction.add(R.id.loading_settings,new HomeFragment()).commit();*/
@@ -88,14 +115,10 @@ public class LoadingActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
     }
 
@@ -158,6 +181,7 @@ public class LoadingActivity extends AppCompatActivity {
     }
 
     public void setProcessBarComplete() {
+        loadingComplete = true;
         ImageView processBarButton = findViewById(R.id.process_bar);
         AnimationDrawable loadingAnimation = (AnimationDrawable) processBarButton.getDrawable();
         loadingAnimation.start();
