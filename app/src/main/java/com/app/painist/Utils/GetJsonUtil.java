@@ -20,8 +20,15 @@ public class GetJsonUtil {
             @Override
             public void run() {
                 togetJsonData(myurl);
+
             }
+
         });
+        try {
+            Thread.currentThread().sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         try {
             jsonObject  = new JSONObject(result);
 

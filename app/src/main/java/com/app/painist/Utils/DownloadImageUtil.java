@@ -41,7 +41,7 @@ public class DownloadImageUtil {
             bitmap = BitmapFactory.decodeStream(is);
 
             is.close();
-
+            conn.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
         }
