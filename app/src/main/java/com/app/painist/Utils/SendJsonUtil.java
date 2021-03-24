@@ -44,8 +44,6 @@ public class SendJsonUtil {
                 DataOutputStream dataOutputStream = new DataOutputStream(httpURLConnection.getOutputStream());
                 dataOutputStream.write(jsonObject.toString().getBytes());
                 dataOutputStream.flush();
-                dataOutputStream.close();
-                httpURLConnection.disconnect();
                 if(httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK
                                 && isReadReturnData == true)
                 {
@@ -60,13 +58,17 @@ public class SendJsonUtil {
                 }
                 else {
                     result = "读取失败";
+
                 }
+                dataOutputStream.close();
+                httpURLConnection.disconnect();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+
     }
 
     public String getResult() {
