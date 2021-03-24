@@ -2,13 +2,16 @@ package com.app.painist.ui.scorelist;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,9 +24,6 @@ import com.google.android.material.tabs.TabLayout;
 public class ScorelistFragment extends Fragment {
 
     private ScorelistViewModel scorelistViewModel;
-
-    private String[] tabNames = {"历史曲谱", "我的收藏", "猜你想练"};
-    private ScoreitemFragment scoreitemFragment;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,12 +43,16 @@ public class ScorelistFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        TabLayout tabLayout = getActivity().findViewById(R.id.layout_scoretab);
 
-        //添加tab
-        for (int i = 0; i < tabNames.length; i++) {
-            tabLayout.addTab(tabLayout.newTab().setText(tabNames[i]));
-        }
+        // Button To Open Left-Navigation Menu
+        ImageView menuButton = getActivity().findViewById(R.id.menu_button);
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawerLayout = getActivity().findViewById(R.id.drawer_layout);
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
     }
 
     @Override

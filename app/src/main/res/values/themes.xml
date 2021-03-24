@@ -44,6 +44,12 @@
         <item name="colorControlHighlight">#808080</item>
     </style>
 
+    <style name="PracticeModeButton" parent="Theme.AppCompat.Light">
+        <item name="color">#FFFFFF</item>
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorControlNormal">#FFFFFF</item>
+    </style>
+
     <style name="Theme.Painist.NoActionBar.AppBarOverlay"
         parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.Painist.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

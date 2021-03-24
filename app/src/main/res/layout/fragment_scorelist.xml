@@ -26,6 +26,16 @@
             android:text="我的曲谱"
             android:textSize="22sp"
             style="@style/TextAppearance.AppCompat.Title" />
+
+        <Button
+            android:id="@+id/test_button"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:text="test"
+            android:src="@mipmap/menu"/>
     </RelativeLayout>
 
 <!--    <ImageView-->

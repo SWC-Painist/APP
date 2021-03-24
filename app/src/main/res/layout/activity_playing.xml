@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoadingActivity">
+    <LinearLayout
+        android:id="@+id/loading_settings_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/practice_mode_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="预习模式"
+            android:textSize="20sp"
+            android:background="@drawable/rounded_retangle"
+            app:backgroundTint="#F0F0F0"
+            android:textColor="#606060"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/practice_hint_card"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/practice_hint_card_right"
+            android:layout_width="170dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_card"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginRight="7dp">
+            <include layout="@layout/hint_card_note_2"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/practice_hint_card_left"
+            android:layout_width="170dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_card"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginRight="7dp">
+            <include layout="@layout/hint_card_note_3"/>
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>
