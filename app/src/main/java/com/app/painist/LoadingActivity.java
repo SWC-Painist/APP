@@ -120,6 +120,8 @@ public class LoadingActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) { }
         });
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

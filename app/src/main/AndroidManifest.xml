@@ -29,7 +29,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Painist.NoActionBar">
-        <activity android:name=".LoadingActivity"
+        <activity android:name=".LoginActivity"></activity>
+        <activity
+            android:name=".LoadingActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".EvaluationActivity"

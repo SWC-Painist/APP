@@ -35,7 +35,7 @@ public class SendJsonUtil {
             target = new URL(url);
             try {
                 HttpURLConnection httpURLConnection = (HttpURLConnection) target.openConnection();
-                httpURLConnection.setRequestMethod("post");
+                httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setDoInput(true);
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setUseCaches(false);
@@ -47,7 +47,7 @@ public class SendJsonUtil {
                 dataOutputStream.close();
                 httpURLConnection.disconnect();
                 if(httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK
-                                &&isReadReturnData == true)
+                                && isReadReturnData == true)
                 {
                     InputStreamReader inputStreamReader = new InputStreamReader(httpURLConnection.getInputStream());
                     BufferedReader bufferedReader = new BufferedReader(inputStreamReader);

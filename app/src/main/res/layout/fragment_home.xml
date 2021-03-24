@@ -37,7 +37,8 @@
             android:id="@+id/photo_button"
             android:layout_width="259.7dp"
             android:layout_height="262.6dp"
-            android:background="@mipmap/photo_button" />
+            android:src="@mipmap/photo_button"
+            android:background="@drawable/ripple_photo_button"/>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="60dp"/>

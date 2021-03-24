@@ -167,7 +167,7 @@ public class UploadFileUtil {
 
             Log.i(TAG, file.getName()+"=" + params+"##");
             dos.write(params.getBytes());
-            /**上传文件*/
+            /*上传文件*/
             InputStream is = new FileInputStream(file);
             byte[] bytes = new byte[1024];
             int len = 0;

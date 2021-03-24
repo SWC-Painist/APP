@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -16,9 +17,11 @@ import android.view.View;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.app.painist.Utils.UploadFileUtil;
 import com.app.painist.ui.fragments.ScoreitemFragment;
 import com.app.painist.ui.home.HomeFragment;
 import com.app.painist.ui.profile.ProfileFragment;
@@ -44,6 +47,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
@@ -54,8 +58,8 @@ import static com.app.painist.ui.home.HomeFragment.TAKE_PHOTO;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private String[] tabNames = {"Histories", "Favorites", "Recommends"};
-    private ArrayList<Fragment> fragments = new ArrayList<>();
+
+    private final String photoFilePath = Environment.getExternalStorageDirectory() + File.separator + "temp_music_score.jpg";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -122,6 +126,16 @@ public class MainActivity extends AppCompatActivity {
 //        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
 //        NavigationUI.setupWithNavController(navigationView, navController);
         //侧边栏点击事件
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
+        LinearLayout headerUser = (LinearLayout) headerView.findViewById(R.id.nav_header_user);
+        headerUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -143,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
     }
 
     @Override
@@ -180,6 +193,13 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
+                    File outputImage = new File(photoFilePath);
+                    if (!outputImage.exists()) {
+                        return;
+                    }
+                    UploadFileUtil uploadFileUtil = new UploadFileUtil();
+                    uploadFileUtil.uploadFile(photoFilePath,"file","http://101.76.217.74:8000/user/upload/picture/",null);
+
                     Log.d("ActivityResult", "Intent");
                     Intent intent = new Intent(MainActivity.this, LoadingActivity.class);
                     startActivity(intent);
