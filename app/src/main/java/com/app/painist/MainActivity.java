@@ -77,20 +77,19 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_home, R.id.navigation_scorelist, R.id.navigation_profile)
                 .build();
 
-
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setItemTextColor(getColorStateList(R.color.white));
 //        navigationView.setItemIconPadding(1);
         navigationView.setItemIconSize(50);
         navigationView.setItemBackground(getDrawable(R.drawable.piano_key_background));
 
-
         FragmentManager manager = getSupportFragmentManager();
+
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         HomeFragment homeFragment = new HomeFragment();
         ScorelistFragment scoreFragment = new ScorelistFragment();
         ProfileFragment profileFragment = new ProfileFragment();
+
         fragmentTransaction.add(R.id.main_fragment,homeFragment)
                 .add(R.id.main_fragment,scoreFragment)
                 .add(R.id.main_fragment,profileFragment)
@@ -190,15 +189,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
-
-    public static class MusicScoreFragment extends Fragment {
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState)
-        {
-            return inflater.inflate(R.layout.fragment_scoreitem, container, false);
-        }
     }
 
     //处理返回结果的函数

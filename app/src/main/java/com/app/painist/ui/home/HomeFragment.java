@@ -55,7 +55,6 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private Button TakePhotoButton,beginaudio,endaudio,getimg;
-    private ImageView myimg;
 
     public static final int TAKE_PHOTO = 1;//声明一个请求码，用于识别返回的结果
     private ImageView picture;
