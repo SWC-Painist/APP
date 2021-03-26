@@ -1,7 +1,9 @@
 package com.app.painist;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -10,6 +12,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -51,6 +55,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import static com.app.painist.LoginActivity.USER_LOGIN;
 import static com.app.painist.R.id.nav_host_fragment;
 import static com.app.painist.ui.home.HomeFragment.TAKE_PHOTO;
 
@@ -144,17 +149,19 @@ public class MainActivity extends AppCompatActivity {
 //        NavController navController = Navigation.findNavController(this, nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
 //        NavigationUI.setupWithNavController(navigationView, navController);
-        //侧边栏点击事件
+
+        // 设置登录
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main);
         LinearLayout headerUser = (LinearLayout) headerView.findViewById(R.id.nav_header_user);
         headerUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, USER_LOGIN);
             }
         });
 
+        //侧边栏点击事件
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -176,6 +183,19 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        /*try {
+            int permission = ActivityCompat.checkSelfPermission(this, "android.permission.WRITE_EXTERNAL_STORAGE");
+
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                // 没有写的权限，去申请写的权限，申请权限
+                ActivityCompat.requestPermissions(this, new String[] {"android.permission.READ_EXTERNAL_STORAGE",
+                        "android.permission.WRITE_EXTERNAL_STORAGE"}, 1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
     }
 
     @Override
@@ -191,12 +211,46 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    public void onLoginStatusChanged(String userAvatarUrl, String userName, String userStatus) {
+        Log.d("CHANGING LOGIN STATUS", "processing...");
+
+        View headerView = findViewById(R.id.nav_view);
+
+        // 更换头像
+        userAvatarUrl = Environment.getExternalStorageDirectory().toString() + "/Painist/" + userAvatarUrl;
+        Log.d("CHANGING AVATAR", "processing...");
+        ImageView userAvatarView = headerView.findViewById(R.id.nav_header_avatar);
+        Bitmap userAvatarBitmap = BitmapFactory.decodeFile(userAvatarUrl);
+        if (userAvatarBitmap == null) {
+            Log.e("CHANGING AVATAR", "FATAL! Cannot find bitmap file");
+        } else {
+            userAvatarView.setImageBitmap(userAvatarBitmap);
+        }
+
+        // 更换用户名和状态
+        Log.d("CHANGING LOGIN STATUS", "processing...");
+        TextView userNameView = headerView.findViewById(R.id.nav_header_username);
+        userNameView.setText(userName);
+        TextView userStatusView = headerView.findViewById(R.id.nav_header_user_status);
+        userStatusView.setText(userStatus);
+
+        Log.d("CHANGING ONCLICK", "processing...");
+        LinearLayout headerUser = (LinearLayout) headerView.findViewById(R.id.nav_header_user);
+        headerUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 更改Intent方向：指向"我的资料"界面
+
+                /*Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);*/
+            }
+        });
+    }
+
     //处理返回结果的函数
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
         Log.d("ActivityResult", "Enter");
-
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("ActivityResult", "requestCode="+requestCode);
         Log.d("ActivityResult", "resultCode="+resultCode);
@@ -204,15 +258,25 @@ public class MainActivity extends AppCompatActivity {
             case TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
                     File outputImage = new File(photoFilePath);
-                    if (!outputImage.exists()) {
-                        return;
-                    }
+                    if (!outputImage.exists()) { break; }
                     UploadFileUtil uploadFileUtil = new UploadFileUtil();
                     uploadFileUtil.uploadFile(photoFilePath,"file","http://101.76.217.74:8000/user/upload/picture/",null);
 
                     Log.d("ActivityResult", "Intent");
                     Intent intent = new Intent(MainActivity.this, LoadingActivity.class);
                     startActivity(intent);
+                }
+                break;
+            case USER_LOGIN:
+                if (resultCode == RESULT_OK) {
+                    Log.d("LOGIN RESULT", "OK");
+                    String userName = data.getStringExtra("login_user_name");
+                    String userIntro = data.getStringExtra("login_user_intro");
+                    String userAvatarUrl = data.getStringExtra("login_user_avatar_url");
+                    Log.d("LOGIN DATA: userName", userName);
+                    Log.d("LOGIN DATA: userIntro", userIntro);
+                    Log.d("LOGIN DATA: userAvatar", userAvatarUrl);
+                    onLoginStatusChanged(userAvatarUrl, userName, userIntro);
                 }
                 break;
             default:

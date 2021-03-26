@@ -50,7 +50,7 @@
         <item name="colorControlNormal">#FFFFFF</item>
     </style>
 
-    <style name="Theme.Painist.NoActionBar.AppBarOverlay"
-        parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Painist.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="Theme.Painist.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

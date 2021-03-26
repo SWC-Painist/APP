@@ -66,19 +66,15 @@ public class SendJsonUtil {
                     inputStreamReader.close();
 
                     if (result != null) {
-
                         Log.d("Result", "Result = " + result);
-
                         JsonElement respond = (new JsonParser().parse(result));
                         JsonObject respondObject = respond.getAsJsonObject();
-
+                        Log.d("Respond: ", respondObject.get("user_avatar_url").getAsString());
                         listener.onRespond(respondObject);
                     }
                 }
                 else {
                     Log.d("Result", "Failed");
-                    result = "读取失败";
-
                 }
                 dataOutputStream.close();
                 httpURLConnection.disconnect();

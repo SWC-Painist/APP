@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,11 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.app.painist.Utils.DownloadImageUtil;
 import com.app.painist.Utils.SendJsonUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 
 import org.json.JSONException;
@@ -32,8 +37,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
-    private final static String loginUrl = "http://101.76.217.74:8000/user/history/";
+    private final static String loginUrl = "http://101.76.217.74:8000/user/login/";
     private final static String registerUrl = "http://101.76.217.74:8000/user/register/";
+
+    public static final int USER_LOGIN = 2;     //声明一个请求码，用于识别返回的结果
+    public static final int USER_REGISTER = 3;  //声明一个请求码，用于识别返回的结果
 
     private FrameLayout loginRegisterFragment;
 
@@ -86,23 +94,39 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void sendLoginStatus(String userName, String password) {
+
         Log.d("UserName",userName);
         Log.d("Password",password);
 
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("username", userName);
         map.put("password", password);
-
         JSONObject json = new JSONObject(map);
-        Log.d("JSON Object", json.toString());
-
         SendJsonUtil sendJsonUtil = new SendJsonUtil();
 
-        Log.d("JSON sending", "Sending to url: "+loginUrl);
+        Log.d("JSON sending", "Sending to url: " + loginUrl);
         sendJsonUtil.SendJsonData(loginUrl, json, new SendJsonUtil.OnJsonRespondListener() {
             @Override
             public void onRespond(JsonObject respondJson) {
-//                Log.d("RESPOND", respondJson.getAsString());
+
+                DownloadImageUtil downloadImageUtil = new DownloadImageUtil();
+                downloadImageUtil.downloadImage(respondJson.get("user_avatar_url").getAsString(),
+                    new DownloadImageUtil.OnImageRespondListener() {
+                        @Override
+                        public void onRespond(Bitmap respondBitmap) {
+                            Intent intent = new Intent();
+                            DownloadImageUtil.SaveImage(respondBitmap,
+                                    respondJson.get("user_avatar_url").getAsString(),
+                                    getApplicationContext());
+
+                            intent.putExtra("login_user_name", respondJson.get("user_name").getAsString());
+                            intent.putExtra("login_user_intro", respondJson.get("user_intro").getAsString());
+                            intent.putExtra("login_user_avatar_url", respondJson.get("user_avatar_url").getAsString());
+
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    });
             }
         });
     }
@@ -122,7 +146,25 @@ public class LoginActivity extends AppCompatActivity {
         sendJsonUtil.SendJsonData(registerUrl, json, new SendJsonUtil.OnJsonRespondListener() {
             @Override
             public void onRespond(JsonObject respondJson) {
-//                Log.d("RESPOND", respondJson.getAsString());
+
+                DownloadImageUtil downloadImageUtil = new DownloadImageUtil();
+                downloadImageUtil.downloadImage(respondJson.get("user_avatar_url").getAsString(),
+                    new DownloadImageUtil.OnImageRespondListener() {
+                        @Override
+                        public void onRespond(Bitmap respondBitmap) {
+                            Intent intent = new Intent();
+                            DownloadImageUtil.SaveImage(respondBitmap,
+                                    respondJson.get("user_avatar_url").getAsString(),
+                                    getApplicationContext());
+
+                            intent.putExtra("login_user_name", respondJson.get("user_name").getAsString());
+                            intent.putExtra("login_user_intro", respondJson.get("user_intro").getAsString());
+                            intent.putExtra("login_user_avatar_url", respondJson.get("user_avatar_url").getAsString());
+
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    });
             }
         });
     }

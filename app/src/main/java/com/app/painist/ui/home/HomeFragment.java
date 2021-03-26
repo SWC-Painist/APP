@@ -173,13 +173,6 @@ public class HomeFragment extends Fragment {
         ImageView photoButton = getActivity().findViewById(R.id.photo_button);
         photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), TakePhotoActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        photoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 //请求相机权限
                 requestPermission();
@@ -237,9 +230,7 @@ public class HomeFragment extends Fragment {
             //使用隐示的Intent，系统会找到与它对应的活动，即调用摄像头，并把它存储
             Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            Log.d("HomeFragment", "Photoing");
             getActivity().startActivityForResult(intent, TAKE_PHOTO);
-            Log.d("HomeFragment", "EndPhotoing");
             //调用会返回结果的开启方式，返回成功的话，则把它显示出来
         } catch (IOException e) {
             e.printStackTrace();

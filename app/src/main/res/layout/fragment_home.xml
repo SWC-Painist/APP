@@ -23,9 +23,12 @@
             android:id="@+id/menu_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:layout_marginLeft="15dp"
-            android:background="@mipmap/menu" />
+            android:paddingTop="18dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="15dp"
+            android:src="@mipmap/menu"
+            android:background="@drawable/ripple_dark_button"/>
     </LinearLayout>
 
     <LinearLayout
