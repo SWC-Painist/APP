@@ -96,10 +96,12 @@ public class DownloadImageUtil {
         String dir = Environment.getExternalStorageDirectory().toString() + "/Painist";
         File mFile = new File(dir + "/" + path);
         Log.d("FILE", mFile.getAbsolutePath());
+        File mDir = mFile.getParentFile();
+        Log.d("DIR", mDir.getAbsolutePath());
         //文件夹不存在，则创建它
-        if (!mFile.exists()) {
+        if (!mDir.exists()) {
             Log.d("MAKE DIR", "FILE MAKE DIR");
-            mFile.mkdir();
+            mDir.mkdir();
         }
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri uri = Uri.fromFile(mFile);
