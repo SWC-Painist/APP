@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:layout_centerInParent="true">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true">
 
     <ImageView
         android:layout_width="match_parent"
@@ -27,26 +28,24 @@ android:layout_centerInParent="true">
                 android:layout_height="50dp"
                 android:layout_marginTop="5dp"
                 android:inputType="text"
-                android:paddingRight="60dp"
                 android:hint="用户名"
                 android:maxLength="20"
-                android:paddingLeft="55dp" >
-            </EditText>
+                android:paddingLeft="45dp"
+                android:paddingRight="60dp"/>
+
             <ImageView
                 android:layout_width="21dp"
                 android:layout_height="26dp"
                 android:layout_gravity="left|center_vertical"
-                android:background="@mipmap/login_user"
+                android:src="@mipmap/login_user"
                 android:visibility="visible" />
-            <!--<Button
-                android:id="@+id/bt_username_clear"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:background="@drawable/button_clear"
+            <ImageView
+                android:id="@+id/login_clear_username"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginRight="10dp"
-                android:visibility="invisible"
-                />-->
+                android:src="@mipmap/light_cancel"
+                android:visibility="visible" />
         </FrameLayout>
         <FrameLayout
             android:id="@+id/password_layout"
@@ -60,47 +59,53 @@ android:layout_centerInParent="true">
                 android:layout_width="fill_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="5dp"
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:paddingRight="60dp"
                 android:hint="密码"
                 android:maxLength="20"
-                android:paddingLeft="55dp" >
+                android:paddingLeft="45dp" >
             </EditText>
             <ImageView
                 android:layout_width="21dp"
                 android:layout_height="26dp"
                 android:layout_gravity="left|center_vertical"
-                android:background="@mipmap/login_lock"
+                android:src="@mipmap/login_lock"
                 android:visibility="visible" />
-            <!--<Button
-                android:id="@+id/bt_password_clear"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:background="@drawable/button_clear"
+            <ImageView
+                android:id="@+id/login_clear_password"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
                 android:layout_gravity="right|center_vertical"
-                android:layout_marginRight="10dp"
-                android:visibility="invisible"
-                />-->
+                android:src="@mipmap/light_cancel"
+                android:visibility="visible" />
+            <ImageView
+                android:id="@+id/login_password_visibility"
+                android:layout_width="24dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right|center_vertical"
+                android:src="@mipmap/password_eye"
+                android:layout_marginRight="30dp"
+                android:visibility="visible" />
         </FrameLayout>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="7dp"
             android:paddingLeft="30dp"
             android:paddingRight="30dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="其它方式登录"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textColor="#A0A0A0"
                 android:layout_alignParentLeft="true"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="忘记密码"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textColor="#A0A0A0"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>

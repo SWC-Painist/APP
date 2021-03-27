@@ -164,6 +164,8 @@ public class LoginBackgroundFragment extends Fragment {
         if (positionY > 0) paddingT = (int) positionY;
         else paddingB = (int) -positionY;
 
+        /*image.animate().translationX(positionX);
+        image.animate().translationX(positionX);*/
         image.setPadding(paddingL, paddingT, paddingR, paddingB);
         image.setAlpha(alpha);
     }

@@ -31,10 +31,12 @@ import com.app.painist.ui.home.HomeFragment;
 import com.app.painist.ui.profile.ProfileFragment;
 import com.app.painist.ui.scorelist.ScorelistFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+/*import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayout;*/
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -232,7 +234,11 @@ public class MainActivity extends AppCompatActivity {
         TextView userNameView = headerView.findViewById(R.id.nav_header_username);
         userNameView.setText(userName);
         TextView userStatusView = headerView.findViewById(R.id.nav_header_user_status);
-        userStatusView.setText(userStatus);
+        if (userStatus.equals("")) {
+            userStatusView.setText(userStatus);
+        } else {
+            userStatusView.setText("未设置签名");
+        }
 
         Log.d("CHANGING ONCLICK", "processing...");
         LinearLayout headerUser = (LinearLayout) headerView.findViewById(R.id.nav_header_user);

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -174,8 +175,11 @@ public class HomeFragment extends Fragment {
         photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                photoButton.setImageResource(R.drawable.photo_button);
+                photoButton.setVisibility(View.VISIBLE);
+                ((Animatable) photoButton.getDrawable()).start();
                 //请求相机权限
-                requestPermission();
+                // requestPermission();
             }
         });
     }

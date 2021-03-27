@@ -77,7 +77,7 @@
         android:id="@+id/continue_practice_notification"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:paddingTop="500dp"
+        android:paddingTop="0dp"
         android:orientation="vertical"
         android:layout_gravity="bottom">
         <LinearLayout
@@ -94,10 +94,10 @@
             </ImageView>
             <ImageView
                 android:id="@+id/span_button"
-                android:layout_width="20dp"
-                android:layout_height="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_width="45dp"
+                android:layout_height="12dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
                 android:src="@mipmap/down_arrow">
             </ImageView>
             <ImageView

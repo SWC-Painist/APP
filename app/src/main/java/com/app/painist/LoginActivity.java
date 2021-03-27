@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -56,19 +57,43 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void switchToLoginFragment() {
-        /*RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(320, 400);
-        loginRegisterFragment.setLayoutParams(params);*/
+        // 将用户名和密码一同复制
+        String userName = ((TextView) findViewById(R.id.register_username)).getText().toString();
+        String password = ((TextView) findViewById(R.id.register_password)).getText().toString();
+        ((TextView) findViewById(R.id.login_username)).setText(userName);
+        ((TextView) findViewById(R.id.login_password)).setText(password);
+
+        final float scale = getResources().getDisplayMetrics().density;
+        int width = (int) (320 * scale + 0.5f);     // 320dp
+        int height = (int) (400 * scale + 0.5f);    // 400dp
 
         FragmentTransaction transaction = loginRegisterManager.beginTransaction();
         transaction.show(loginFragment).hide(registerFragment).commit();
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        loginRegisterFragment.setLayoutParams(params);
+        loginRegisterFragment.setPadding((int) (10 * scale + 0.5f),0,0,(int) (20 * scale + 0.5f));
     }
 
     public void switchToRegisterFragment() {
-        /*RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(350, 450);
-        loginRegisterFragment.setLayoutParams(params);*/
+        // 将用户名和密码一同复制
+        String userName = ((TextView) findViewById(R.id.login_username)).getText().toString();
+        String password = ((TextView) findViewById(R.id.login_password)).getText().toString();
+        ((TextView) findViewById(R.id.register_username)).setText(userName);
+        ((TextView) findViewById(R.id.register_password)).setText(password);
+
+        final float scale = getResources().getDisplayMetrics().density;
+        int width = (int) (350 * scale + 0.5f);     // 350dp
+        int height = (int) (450 * scale + 0.5f);    // 450dp
 
         FragmentTransaction transaction = loginRegisterManager.beginTransaction();
         transaction.show(registerFragment).hide(loginFragment).commit();
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        loginRegisterFragment.setLayoutParams(params);
+        loginRegisterFragment.setPadding((int) (10 * scale + 0.5f),0,0,(int) (20 * scale + 0.5f));
     }
 
     @Override
