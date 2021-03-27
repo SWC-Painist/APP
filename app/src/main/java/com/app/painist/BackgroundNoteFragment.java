@@ -113,6 +113,7 @@ public class BackgroundNoteFragment extends Fragment {
             noteMoveDistance[i] = 600f;
         }
 
+        globalTimer.setStartDelay(500);
         globalTimer.setRepeatCount(ValueAnimator.INFINITE);
         globalTimer.setFloatValues(0, cycleTime);
         globalTimer.setDuration((long) (cycleTime * 1000));

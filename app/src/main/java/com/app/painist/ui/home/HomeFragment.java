@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -63,7 +64,7 @@ public class HomeFragment extends Fragment {
     private final String filePath = Environment.getExternalStorageDirectory() + File.separator + "temp_music_score.jpg";
 
     private final float paddingMin = 0;
-    private final float paddingMax = 470f;
+    private final float paddingMax = 480f;
     private final float duration = 0.6f;
     private boolean isSpan;
     private ValueAnimator bottomSpanAnimator;
@@ -129,7 +130,7 @@ public class HomeFragment extends Fragment {
 
         isSpan = true;
         bottomSpanAnimator.setDuration((long) (duration * 1000));
-        bottomSpanAnimator.setStartDelay(1500);
+        bottomSpanAnimator.setStartDelay(3000);
         bottomSpanAnimator.setFloatValues(paddingMax, paddingMin);
         bottomSpanAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -171,15 +172,41 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        ImageView photoButtonShade = getActivity().findViewById(R.id.photo_button_shade);
+        ValueAnimator shadeAlphaAnimator = new ValueAnimator();
+        shadeAlphaAnimator.setDuration(800);
+        shadeAlphaAnimator.setStartDelay(1300);
+        shadeAlphaAnimator.setFloatValues(0.0f, 0.5f);
+        shadeAlphaAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                photoButtonShade.setAlpha((float) animation.getAnimatedValue());
+            }
+        });
+        shadeAlphaAnimator.start();
+
         ImageView photoButton = getActivity().findViewById(R.id.photo_button);
+        photoButton.setVisibility(View.VISIBLE);
+        ((Animatable) photoButton.getDrawable()).start();
+
+        ImageView photoButtonText = getActivity().findViewById(R.id.photo_button_text);
+        photoButtonText.setVisibility(View.VISIBLE);
+        ((Animatable) photoButtonText.getDrawable()).start();
+
         photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                photoButton.setImageResource(R.drawable.photo_button);
-                photoButton.setVisibility(View.VISIBLE);
-                ((Animatable) photoButton.getDrawable()).start();
                 //请求相机权限
-                // requestPermission();
+                requestPermission();
+            }
+        });
+
+        ImageView photoButtonTextClicker = getActivity().findViewById(R.id.photo_button_text_button);
+        photoButtonTextClicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //请求相机权限
+                requestPermission();
             }
         });
     }

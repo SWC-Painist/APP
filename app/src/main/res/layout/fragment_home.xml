@@ -36,48 +36,56 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center">
-        <ImageView
-            android:id="@+id/photo_button"
-            android:layout_width="259.7dp"
-            android:layout_height="262.6dp"
-            android:src="@mipmap/photo_button"
-            android:background="@drawable/ripple_photo_button"/>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="60dp"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/photo_button_shade"
+                android:layout_width="285dp"
+                android:layout_height="285dp"
+                android:layout_centerInParent="true"
+                android:alpha="0"
+                android:translationY="-50dp"
+                android:translationX="4dp"
+                android:src="@mipmap/shade"/>
+
+            <ImageView
+                android:id="@+id/photo_button"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_centerInParent="true"
+                android:translationY="-50dp"
+                android:translationX="4dp"
+                android:src="@drawable/photo_button"
+                android:background="@drawable/ripple_photo_button"/>
+
+            <ImageView
+                android:id="@+id/photo_button_text"
+                android:layout_width="500dp"
+                android:layout_height="295dp"
+                android:layout_centerInParent="true"
+                android:translationX="-4dp"
+                android:translationY="180dp"
+                android:src="@drawable/photo_button_text"/>
+
+            <ImageView
+                android:id="@+id/photo_button_text_button"
+                android:layout_width="300dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:translationX="-4dp"
+                android:translationY="70dp"
+                android:src="@drawable/photo_button_text"/>
+
+        </RelativeLayout>
     </LinearLayout>
-
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:gravity="center"
-        android:orientation="vertical">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="开始录音"
-            android:id="@+id/begin"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="结束录音"
-            android:id="@+id/end"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="获取图片"
-            android:id="@+id/getimg"
-            />
-    </LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/continue_practice_notification"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:paddingTop="0dp"
+        android:paddingTop="500dp"
         android:orientation="vertical"
         android:layout_gravity="bottom">
         <LinearLayout

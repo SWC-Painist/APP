@@ -9,6 +9,18 @@
             android:viewportWidth="200"
             android:viewportHeight="200">
             <path
+                android:name="back_circle"
+                android:pathData="M 96.848 181.8 C 56.865 181.8 24.452 149.387 24.452 109.404 C 24.452 69.421 56.865 37.008 96.848 37.008 C 136.831 37.008 169.244 69.421 169.244 109.404 C 169.244 149.387 136.832 181.8 96.848 181.8"
+                android:fillColor="#ffffff"/>
+            <path
+                android:name="path"
+                android:pathData="M 44.707 159.619 L 148.99 159.619"
+                android:strokeColor="#292929"
+                android:strokeWidth="5"
+                android:trimPathStart="0.5"
+                android:trimPathEnd="0.5"
+                android:strokeLineCap="round"/>
+            <path
                 android:name="note_tail_white"
                 android:pathData="M 116.06 26.237 L 145.479 40.089 L 145.479 50.391 L 115.698 37.026 Z"
                 android:fillColor="#ffffff"
@@ -88,6 +100,48 @@
                 android:strokeLineCap="round"/>
         </vector>
     </aapt:attr>
+    <target android:name="back_circle">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:startOffset="1500"
+                android:duration="700"
+                android:valueFrom="M 96.848 181.8 C 56.865 181.8 24.452 149.387 24.452 109.404 C 24.452 69.421 56.865 37.008 96.848 37.008 C 136.831 37.008 169.244 69.421 169.244 109.404 C 169.244 149.387 136.832 181.8 96.848 181.8"
+                android:valueTo="M 44.703 159.624 C 32.163 146.607 24.452 128.906 24.452 109.403 C 24.452 69.42 56.865 37.007 96.848 37.007 C 136.831 37.007 169.244 69.42 169.244 109.403 C 169.244 128.905 161.533 146.606 148.993 159.624"
+                android:valueType="pathType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="pathData"
+                    android:startOffset="1500"
+                    android:duration="700"
+                    android:valueFrom="M 44.707 181.8 L 148.99 181.8"
+                    android:valueTo="M 44.707 159.619 L 148.99 159.619"
+                    android:valueType="pathType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="trimPathStart"
+                    android:startOffset="1500"
+                    android:duration="700"
+                    android:valueFrom="0.5"
+                    android:valueTo="0"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="trimPathEnd"
+                    android:startOffset="1500"
+                    android:duration="700"
+                    android:valueFrom="0.5"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
+        </aapt:attr>
+    </target>
     <target android:name="camera_frame">
         <aapt:attr name="android:animation">
             <objectAnimator
