@@ -132,26 +132,59 @@ public class LoginActivity extends AppCompatActivity {
         Log.d("JSON sending", "Sending to url: " + loginUrl);
         sendJsonUtil.SendJsonData(loginUrl, json, new SendJsonUtil.OnJsonRespondListener() {
             @Override
+            public void onParseDataException(String exception) {
+                Snackbar.make(findViewById(R.id.login_content),
+                        "解析数据时出错" + exception, Snackbar.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onConnectionFailed(String exception) {
+                Snackbar.make(findViewById(R.id.login_content),
+                        "无法连接至服务器" + exception, Snackbar.LENGTH_LONG).show();
+            }
+
+            @Override
             public void onRespond(JsonObject respondJson) {
 
-                DownloadImageUtil downloadImageUtil = new DownloadImageUtil();
-                downloadImageUtil.downloadImage(respondJson.get("user_avatar_url").getAsString(),
-                    new DownloadImageUtil.OnImageRespondListener() {
-                        @Override
-                        public void onRespond(Bitmap respondBitmap) {
-                            Intent intent = new Intent();
-                            DownloadImageUtil.SaveImage(respondBitmap,
-                                    respondJson.get("user_avatar_url").getAsString(),
-                                    getApplicationContext());
+                if (respondJson.get("code").getAsString().equals("success")) {
+                    JsonObject data = respondJson.get("data").getAsJsonObject();
 
-                            intent.putExtra("login_user_name", respondJson.get("user_name").getAsString());
-                            intent.putExtra("login_user_intro", respondJson.get("user_intro").getAsString());
-                            intent.putExtra("login_user_avatar_url", respondJson.get("user_avatar_url").getAsString());
+                    DownloadImageUtil downloadImageUtil = new DownloadImageUtil();
+                    downloadImageUtil.downloadImage(data.get("user_avatar_url").getAsString(),
+                        new DownloadImageUtil.OnImageRespondListener() {
+                            @Override
+                            public void onParseDataException(String exception) {
+                                Snackbar.make(findViewById(R.id.login_content),
+                                        "解析数据时出错" + exception, Snackbar.LENGTH_LONG).show();
+                            }
 
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
-                    });
+                            @Override
+                            public void onConnectionFailed(String exception) {
+                                Snackbar.make(findViewById(R.id.login_content),
+                                        "无法连接至服务器" + exception, Snackbar.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onRespond(Bitmap respondBitmap) {
+                                Intent intent = new Intent();
+
+                                JsonObject data = respondJson.get("data").getAsJsonObject();
+                                intent.putExtra("login_user_name", data.get("user_name").getAsString());
+                                intent.putExtra("login_user_intro", data.get("user_intro").getAsString());
+                                intent.putExtra("login_user_avatar_url", data.get("user_avatar_url").getAsString());
+
+                                DownloadImageUtil.SaveImage(respondBitmap,
+                                        data.get("user_avatar_url").getAsString(),
+                                        getApplicationContext());
+
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            }
+                        });}
+                else if (respondJson.get("code").getAsString().equals("failed")) {
+                    Snackbar.make(findViewById(R.id.login_content),
+                            "用户名或密码错误", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -170,26 +203,59 @@ public class LoginActivity extends AppCompatActivity {
         Log.d("JSON sending", "Sending to url: " + registerUrl);
         sendJsonUtil.SendJsonData(registerUrl, json, new SendJsonUtil.OnJsonRespondListener() {
             @Override
+            public void onParseDataException(String exception) {
+                Snackbar.make(findViewById(R.id.login_content),
+                        "解析数据时出错" + exception, Snackbar.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onConnectionFailed(String exception) {
+                Snackbar.make(findViewById(R.id.login_content),
+                        "无法连接至服务器" + exception, Snackbar.LENGTH_LONG).show();
+            }
+
+            @Override
             public void onRespond(JsonObject respondJson) {
 
-                DownloadImageUtil downloadImageUtil = new DownloadImageUtil();
-                downloadImageUtil.downloadImage(respondJson.get("user_avatar_url").getAsString(),
-                    new DownloadImageUtil.OnImageRespondListener() {
-                        @Override
-                        public void onRespond(Bitmap respondBitmap) {
-                            Intent intent = new Intent();
-                            DownloadImageUtil.SaveImage(respondBitmap,
-                                    respondJson.get("user_avatar_url").getAsString(),
-                                    getApplicationContext());
+                if (respondJson.get("code").getAsString().equals("success")) {
+                    JsonObject data = respondJson.get("data").getAsJsonObject();
 
-                            intent.putExtra("login_user_name", respondJson.get("user_name").getAsString());
-                            intent.putExtra("login_user_intro", respondJson.get("user_intro").getAsString());
-                            intent.putExtra("login_user_avatar_url", respondJson.get("user_avatar_url").getAsString());
+                    DownloadImageUtil downloadImageUtil = new DownloadImageUtil();
+                    downloadImageUtil.downloadImage(data.get("user_avatar_url").getAsString(),
+                            new DownloadImageUtil.OnImageRespondListener() {
+                                @Override
+                                public void onParseDataException(String exception) {
+                                    Snackbar.make(findViewById(R.id.login_content),
+                                            "解析数据时出错" + exception, Snackbar.LENGTH_LONG).show();
+                                }
 
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
-                    });
+                                @Override
+                                public void onConnectionFailed(String exception) {
+                                    Snackbar.make(findViewById(R.id.login_content),
+                                            "无法连接至服务器" + exception, Snackbar.LENGTH_LONG).show();
+                                }
+
+                                @Override
+                                public void onRespond(Bitmap respondBitmap) {
+                                    Intent intent = new Intent();
+
+                                    JsonObject data = respondJson.get("data").getAsJsonObject();
+                                    intent.putExtra("login_user_name", data.get("user_name").getAsString());
+                                    intent.putExtra("login_user_intro", data.get("user_intro").getAsString());
+                                    intent.putExtra("login_user_avatar_url", data.get("user_avatar_url").getAsString());
+
+                                    DownloadImageUtil.SaveImage(respondBitmap,
+                                            data.get("user_avatar_url").getAsString(),
+                                            getApplicationContext());
+
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                }
+                            });}
+                else if (respondJson.get("code").getAsString().equals("failed")) {
+                    Snackbar.make(findViewById(R.id.login_content),
+                            "用户名已存在", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
     }

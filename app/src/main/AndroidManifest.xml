@@ -33,7 +33,7 @@
         <activity
             android:name=".StatisticActivity"
             android:label="@string/title_activity_statistic"
-            android:theme="@style/Theme.Painist.NoActionBar.NoActionBar"></activity>
+            android:theme="@style/Theme.Painist.NoActionBar.NoActionBar"/>
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".LoadingActivity"
@@ -45,7 +45,6 @@
             android:name=".PlayingActivity"
             android:screenOrientation="landscape" />
         <activity android:name=".TakePhotoActivity" />
-        <activity android:name=".Scorelist" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

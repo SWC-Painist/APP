@@ -18,26 +18,27 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.app.painist.R;
+import com.app.painist.Utils.SendJsonUtil;
 import com.app.painist.ui.fragments.ScoreitemFragment;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 public class ScorelistFragment extends Fragment {
 
-    private ScorelistViewModel scorelistViewModel;
+    private static final String historyUrl = "http://101.76.217.74:8000/user/history/";
+    private static final String favoriteUrl = "http://101.76.217.74:8000/user/favorite/";
+    private static final String recommendUrl = "http://101.76.217.74:8000/user/recommend/";
+
+    public static final int STATE_HISTORY = 1;
+    public static final int STATE_FAVORITE = 2;
+    public static final int STATE_RECOMMEND = 3;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        scorelistViewModel =
-                new ViewModelProvider(this).get(ScorelistViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_scorelist, container, false);
-        /*final TextView textView = root.findViewById(R.id.text_scorelist);
-        scorelistViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });*/
-        return root;
+        return inflater.inflate(R.layout.fragment_scorelist, container, false);
     }
 
     @Override
@@ -58,5 +59,38 @@ public class ScorelistFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    public void sendScoreListRequest(int scoreListState) {
+        String requestUrl = "";
+        switch (scoreListState) {
+            case STATE_HISTORY:
+                requestUrl = historyUrl;
+                break;
+            case STATE_FAVORITE:
+                requestUrl = favoriteUrl;
+                break;
+            case STATE_RECOMMEND:
+                requestUrl = recommendUrl;
+                break;
+        }
+        JSONObject jsonObject = new JSONObject();
+        SendJsonUtil sendJsonUtil = new SendJsonUtil();
+        sendJsonUtil.SendJsonData(requestUrl, jsonObject, new SendJsonUtil.OnJsonRespondListener() {
+            @Override
+            public void onParseDataException(String exception) {
+                Snackbar.make(getView(), "解析数据时出错" + exception, Snackbar.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onConnectionFailed(String exception) {
+                Snackbar.make(getView(), "无法连接至服务器" + exception, Snackbar.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onRespond(JsonObject respondJson) {
+                Log.d("RESPOND", respondJson.toString());
+            }
+        });
     }
 }

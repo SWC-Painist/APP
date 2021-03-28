@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
@@ -37,7 +38,7 @@ public class SendJsonUtil {
      * @param jsonObject 所需要发送的数组
      * @param listener 回调函数
      */
-    public void toSendJsonData(String url, JSONObject jsonObject, OnJsonRespondListener listener) {
+    private void toSendJsonData(String url, JSONObject jsonObject, OnJsonRespondListener listener) {
         String result = "";
         try {
             target = new URL(url);
@@ -49,6 +50,7 @@ public class SendJsonUtil {
                 httpURLConnection.setUseCaches(false);
                 httpURLConnection.setInstanceFollowRedirects(true);
                 httpURLConnection.setRequestProperty("Content-Type", "application/x-www-from-urlencoded");
+
                 DataOutputStream dataOutputStream = new DataOutputStream(httpURLConnection.getOutputStream());
                 dataOutputStream.write(jsonObject.toString().getBytes());
                 dataOutputStream.flush();
@@ -67,10 +69,21 @@ public class SendJsonUtil {
 
                     if (result != null) {
                         Log.d("Result", "Result = " + result);
-                        JsonElement respond = (new JsonParser().parse(result));
-                        JsonObject respondObject = respond.getAsJsonObject();
-                        Log.d("Respond: ", respondObject.get("user_avatar_url").getAsString());
-                        listener.onRespond(respondObject);
+                        JsonElement respond = null;
+                        try {
+                            respond = (new JsonParser().parse(result));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            listener.onParseDataException(" 错误：数据不是JSON格式");
+                        }
+                        JsonObject respondObject = null;
+                        try {
+                            respondObject = respond.getAsJsonObject();
+                            listener.onRespond(respondObject);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            listener.onParseDataException(" 错误：JSON数据解析异常");
+                        }
                     }
                 }
                 else {
@@ -80,14 +93,14 @@ public class SendJsonUtil {
                 httpURLConnection.disconnect();
             } catch (IOException e) {
                 e.printStackTrace();
+                listener.onConnectionFailed("");
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
 
-    public interface OnJsonRespondListener {
+    public interface OnJsonRespondListener extends OnRespondListener {
         void onRespond(JsonObject respondJson);
     }
-
 }

@@ -32,6 +32,7 @@ import com.app.painist.ui.profile.ProfileFragment;
 import com.app.painist.ui.scorelist.ScorelistFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 /*import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -126,6 +127,8 @@ public class MainActivity extends AppCompatActivity {
                                 .hide(homeFragment)
                                 .hide(profileFragment)
                                 .commit();
+
+                        scoreFragment.sendScoreListRequest(ScorelistFragment.STATE_HISTORY);
 //                        fragmentTransaction.commit();
                         break;
                     case R.id.navigation_profile:
@@ -234,10 +237,11 @@ public class MainActivity extends AppCompatActivity {
         TextView userNameView = headerView.findViewById(R.id.nav_header_username);
         userNameView.setText(userName);
         TextView userStatusView = headerView.findViewById(R.id.nav_header_user_status);
-        if (userStatus.equals("")) {
+
+        if (!userStatus.equals("")) {
             userStatusView.setText(userStatus);
         } else {
-            userStatusView.setText("未设置签名");
+            userStatusView.setText("（未设置签名）");
         }
 
         Log.d("CHANGING ONCLICK", "processing...");
@@ -249,6 +253,30 @@ public class MainActivity extends AppCompatActivity {
 
                 /*Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);*/
+            }
+        });
+    }
+
+    public void onLogoutStatusChanged() {
+        View headerView = findViewById(R.id.nav_view);
+
+        // 更换头像
+        ImageView userAvatarView = headerView.findViewById(R.id.nav_header_avatar);
+        Bitmap userAvatarBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.not_login_avatar);
+        userAvatarView.setImageBitmap(userAvatarBitmap);
+
+        // 更换用户名和状态
+        TextView userNameView = headerView.findViewById(R.id.nav_header_username);
+        userNameView.setText("未登录");
+        TextView userStatusView = headerView.findViewById(R.id.nav_header_user_status);
+        userStatusView.setText("点击登录");
+
+        LinearLayout headerUser = (LinearLayout) headerView.findViewById(R.id.nav_header_user);
+        headerUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
             }
         });
     }

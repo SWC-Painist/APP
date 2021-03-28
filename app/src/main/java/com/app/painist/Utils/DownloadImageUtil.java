@@ -122,7 +122,7 @@ public class DownloadImageUtil {
         }
     }
 
-    public interface OnImageRespondListener {
+    public interface OnImageRespondListener extends OnRespondListener{
         void onRespond(Bitmap respondBitmap);
     }
 }
