@@ -42,7 +42,6 @@ public class LoginActivity extends AppCompatActivity {
     private final static String registerUrl = "http://101.76.217.74:8000/user/register/";
 
     public static final int USER_LOGIN = 2;     //声明一个请求码，用于识别返回的结果
-    public static final int USER_REGISTER = 3;  //声明一个请求码，用于识别返回的结果
 
     private FrameLayout loginRegisterFragment;
 
@@ -50,11 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginFragment loginFragment;
     private RegisterFragment registerFragment;
 
-    public static class LoginStatus {
-        public static boolean isLogin;
-        public static String userName;
-        public static String userStatus;
-    }
+    private static String token;
 
     public void switchToLoginFragment() {
         // 将用户名和密码一同复制
@@ -145,8 +140,11 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onRespond(JsonObject respondJson) {
-
                 if (respondJson.get("code").getAsString().equals("success")) {
+                    String jsonToken = respondJson.get("token").getAsString();
+                    Log.d("Token", jsonToken);
+                    updateToken(jsonToken);
+
                     JsonObject data = respondJson.get("data").getAsJsonObject();
 
                     DownloadImageUtil downloadImageUtil = new DownloadImageUtil();
@@ -196,11 +194,7 @@ public class LoginActivity extends AppCompatActivity {
         map.put("email", email);
 
         JSONObject json = new JSONObject(map);
-        Log.d("JSON Object", json.toString());
-
         SendJsonUtil sendJsonUtil = new SendJsonUtil();
-
-        Log.d("JSON sending", "Sending to url: " + registerUrl);
         sendJsonUtil.SendJsonData(registerUrl, json, new SendJsonUtil.OnJsonRespondListener() {
             @Override
             public void onParseDataException(String exception) {
@@ -218,6 +212,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onRespond(JsonObject respondJson) {
 
                 if (respondJson.get("code").getAsString().equals("success")) {
+                    String jsonToken = respondJson.get("token").getAsString();
+                    updateToken(jsonToken);
+
                     JsonObject data = respondJson.get("data").getAsJsonObject();
 
                     DownloadImageUtil downloadImageUtil = new DownloadImageUtil();
@@ -260,9 +257,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void onLoginComplete(String userName, String userStatus) {
-        LoginStatus.isLogin = true;
-        LoginStatus.userName = userName;
-        LoginStatus.userStatus = userStatus;
+    public static String getToken() {
+        return token;
+    }
+
+    public static void updateToken(String newToken) {
+        token = newToken;
     }
 }

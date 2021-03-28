@@ -4,6 +4,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,11 @@ import java.util.List;
 
 public class ScoretabFragment extends Fragment {
 
+    public static final int STATE_HISTORY = 1;
+    public static final int STATE_FAVORITE = 2;
+    public static final int STATE_RECOMMEND = 3;
+
+    private TabLayout.Tab[] scoreTabs = new TabLayout.Tab[3];
     private String[] tabNames = {"历史曲谱", "我的收藏", "猜你想练"};
     private ScoreitemFragment scoreitemFragment;
 
@@ -45,7 +51,8 @@ public class ScoretabFragment extends Fragment {
 
         //添加tab
         for (int i = 0; i < tabNames.length; i++) {
-            tabLayout.addTab(tabLayout.newTab().setText(tabNames[i]));
+            scoreTabs[i] = tabLayout.newTab().setText(tabNames[i]);
+            tabLayout.addTab(scoreTabs[i]);
         }
 
         LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
@@ -53,6 +60,32 @@ public class ScoretabFragment extends Fragment {
         linearLayout.setDividerDrawable(ContextCompat.getDrawable(getContext(),
                 R.drawable.tablayout_divider_line));
         linearLayout.setDividerPadding(30);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab == scoreTabs[0]) {  // History
+                    Log.d("Tab", "select history");
+                } else if (tab == scoreTabs[1]) {
+                    Log.d("Tab", "select favorite");
+                } else if (tab == scoreTabs[2]) {
+                    Log.d("Tab", "select recommend");
+                }
+                Log.d("Tab Selected", String.valueOf(tab.getPosition()));
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) { }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) { }
+        });
+    }
+
+    public int getCurrentTabState() {
+        TabLayout tabLayout = getActivity().findViewById(R.id.layout_scoretab);
+        // tabLayout.getSelectedTabPosition()
+        return 0;
     }
 
     @Override

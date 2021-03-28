@@ -51,12 +51,37 @@
         android:layout_height="45dp"
         tools:layout="@layout/fragment_scoretab" />
 
-    <fragment
-        android:id="@+id/scoreitem"
-        android:name="com.app.painist.ui.fragments.ScoreitemFragment"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:layout="@layout/fragment_scoreitem" />
-
+        android:layout_weight="1">
+        <FrameLayout
+            android:id="@+id/scoreitem_loading_frame"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <include layout="@layout/fragment_scorelist_loading_frame" />
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/scoreitem_error"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <include layout="@layout/fragment_scorelist_error"/>
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/scoreitem_empty"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <include layout="@layout/fragment_scorelist_empty"/>
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/scoreitem"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <include layout="@layout/fragment_scoreitem"/>
+        </FrameLayout>
+    </RelativeLayout>
 </LinearLayout >

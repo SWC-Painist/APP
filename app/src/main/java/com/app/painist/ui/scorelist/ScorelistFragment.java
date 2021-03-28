@@ -17,14 +17,25 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
+import com.app.painist.LoginActivity;
 import com.app.painist.R;
 import com.app.painist.Utils.SendJsonUtil;
 import com.app.painist.ui.fragments.ScoreitemFragment;
+import com.app.painist.ui.fragments.ScoretabFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import static com.app.painist.ui.fragments.ScoretabFragment.STATE_FAVORITE;
+import static com.app.painist.ui.fragments.ScoretabFragment.STATE_HISTORY;
+import static com.app.painist.ui.fragments.ScoretabFragment.STATE_RECOMMEND;
 
 public class ScorelistFragment extends Fragment {
 
@@ -32,9 +43,10 @@ public class ScorelistFragment extends Fragment {
     private static final String favoriteUrl = "http://101.76.217.74:8000/user/favorite/";
     private static final String recommendUrl = "http://101.76.217.74:8000/user/recommend/";
 
-    public static final int STATE_HISTORY = 1;
-    public static final int STATE_FAVORITE = 2;
-    public static final int STATE_RECOMMEND = 3;
+    private View errorView;
+    private View emptyView;
+    private View loadingFrameView;
+    private View mainView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -54,6 +66,20 @@ public class ScorelistFragment extends Fragment {
                 drawerLayout.openDrawer(Gravity.LEFT);
             }
         });
+
+        errorView = getActivity().findViewById(R.id.scoreitem_error);
+        emptyView = getActivity().findViewById(R.id.scoreitem_empty);
+        loadingFrameView = getActivity().findViewById(R.id.scoreitem_loading_frame);
+        mainView = getActivity().findViewById(R.id.scoreitem);
+
+        getActivity().findViewById(R.id.scoreitem_error_content)
+            .setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // sendScoreListRequest()
+                }
+            }
+        );
     }
 
     @Override
@@ -64,27 +90,37 @@ public class ScorelistFragment extends Fragment {
     public void sendScoreListRequest(int scoreListState) {
         String requestUrl = "";
         switch (scoreListState) {
-            case STATE_HISTORY:
+            case ScoretabFragment.STATE_HISTORY:
                 requestUrl = historyUrl;
                 break;
-            case STATE_FAVORITE:
+            case ScoretabFragment.STATE_FAVORITE:
                 requestUrl = favoriteUrl;
                 break;
-            case STATE_RECOMMEND:
+            case ScoretabFragment.STATE_RECOMMEND:
                 requestUrl = recommendUrl;
                 break;
         }
-        JSONObject jsonObject = new JSONObject();
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("token", LoginActivity.getToken());
+
+        JSONObject jsonObject = new JSONObject(map);
         SendJsonUtil sendJsonUtil = new SendJsonUtil();
         sendJsonUtil.SendJsonData(requestUrl, jsonObject, new SendJsonUtil.OnJsonRespondListener() {
             @Override
             public void onParseDataException(String exception) {
+                loadingFrameView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.GONE);
+                mainView.setVisibility(View.GONE);
+                errorView.setVisibility(View.VISIBLE);
                 Snackbar.make(getView(), "解析数据时出错" + exception, Snackbar.LENGTH_LONG).show();
             }
 
             @Override
             public void onConnectionFailed(String exception) {
-                Snackbar.make(getView(), "无法连接至服务器" + exception, Snackbar.LENGTH_LONG).show();
+                loadingFrameView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.GONE);
+                mainView.setVisibility(View.GONE);
+                errorView.setVisibility(View.VISIBLE);
             }
 
             @Override

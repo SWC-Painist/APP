@@ -49,53 +49,44 @@
                 android:layout_marginLeft="0dp">
                 <LinearLayout
                     android:layout_width="5dp"
-                    android:layout_height="20dp"
+                    android:layout_height="18dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginEnd="5dp"
-                    android:background="#606060"/>
+                    android:background="#A0A0A0"/>
                 <LinearLayout
                     android:layout_width="5dp"
-                    android:layout_height="30dp"
+                    android:layout_height="28dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginEnd="5dp"
-                    android:background="#606060"/>
+                    android:background="#A0A0A0"/>
                 <LinearLayout
                     android:layout_width="5dp"
-                    android:layout_height="20dp"
+                    android:layout_height="18dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginEnd="5dp"
-                    android:background="#606060"/>
-                <TextView
-                    android:id="@+id/scoreitem_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:background="#A0A0A0"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="22sp"
+                    android:layout_gravity="top"
                     android:layout_marginLeft="5dp"
-                    android:text="秋日私语"
-                    android:textSize="20sp"
-                    android:textColor="#606060"
-                    android:textStyle="bold">
-
-                </TextView>
+                    android:src="@drawable/rounded_retangle_normal"
+                    android:textStyle="bold"/>
             </LinearLayout>
-            <TextView
-                android:id="@+id/scoreitem_intro_text1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="16sp"
                 android:layout_gravity="left"
-                android:layout_marginTop="5dp"
-                android:text=" - 距上一次练习已有3天"
-                android:textSize="15sp">
-            </TextView>
-            <TextView
-                android:id="@+id/scoreitem_intro_text2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:src="@drawable/rounded_retangle_normal"
+                android:textStyle="bold"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="16sp"
                 android:layout_gravity="left"
-                android:layout_marginTop="5dp"
-                android:text=" - 熟练度只有65% 加油~"
-                android:textSize="15sp">
-            </TextView>
+                android:layout_marginTop="9dp"
+                android:src="@drawable/rounded_retangle_normal"
+                android:textStyle="bold"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

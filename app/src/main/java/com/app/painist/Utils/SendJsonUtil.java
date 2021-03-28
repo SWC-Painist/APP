@@ -1,5 +1,6 @@
 package com.app.painist.Utils;
 
+import android.app.Activity;
 import android.util.Log;
 
 import com.google.gson.JsonElement;
@@ -32,6 +33,16 @@ public class SendJsonUtil {
                 toSendJsonData(url, jsonObject, listener);
             }
         }).start();
+    }
+
+    public void SendJsonDataOnUiThread(Activity activity, String url, JSONObject jsonObject, OnJsonRespondListener listener){
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("Thread", "Running");
+                toSendJsonData(url, jsonObject, listener);
+            }
+        });
     }
     /**
      * @param url 请求的地址
@@ -88,12 +99,13 @@ public class SendJsonUtil {
                 }
                 else {
                     Log.d("Result", "Failed");
+                    listener.onConnectionFailed(" 错误码：" + httpURLConnection.getResponseCode());
                 }
                 dataOutputStream.close();
                 httpURLConnection.disconnect();
             } catch (IOException e) {
                 e.printStackTrace();
-                listener.onConnectionFailed("");
+                listener.onConnectionFailed("：未连网");
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();

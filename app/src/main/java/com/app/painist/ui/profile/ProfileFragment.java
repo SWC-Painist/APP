@@ -1,6 +1,7 @@
 package com.app.painist.ui.profile;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.app.painist.LoginActivity;
 import com.app.painist.MainActivity;
 import com.app.painist.R;
 import com.app.painist.Utils.SendJsonUtil;
@@ -47,6 +49,8 @@ public class ProfileFragment extends Fragment {
                 sendJsonUtil.SendJsonData(logoutUrl, jsonObject, new SendJsonUtil.OnJsonRespondListener() {
                     @Override
                     public void onRespond(JsonObject respondJson) {
+                        LoginActivity.updateToken("");
+                        Log.d("Token", "clear");
                         ((MainActivity) getActivity()).onLogoutStatusChanged();
                     }
 

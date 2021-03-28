@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.app.painist.Utils.UploadFileUtil;
 import com.app.painist.ui.fragments.ScoreitemFragment;
+import com.app.painist.ui.fragments.ScoretabFragment;
 import com.app.painist.ui.home.HomeFragment;
 import com.app.painist.ui.profile.ProfileFragment;
 import com.app.painist.ui.scorelist.ScorelistFragment;
@@ -111,34 +112,26 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {//底部导航点击事件
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
-//                        FragmentManager manager1 = getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction1 = manager.beginTransaction();
                         fragmentTransaction1.show(homeFragment)
                                 .hide(scoreFragment)
                                 .hide(profileFragment)
                                 .commit();
-//                        fragmentTransaction.commit();
                         break;
                     case R.id.navigation_scorelist:
-//                        FragmentManager manager2 = getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction2 = manager.beginTransaction();
-
                         fragmentTransaction2.show(scoreFragment)
                                 .hide(homeFragment)
                                 .hide(profileFragment)
                                 .commit();
-
-                        scoreFragment.sendScoreListRequest(ScorelistFragment.STATE_HISTORY);
-//                        fragmentTransaction.commit();
+                        scoreFragment.sendScoreListRequest(ScoretabFragment.STATE_HISTORY);
                         break;
                     case R.id.navigation_profile:
-//                        FragmentManager manager3 = getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction3 = manager.beginTransaction();
                         fragmentTransaction3.show(profileFragment)
                                 .hide(scoreFragment)
                                 .hide(homeFragment)
                                 .commit();;
-//                        fragmentTransaction.commit();
                         break;
                 }
 //                fragmentTransaction.commit();
