@@ -2,7 +2,7 @@
 <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scorelist"
+    android:id="@+id/statistic_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,17 +13,27 @@
             android:id="@+id/statistic_bottom_view"
             android:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FF8080">
+            android:layout_height="match_parent">
+            <include
+                layout="@layout/sublayout_practice_time"/>
         </FrameLayout>
         <FrameLayout
             android:id="@+id/statistic_top_view"
             android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#8080FF"
             android:translationY="0dp">
+            <include
+                layout="@layout/sublayout_practice_score"/>
         </FrameLayout>
+        <Button
+            android:id="@+id/statistic_next_page_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="next"
+            android:layout_marginBottom="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
     </RelativeLayout>
 
     <LinearLayout
