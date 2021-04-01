@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.app.painist.Utils.SendJsonUtil;
 import com.app.painist.Utils.UploadFileUtil;
 import com.app.painist.Utils.UploadImageGetJsonUtil;
 import com.app.painist.ui.fragments.ScoreitemFragment;
@@ -57,6 +58,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -210,6 +213,36 @@ public class MainActivity extends AppCompatActivity {
                         scoreFragment.getScoreTabFragment().selectTab(2);
                         // scoreFragment.sendScoreListRequest(ScoretabFragment.STATE_HISTORY);
                         break;
+                    case R.id.nav_menu_statistic:
+                        Intent intentToStatistic = new Intent(MainActivity.this, StatisticActivity.class);
+                        startActivity(intentToStatistic);
+
+                        // test
+                    case R.id.nav_menu_toolbox:
+
+                        HashMap<String, String> map = new HashMap<String, String>();
+                        map.put("token", LoginActivity.getToken());
+                        JSONObject jsonObject = new JSONObject(map);
+
+                        SendJsonUtil sendJsonUtil = new SendJsonUtil();
+                        sendJsonUtil.SendJsonData("http://101.76.217.74:8000/user/practice/time/", jsonObject,
+                                new SendJsonUtil.OnJsonRespondListener() {
+                                    @Override
+                                    public void onRespond(JsonObject respondJson) {
+                                        Log.d("Practice Respond", respondJson.toString());
+                                    }
+
+                                    @Override
+                                    public void onParseDataException(String exception) {
+
+                                    }
+
+                                    @Override
+                                    public void onConnectionFailed(String exception) {
+
+                                    }
+                                });
+
                     default:
                         break;
                 }

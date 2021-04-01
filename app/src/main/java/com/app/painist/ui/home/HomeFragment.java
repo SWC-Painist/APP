@@ -122,7 +122,7 @@ public class HomeFragment extends Fragment {
 
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        fragmentTransaction.add(R.id.background_note_fragment,new BackgroundNoteFragment()).commit();
+        fragmentTransaction.add(R.id.background_note_fragment, new BackgroundNoteFragment()).commit();
 
         bottomSpan = getActivity().findViewById(R.id.continue_practice_notification);
 
