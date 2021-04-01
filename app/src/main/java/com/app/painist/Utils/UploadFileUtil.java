@@ -81,7 +81,6 @@ public class UploadFileUtil {
     public void uploadFile(final File file, final String fileKey,
                            final String RequestURL, final Map<String, String> param) {
         if (file == null || (!file.exists())) {
-
             return;
         }
 

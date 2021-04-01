@@ -1,6 +1,8 @@
 package com.app.painist.Utils;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.renderscript.Sampler;
 import android.util.Log;
 
 import com.google.gson.JsonElement;
@@ -35,14 +37,92 @@ public class SendJsonUtil {
         }).start();
     }
 
-    public void SendJsonDataOnUiThread(Activity activity, String url, JSONObject jsonObject, OnJsonRespondListener listener){
-        activity.runOnUiThread(new Runnable() {
+    public class RespondCompleteFlag{
+        boolean completeFlag = false;
+        boolean handledFlag = false;
+        int resultCode = 1; // 0: success (negative: failed / -1: parser error / -2: connection error)
+        JsonObject jsonObject = null;
+        String errorString = null;
+    }
+
+    private final RespondCompleteFlag flag = new RespondCompleteFlag();
+    private final static long waitingTime = 1000;
+
+    public void SendJsonDataSynchronously(String url, JSONObject jsonObject, OnJsonRespondListener listener) {
+        flag.completeFlag = false;
+        flag.handledFlag = false;
+        flag.resultCode = 1;
+        flag.jsonObject = null;
+        flag.errorString = null;
+
+        // 轮询：使用ValueAnimator作计时器
+        ValueAnimator timer = new ValueAnimator();
+        timer.setDuration(waitingTime);
+        timer.setIntValues(0, (int) waitingTime);
+        timer.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                // 在轮询时锁状态位
+                synchronized (flag)
+                {
+                    if (flag.handledFlag) return;
+                    if (flag.completeFlag)
+                    {
+                        if (flag.resultCode == 0)
+                            listener.onRespond(flag.jsonObject);
+                        else if (flag.resultCode == -1)
+                            listener.onParseDataException(flag.errorString);
+                        else if (flag.resultCode == -2)
+                            listener.onConnectionFailed(flag.errorString);
+                        flag.handledFlag = true;
+                        // if (animation.isRunning()) animation.end();
+                        return;
+                    }
+                }
+
+                if ((int) animation.getAnimatedValue() >= (int) waitingTime) {
+                    listener.onConnectionFailed("：连接超时");
+                    return;
+                }
+            }
+        });
+        timer.start();
+
+        // 新线程：执行json数据发送与接收
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 Log.d("Thread", "Running");
-                toSendJsonData(url, jsonObject, listener);
+                toSendJsonData(url, jsonObject, new OnJsonRespondListener() {
+                    @Override
+                    public void onRespond(JsonObject respondJson) {
+                        synchronized (flag) {
+                            flag.completeFlag = true;
+                            flag.resultCode = 0;
+                            flag.jsonObject = respondJson;
+                        }
+                    }
+
+                    @Override
+                    public void onParseDataException(String exception) {
+                        synchronized (flag) {
+                            flag.completeFlag = true;
+                            flag.resultCode = -1;
+                            flag.errorString = exception;
+                        }
+                    }
+
+                    @Override
+                    public void onConnectionFailed(String exception) {
+                        synchronized (flag) {
+                            flag.completeFlag = true;
+                            flag.resultCode = -2;
+                            flag.errorString = exception;
+                        }
+                    }
+                });
             }
-        });
+        }).start();
     }
     /**
      * @param url 请求的地址
@@ -109,6 +189,7 @@ public class SendJsonUtil {
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            listener.onConnectionFailed("：URL错误");
         }
     }
 

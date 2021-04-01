@@ -27,7 +27,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp">
             <ImageView
-                android:id="@+id/scoreitem_image"
+                android:id="@+id/scoreitem_avatar"
                 android:layout_width="140dp"
                 android:layout_height="90dp"
                 android:background="#E0E0E0"
@@ -74,7 +74,8 @@
                     android:text="秋日私语"
                     android:textSize="20sp"
                     android:textColor="#606060"
-                    android:textStyle="bold">
+                    android:textStyle="bold"
+                    android:singleLine="true">
 
                 </TextView>
             </LinearLayout>
@@ -85,7 +86,8 @@
                 android:layout_gravity="left"
                 android:layout_marginTop="5dp"
                 android:text=" - 距上一次练习已有3天"
-                android:textSize="15sp">
+                android:textSize="15sp"
+                android:singleLine="true">
             </TextView>
             <TextView
                 android:id="@+id/scoreitem_intro_text2"
@@ -94,7 +96,8 @@
                 android:layout_gravity="left"
                 android:layout_marginTop="5dp"
                 android:text=" - 熟练度只有65% 加油~"
-                android:textSize="15sp">
+                android:textSize="15sp"
+                android:singleLine="true">
             </TextView>
         </LinearLayout>
     </LinearLayout>

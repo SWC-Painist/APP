@@ -46,7 +46,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 SendJsonUtil sendJsonUtil = new SendJsonUtil();
                 JSONObject jsonObject = new JSONObject();
-                sendJsonUtil.SendJsonData(logoutUrl, jsonObject, new SendJsonUtil.OnJsonRespondListener() {
+                sendJsonUtil.SendJsonDataSynchronously(logoutUrl, jsonObject, new SendJsonUtil.OnJsonRespondListener() {
                     @Override
                     public void onRespond(JsonObject respondJson) {
                         LoginActivity.updateToken("");

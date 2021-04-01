@@ -217,6 +217,7 @@ public class HomeFragment extends Fragment {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
         } else {
             //调用
+            Log.d("REQUEST CAMERA", "REQUEST CAMERA");
             requestCamera();
         }
     }
@@ -241,7 +242,7 @@ public class HomeFragment extends Fragment {
                 用关联缓存目录呢？由于android6.0开始，读写sd卡列为了危险权限，使用的时候必须要有权限，
                 应用关联目录则可以跳过这一步
                  */
-        try//判断图片是否存在，存在则删除在创建，不存在则直接创建
+        try //判断图片是否存在，存在则删除在创建，不存在则直接创建
         {
             if (!outputImage.getParentFile().exists()) {
                 outputImage.getParentFile().mkdirs();

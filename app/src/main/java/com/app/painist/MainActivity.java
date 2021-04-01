@@ -23,9 +23,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.app.painist.Utils.UploadFileUtil;
+import com.app.painist.Utils.UploadImageGetJsonUtil;
 import com.app.painist.ui.fragments.ScoreitemFragment;
 import com.app.painist.ui.fragments.ScoretabFragment;
 import com.app.painist.ui.home.HomeFragment;
@@ -34,6 +36,7 @@ import com.app.painist.ui.scorelist.ScorelistFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonObject;
 /*import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -58,6 +61,7 @@ import androidx.viewpager.widget.ViewPager;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static com.app.painist.LoginActivity.USER_LOGIN;
 import static com.app.painist.R.id.nav_host_fragment;
@@ -124,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                                 .hide(homeFragment)
                                 .hide(profileFragment)
                                 .commit();
+                        scoreFragment.setLoadingView();
                         scoreFragment.sendScoreListRequest(ScoretabFragment.STATE_HISTORY);
                         break;
                     case R.id.navigation_profile:
@@ -131,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                         fragmentTransaction3.show(profileFragment)
                                 .hide(scoreFragment)
                                 .hide(homeFragment)
-                                .commit();;
+                                .commit();
                         break;
                 }
 //                fragmentTransaction.commit();
@@ -174,6 +179,36 @@ public class MainActivity extends AppCompatActivity {
                         
                         Intent intent = new Intent(MainActivity.this,MainActivity.class);
                         startActivity(intent);
+                        break;
+                    case R.id.nav_menu_history:
+                        FragmentTransaction historyTransaction = manager.beginTransaction();
+                        historyTransaction.show(scoreFragment)
+                                .hide(homeFragment)
+                                .hide(profileFragment)
+                                .commit();
+                        scoreFragment.setLoadingView();
+                        scoreFragment.getScoreTabFragment().selectTab(0);
+                        // scoreFragment.sendScoreListRequest(ScoretabFragment.STATE_HISTORY);
+                        break;
+                    case R.id.nav_menu_favorite:
+                        FragmentTransaction favoriteTransaction = manager.beginTransaction();
+                        favoriteTransaction.show(scoreFragment)
+                                .hide(homeFragment)
+                                .hide(profileFragment)
+                                .commit();
+                        scoreFragment.setLoadingView();
+                        scoreFragment.getScoreTabFragment().selectTab(1);
+                        // scoreFragment.sendScoreListRequest(ScoretabFragment.STATE_HISTORY);
+                        break;
+                    case R.id.nav_menu_recommend:
+                        FragmentTransaction recommendTransaction = manager.beginTransaction();
+                        recommendTransaction.show(scoreFragment)
+                                .hide(homeFragment)
+                                .hide(profileFragment)
+                                .commit();
+                        scoreFragment.setLoadingView();
+                        scoreFragment.getScoreTabFragment().selectTab(2);
+                        // scoreFragment.sendScoreListRequest(ScoretabFragment.STATE_HISTORY);
                         break;
                     default:
                         break;
@@ -277,7 +312,6 @@ public class MainActivity extends AppCompatActivity {
     //处理返回结果的函数
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Log.d("ActivityResult", "Enter");
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("ActivityResult", "requestCode="+requestCode);
         Log.d("ActivityResult", "resultCode="+resultCode);
@@ -286,10 +320,27 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     File outputImage = new File(photoFilePath);
                     if (!outputImage.exists()) { break; }
-                    UploadFileUtil uploadFileUtil = new UploadFileUtil();
-                    uploadFileUtil.uploadFile(photoFilePath,"file","http://101.76.217.74:8000/user/upload/picture/",null);
+                    UploadImageGetJsonUtil uploadImageGetJsonUtil = new UploadImageGetJsonUtil();
 
-                    Log.d("ActivityResult", "Intent");
+                    uploadImageGetJsonUtil.uploadFile(photoFilePath,
+                            "file", "http://101.76.217.74:8000/user/upload/picture/",
+                            new UploadImageGetJsonUtil.OnUploadImageRespondListener() {
+                                @Override
+                                public void onRespond(JsonObject jsonObject) {
+                                    Log.d("Respond", jsonObject.toString());
+                                }
+
+                                @Override
+                                public void onParseDataException(String exception) {
+                                    Log.d("Respond", exception);
+                                }
+
+                                @Override
+                                public void onConnectionFailed(String exception) {
+                                    Log.d("Respond", exception);
+                                }
+                            });
+
                     Intent intent = new Intent(MainActivity.this, LoadingActivity.class);
                     startActivity(intent);
                 }
@@ -303,6 +354,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("LOGIN DATA: userName", userName);
                     Log.d("LOGIN DATA: userIntro", userIntro);
                     Log.d("LOGIN DATA: userAvatar", userAvatarUrl);
+
                     onLoginStatusChanged(userAvatarUrl, userName, userIntro);
                 }
                 break;

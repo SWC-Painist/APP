@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -61,17 +63,9 @@ public class ScoreitemFragment extends Fragment {
                 drawerLayout.openDrawer(Gravity.LEFT);
             }
         });
-
-        Button testButton = getActivity().findViewById(R.id.test_button);
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addScoreItem("梦中的婚礼", "你已经三天没练啦","快来练习！");
-            }
-        });
     }
 
-    public void addScoreItem(String title, String introText1, String introText2) {
+    public void addScoreItem(Bitmap bitmap, String title, String introText1, String introText2) {
 
         LinearLayout container = (LinearLayout) getActivity().findViewById(R.id.scoreitem_container);
 
@@ -85,6 +79,8 @@ public class ScoreitemFragment extends Fragment {
         LayoutInflater layoutInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = layoutInflater.inflate(R.layout.scoreitem_sample, null);
 
+        if (bitmap != null)
+            ((ImageView) layout.findViewById(R.id.scoreitem_avatar)).setImageBitmap(bitmap);
         ((TextView) layout.findViewById(R.id.scoreitem_title)).setText(title);
         ((TextView) layout.findViewById(R.id.scoreitem_intro_text1)).setText("- " + introText1);
         ((TextView) layout.findViewById(R.id.scoreitem_intro_text2)).setText("- " + introText2);

@@ -44,6 +44,10 @@ public class ScoretabFragment extends Fragment {
         return view;
     }
 
+    public void selectTab(int index) {
+        scoreTabs[index].select();
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

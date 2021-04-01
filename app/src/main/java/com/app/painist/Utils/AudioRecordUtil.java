@@ -113,7 +113,7 @@ public class AudioRecordUtil {
                 os.close();
             }
         }catch (IOException e){
-
+            e.printStackTrace();
         }
 
 

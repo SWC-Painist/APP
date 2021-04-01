@@ -1,5 +1,6 @@
 package com.app.painist.ui.scorelist;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
@@ -28,6 +30,7 @@ import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -82,6 +85,11 @@ public class ScorelistFragment extends Fragment {
         );
     }
 
+    public ScoretabFragment getScoreTabFragment() {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        return (ScoretabFragment) manager.findFragmentById(R.id.coretab);
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,28 +113,86 @@ public class ScorelistFragment extends Fragment {
 
         JSONObject jsonObject = new JSONObject(map);
         SendJsonUtil sendJsonUtil = new SendJsonUtil();
-        sendJsonUtil.SendJsonData(requestUrl, jsonObject, new SendJsonUtil.OnJsonRespondListener() {
+        sendJsonUtil.SendJsonDataSynchronously(requestUrl, jsonObject, new SendJsonUtil.OnJsonRespondListener() {
             @Override
             public void onParseDataException(String exception) {
-                loadingFrameView.setVisibility(View.GONE);
-                emptyView.setVisibility(View.GONE);
-                mainView.setVisibility(View.GONE);
-                errorView.setVisibility(View.VISIBLE);
-                Snackbar.make(getView(), "解析数据时出错" + exception, Snackbar.LENGTH_LONG).show();
+                setErrorView("解析数据时出错", "点击重试");
             }
 
             @Override
             public void onConnectionFailed(String exception) {
-                loadingFrameView.setVisibility(View.GONE);
-                emptyView.setVisibility(View.GONE);
-                mainView.setVisibility(View.GONE);
-                errorView.setVisibility(View.VISIBLE);
+                setErrorView("无法连接到服务器", "请检查你的网络");
             }
 
             @Override
             public void onRespond(JsonObject respondJson) {
-                Log.d("RESPOND", respondJson.toString());
+                String respondStatus = "";
+                try {
+                    respondStatus = respondJson.get("state").getAsString();
+                } catch (NullPointerException e) {
+                    setErrorView("解析数据时出错", "点击重试");
+                }
+                if (respondStatus.equals("success")) {
+                    Log.d("Respond", "SUCCESS");
+                    if (respondJson.get("1") == null) {
+                        Log.d("Respond", "EMPTY!");
+                        setEmptyView();
+                    } else {
+                        Log.d("Json Get", respondJson.get("1").toString());
+                        setMainView(respondJson);
+                    }
+                } else {
+                    Log.d("Respond", "UNLOGIN");
+                    setErrorView("用户未登录", "请登录后重试");
+                }
             }
         });
+        Log.d("Update", "FLAG");
+    }
+
+    public void setErrorView(String errorTitle, String errorSubTitle) {
+        loadingFrameView.setVisibility(View.GONE);
+        emptyView.setVisibility(View.GONE);
+        mainView.setVisibility(View.GONE);
+        errorView.setVisibility(View.VISIBLE);
+        ((TextView) errorView.findViewById(R.id.scoreitem_error_title)).setText(errorTitle);
+        ((TextView) errorView.findViewById(R.id.scoreitem_error_subtitle)).setText(errorSubTitle);
+    }
+
+    public void setLoadingView() {
+        loadingFrameView.setVisibility(View.VISIBLE);
+        emptyView.setVisibility(View.GONE);
+        mainView.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
+    }
+
+    public void setEmptyView() {
+        emptyView.setVisibility(View.VISIBLE);
+        loadingFrameView.setVisibility(View.GONE);
+        mainView.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
+    }
+
+    public void setMainView(JsonObject data) {
+
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        ScoreitemFragment scorelistFragment = (ScoreitemFragment) manager.findFragmentById(R.id.scoreitem_fragment);
+
+        int count = 1;
+        while (data.get(String.valueOf(count)) != null) {
+            JsonObject dataItem = data.get(String.valueOf(count)).getAsJsonObject();
+            String scoreName = dataItem.get("name").getAsString();
+            String scoreTotleScore = dataItem.get("total_score").getAsString();
+            String[] scorePracticeDate = dataItem.get("last_practice").getAsString().split("T");
+            String scoreDate = "上次练习时间：" + scorePracticeDate[0];
+            scorelistFragment.addScoreItem(null, scoreName, scoreTotleScore, scoreDate);
+
+            count++;
+        }
+
+        mainView.setVisibility(View.VISIBLE);
+        emptyView.setVisibility(View.GONE);
+        loadingFrameView.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
     }
 }
