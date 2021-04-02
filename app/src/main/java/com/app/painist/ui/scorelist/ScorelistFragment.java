@@ -1,6 +1,5 @@
 package com.app.painist.ui.scorelist;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -8,37 +7,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager.widget.ViewPager;
 
 import com.app.painist.LoginActivity;
 import com.app.painist.R;
 import com.app.painist.Utils.SendJsonUtil;
 import com.app.painist.ui.fragments.ScoreitemFragment;
-import com.app.painist.ui.fragments.ScoretabFragment;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import static com.app.painist.ui.fragments.ScoretabFragment.STATE_FAVORITE;
-import static com.app.painist.ui.fragments.ScoretabFragment.STATE_HISTORY;
-import static com.app.painist.ui.fragments.ScoretabFragment.STATE_RECOMMEND;
 
 public class ScorelistFragment extends Fragment {
 
@@ -51,6 +39,25 @@ public class ScorelistFragment extends Fragment {
     private View loadingFrameView;
     private View mainView;
 
+    public static final int STATE_HISTORY = 1;
+    public static final int STATE_FAVORITE = 2;
+    public static final int STATE_RECOMMEND = 3;
+
+    private TabLayout.Tab[] scoreTabs = new TabLayout.Tab[3];
+    private String[] tabNames = {"历史曲谱", "我的收藏", "猜你想练"};
+    private ScoreitemFragment scoreitemFragment;
+
+    public void selectTab(int index) {
+        scoreTabs[index].select();
+    }
+
+    public int getCurrentTabState() {
+        TabLayout tabLayout = getActivity().findViewById(R.id.layout_scoretab);
+        // tabLayout.getSelectedTabPosition()
+        return 0;
+    }
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_scorelist, container, false);
@@ -59,6 +66,42 @@ public class ScorelistFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        // Tab list
+        TabLayout tabLayout = getActivity().findViewById(R.id.layout_scoretab);
+
+        //添加tab
+        for (int i = 0; i < tabNames.length; i++) {
+            scoreTabs[i] = tabLayout.newTab().setText(tabNames[i]);
+            tabLayout.addTab(scoreTabs[i]);
+        }
+
+        LinearLayout linearLayout = (LinearLayout) tabLayout.getChildAt(0);
+        linearLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+        linearLayout.setDividerDrawable(ContextCompat.getDrawable(getContext(),
+                R.drawable.tablayout_divider_line));
+        linearLayout.setDividerPadding(30);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab == scoreTabs[0]) {  // History
+                    Log.d("Tab", "select history");
+                } else if (tab == scoreTabs[1]) {
+                    Log.d("Tab", "select favorite");
+                } else if (tab == scoreTabs[2]) {
+                    Log.d("Tab", "select recommend");
+                }
+                Log.d("Tab Selected", String.valueOf(tab.getPosition()));
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) { }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) { }
+        });
+
 
         // Button To Open Left-Navigation Menu
         ImageView menuButton = getActivity().findViewById(R.id.menu_button);
@@ -85,11 +128,6 @@ public class ScorelistFragment extends Fragment {
         );
     }
 
-    public ScoretabFragment getScoreTabFragment() {
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        return (ScoretabFragment) manager.findFragmentById(R.id.coretab);
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,13 +136,13 @@ public class ScorelistFragment extends Fragment {
     public void sendScoreListRequest(int scoreListState) {
         String requestUrl = "";
         switch (scoreListState) {
-            case ScoretabFragment.STATE_HISTORY:
+            case STATE_HISTORY:
                 requestUrl = historyUrl;
                 break;
-            case ScoretabFragment.STATE_FAVORITE:
+            case STATE_FAVORITE:
                 requestUrl = favoriteUrl;
                 break;
-            case ScoretabFragment.STATE_RECOMMEND:
+            case STATE_RECOMMEND:
                 requestUrl = recommendUrl;
                 break;
         }

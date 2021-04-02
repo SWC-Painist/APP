@@ -1,42 +1,28 @@
 package com.app.painist;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
+
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.app.painist.Utils.SendJsonUtil;
-import com.app.painist.Utils.UploadFileUtil;
 import com.app.painist.Utils.UploadImageGetJsonUtil;
-import com.app.painist.ui.fragments.ScoreitemFragment;
-import com.app.painist.ui.fragments.ScoretabFragment;
 import com.app.painist.ui.home.HomeFragment;
 import com.app.painist.ui.profile.ProfileFragment;
 import com.app.painist.ui.scorelist.ScorelistFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 /*import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,9 +32,7 @@ import com.google.android.material.tabs.TabLayout;*/
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -56,20 +40,16 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager.widget.ViewPager;
 
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import static com.app.painist.LoginActivity.USER_LOGIN;
 import static com.app.painist.R.id.nav_host_fragment;
 import static com.app.painist.ui.home.HomeFragment.TAKE_PHOTO;
-
+import static com.app.painist.ui.scorelist.ScorelistFragment.STATE_HISTORY;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -132,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                                 .hide(profileFragment)
                                 .commit();
                         scoreFragment.setLoadingView();
-                        scoreFragment.sendScoreListRequest(ScoretabFragment.STATE_HISTORY);
+                        scoreFragment.sendScoreListRequest(STATE_HISTORY);
                         break;
                     case R.id.navigation_profile:
                         FragmentTransaction fragmentTransaction3 = manager.beginTransaction();
@@ -190,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                                 .hide(profileFragment)
                                 .commit();
                         scoreFragment.setLoadingView();
-                        scoreFragment.getScoreTabFragment().selectTab(0);
+                        scoreFragment.selectTab(0);
                         // scoreFragment.sendScoreListRequest(ScoretabFragment.STATE_HISTORY);
                         break;
                     case R.id.nav_menu_favorite:
@@ -200,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                                 .hide(profileFragment)
                                 .commit();
                         scoreFragment.setLoadingView();
-                        scoreFragment.getScoreTabFragment().selectTab(1);
+                        scoreFragment.selectTab(1);
                         // scoreFragment.sendScoreListRequest(ScoretabFragment.STATE_HISTORY);
                         break;
                     case R.id.nav_menu_recommend:
@@ -210,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                                 .hide(profileFragment)
                                 .commit();
                         scoreFragment.setLoadingView();
-                        scoreFragment.getScoreTabFragment().selectTab(2);
+                        scoreFragment.selectTab(2);
                         // scoreFragment.sendScoreListRequest(ScoretabFragment.STATE_HISTORY);
                         break;
                     case R.id.nav_menu_statistic:

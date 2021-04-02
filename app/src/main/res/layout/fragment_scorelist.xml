@@ -36,12 +36,14 @@
 <!--        android:src="@drawable/verticle_line"-->
 <!--        android:alpha="0.3"/>-->
 
-    <fragment
-        android:id="@+id/coretab"
-        android:name="com.app.painist.ui.fragments.ScoretabFragment"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/layout_scoretab"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        tools:layout="@layout/fragment_scoretab" />
+        android:layout_height="40dp"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorColor="@color/gray"
+        app:tabIndicatorGravity="bottom"
+        app:tabTextAppearance="@style/Theme.Painist.TabLayout"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
