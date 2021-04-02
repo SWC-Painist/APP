@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -49,7 +50,9 @@ import java.util.HashMap;
 import static com.app.painist.LoginActivity.USER_LOGIN;
 import static com.app.painist.R.id.nav_host_fragment;
 import static com.app.painist.ui.home.HomeFragment.TAKE_PHOTO;
+import static com.app.painist.ui.scorelist.ScorelistFragment.STATE_FAVORITE;
 import static com.app.painist.ui.scorelist.ScorelistFragment.STATE_HISTORY;
+import static com.app.painist.ui.scorelist.ScorelistFragment.STATE_RECOMMEND;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -112,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                                 .hide(profileFragment)
                                 .commit();
                         scoreFragment.setLoadingView();
-                        scoreFragment.sendScoreListRequest(STATE_HISTORY);
+                        scoreFragment.refreshNowTab();
                         break;
                     case R.id.navigation_profile:
                         FragmentTransaction fragmentTransaction3 = manager.beginTransaction();
@@ -171,7 +174,8 @@ public class MainActivity extends AppCompatActivity {
                                 .commit();
                         scoreFragment.setLoadingView();
                         scoreFragment.selectTab(0);
-                        // scoreFragment.sendScoreListRequest(ScoretabFragment.STATE_HISTORY);
+                        scoreFragment.sendScoreListRequest(STATE_HISTORY);
+                        drawer.closeDrawer(Gravity.LEFT);
                         break;
                     case R.id.nav_menu_favorite:
                         FragmentTransaction favoriteTransaction = manager.beginTransaction();
@@ -181,7 +185,8 @@ public class MainActivity extends AppCompatActivity {
                                 .commit();
                         scoreFragment.setLoadingView();
                         scoreFragment.selectTab(1);
-                        // scoreFragment.sendScoreListRequest(ScoretabFragment.STATE_HISTORY);
+                        scoreFragment.sendScoreListRequest(STATE_FAVORITE);
+                        drawer.closeDrawer(Gravity.LEFT);
                         break;
                     case R.id.nav_menu_recommend:
                         FragmentTransaction recommendTransaction = manager.beginTransaction();
@@ -191,7 +196,8 @@ public class MainActivity extends AppCompatActivity {
                                 .commit();
                         scoreFragment.setLoadingView();
                         scoreFragment.selectTab(2);
-                        // scoreFragment.sendScoreListRequest(ScoretabFragment.STATE_HISTORY);
+                        scoreFragment.sendScoreListRequest(STATE_RECOMMEND);
+                        drawer.closeDrawer(Gravity.LEFT);
                         break;
                     case R.id.nav_menu_statistic:
                         Intent intentToStatistic = new Intent(MainActivity.this, StatisticActivity.class);
@@ -205,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(map);
 
                         SendJsonUtil sendJsonUtil = new SendJsonUtil();
-                        sendJsonUtil.SendJsonData("http://101.76.217.74:8000/user/practice/time/", jsonObject,
+                        sendJsonUtil.SendJsonData("http://101.76.217.74:8000/user/practice/max/", jsonObject,
                                 new SendJsonUtil.OnJsonRespondListener() {
                                     @Override
                                     public void onRespond(JsonObject respondJson) {

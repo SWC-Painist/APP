@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,9 +40,9 @@ public class ScorelistFragment extends Fragment {
     private View loadingFrameView;
     private View mainView;
 
-    public static final int STATE_HISTORY = 1;
-    public static final int STATE_FAVORITE = 2;
-    public static final int STATE_RECOMMEND = 3;
+    public static final int STATE_HISTORY = 0;
+    public static final int STATE_FAVORITE = 1;
+    public static final int STATE_RECOMMEND = 2;
 
     private TabLayout.Tab[] scoreTabs = new TabLayout.Tab[3];
     private String[] tabNames = {"历史曲谱", "我的收藏", "猜你想练"};
@@ -51,10 +52,9 @@ public class ScorelistFragment extends Fragment {
         scoreTabs[index].select();
     }
 
-    public int getCurrentTabState() {
+    public void refreshNowTab() {
         TabLayout tabLayout = getActivity().findViewById(R.id.layout_scoretab);
-        // tabLayout.getSelectedTabPosition()
-        return 0;
+        sendScoreListRequest(tabLayout.getSelectedTabPosition());
     }
 
 
@@ -86,10 +86,13 @@ public class ScorelistFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab == scoreTabs[0]) {  // History
+                    sendScoreListRequest(STATE_HISTORY);
                     Log.d("Tab", "select history");
                 } else if (tab == scoreTabs[1]) {
+                    sendScoreListRequest(STATE_FAVORITE);
                     Log.d("Tab", "select favorite");
                 } else if (tab == scoreTabs[2]) {
+                    sendScoreListRequest(STATE_RECOMMEND);
                     Log.d("Tab", "select recommend");
                 }
                 Log.d("Tab Selected", String.valueOf(tab.getPosition()));
@@ -104,7 +107,7 @@ public class ScorelistFragment extends Fragment {
 
 
         // Button To Open Left-Navigation Menu
-        ImageView menuButton = getActivity().findViewById(R.id.menu_button);
+        ImageView menuButton = getActivity().findViewById(R.id.scorelist).findViewById(R.id.menu_button);
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
