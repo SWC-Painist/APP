@@ -23,8 +23,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:translationY="0dp">
-            <include
-                layout="@layout/sublayout_practice_score"/>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF"/>
         </FrameLayout>
         <Button
             android:id="@+id/statistic_next_page_button"
