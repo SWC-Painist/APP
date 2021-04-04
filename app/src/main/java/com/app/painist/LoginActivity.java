@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.painist.Utils.DownloadImageUtil;
+import com.app.painist.Utils.RequestURL;
 import com.app.painist.Utils.SendJsonUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -38,9 +39,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
-    private final static String loginUrl = "http://101.76.217.74:8000/user/login/";
-    private final static String registerUrl = "http://101.76.217.74:8000/user/register/";
-
     public static final int USER_LOGIN = 2;     //声明一个请求码，用于识别返回的结果
 
     private FrameLayout loginRegisterFragment;
@@ -124,8 +122,8 @@ public class LoginActivity extends AppCompatActivity {
         JSONObject json = new JSONObject(map);
         SendJsonUtil sendJsonUtil = new SendJsonUtil();
 
-        Log.d("JSON sending", "Sending to url: " + loginUrl);
-        sendJsonUtil.SendJsonData(loginUrl, json, new SendJsonUtil.OnJsonRespondListener() {
+        Log.d("JSON sending", "Sending to url: " + RequestURL.login);
+        sendJsonUtil.SendJsonData(RequestURL.login, json, new SendJsonUtil.OnJsonRespondListener() {
             @Override
             public void onParseDataException(String exception) {
                 Snackbar.make(findViewById(R.id.login_content),
@@ -195,7 +193,7 @@ public class LoginActivity extends AppCompatActivity {
 
         JSONObject json = new JSONObject(map);
         SendJsonUtil sendJsonUtil = new SendJsonUtil();
-        sendJsonUtil.SendJsonData(registerUrl, json, new SendJsonUtil.OnJsonRespondListener() {
+        sendJsonUtil.SendJsonData(RequestURL.register, json, new SendJsonUtil.OnJsonRespondListener() {
             @Override
             public void onParseDataException(String exception) {
                 Snackbar.make(findViewById(R.id.login_content),
@@ -218,7 +216,7 @@ public class LoginActivity extends AppCompatActivity {
                     JsonObject data = respondJson.get("data").getAsJsonObject();
 
                     DownloadImageUtil downloadImageUtil = new DownloadImageUtil();
-                    downloadImageUtil.downloadImage(data.get("user_avatar_url").getAsString(),
+                    downloadImageUtil.downloadImageSynchronously(data.get("user_avatar_url").getAsString(),
                             new DownloadImageUtil.OnImageRespondListener() {
                                 @Override
                                 public void onParseDataException(String exception) {

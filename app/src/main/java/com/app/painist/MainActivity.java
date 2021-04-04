@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.app.painist.Utils.RequestURL;
 import com.app.painist.Utils.SendJsonUtil;
 import com.app.painist.Utils.UploadImageGetJsonUtil;
 import com.app.painist.ui.home.HomeFragment;
@@ -48,7 +49,9 @@ import java.io.File;
 import java.util.HashMap;
 
 import static com.app.painist.LoginActivity.USER_LOGIN;
+import static com.app.painist.R.id.main_fragment;
 import static com.app.painist.R.id.nav_host_fragment;
+import static com.app.painist.R.id.scorelist;
 import static com.app.painist.ui.home.HomeFragment.TAKE_PHOTO;
 import static com.app.painist.ui.scorelist.ScorelistFragment.STATE_FAVORITE;
 import static com.app.painist.ui.scorelist.ScorelistFragment.STATE_HISTORY;
@@ -57,6 +60,10 @@ import static com.app.painist.ui.scorelist.ScorelistFragment.STATE_RECOMMEND;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+
+    private HomeFragment homeFragment;
+    private ScorelistFragment scorelistFragment;
+    private ProfileFragment profileFragment;
 
     private final String photoFilePath = Environment.getExternalStorageDirectory() + File.separator + "temp_music_score.jpg";
 
@@ -67,9 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -78,23 +82,22 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setItemTextColor(getColorStateList(R.color.white));
-//        navigationView.setItemIconPadding(1);
         navigationView.setItemIconSize(50);
         navigationView.setItemBackground(getDrawable(R.drawable.piano_key_background));
 
         FragmentManager manager = getSupportFragmentManager();
 
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        HomeFragment homeFragment = new HomeFragment();
-        ScorelistFragment scoreFragment = new ScorelistFragment();
-        ProfileFragment profileFragment = new ProfileFragment();
+        homeFragment = new HomeFragment();
+        scorelistFragment = new ScorelistFragment();
+        profileFragment = new ProfileFragment();
 
         fragmentTransaction.add(R.id.main_fragment,homeFragment)
-                .add(R.id.main_fragment,scoreFragment)
+                .add(R.id.main_fragment,scorelistFragment)
                 .add(R.id.main_fragment,profileFragment)
                 .show(homeFragment)
                 .hide(profileFragment)
-                .hide(scoreFragment)
+                .hide(scorelistFragment)
                 .commit();
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener(){
@@ -104,23 +107,23 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.navigation_home:
                         FragmentTransaction fragmentTransaction1 = manager.beginTransaction();
                         fragmentTransaction1.show(homeFragment)
-                                .hide(scoreFragment)
+                                .hide(scorelistFragment)
                                 .hide(profileFragment)
                                 .commit();
                         break;
                     case R.id.navigation_scorelist:
                         FragmentTransaction fragmentTransaction2 = manager.beginTransaction();
-                        fragmentTransaction2.show(scoreFragment)
+                        fragmentTransaction2.show(scorelistFragment)
                                 .hide(homeFragment)
                                 .hide(profileFragment)
                                 .commit();
-                        scoreFragment.setLoadingView();
-                        scoreFragment.refreshNowTab();
+                        scorelistFragment.setLoadingView();
+                        scorelistFragment.refreshNowTab();
                         break;
                     case R.id.navigation_profile:
                         FragmentTransaction fragmentTransaction3 = manager.beginTransaction();
                         fragmentTransaction3.show(profileFragment)
-                                .hide(scoreFragment)
+                                .hide(scorelistFragment)
                                 .hide(homeFragment)
                                 .commit();
                         break;
@@ -157,46 +160,40 @@ public class MainActivity extends AppCompatActivity {
                 //根据id分发
                 switch (item.getItemId()){
                     case R.id.nav_menu_info:
-                        /*
-                        跳转样例，
-                        从Intent的前一项链接到Intent的后一项
-                        *@startActivity 启动跳转
-                        */
-                        
-                        Intent intent = new Intent(MainActivity.this,MainActivity.class);
-                        startActivity(intent);
+                        /*Intent intent = new Intent(MainActivity.this,MainActivity.class);
+                        startActivity(intent);*/
                         break;
                     case R.id.nav_menu_history:
                         FragmentTransaction historyTransaction = manager.beginTransaction();
-                        historyTransaction.show(scoreFragment)
+                        historyTransaction.show(scorelistFragment)
                                 .hide(homeFragment)
                                 .hide(profileFragment)
                                 .commit();
-                        scoreFragment.setLoadingView();
-                        scoreFragment.selectTab(0);
-                        scoreFragment.sendScoreListRequest(STATE_HISTORY);
+                        scorelistFragment.setLoadingView();
+                        scorelistFragment.selectTab(0);
+                        scorelistFragment.sendScoreListRequest(STATE_HISTORY);
                         drawer.closeDrawer(Gravity.LEFT);
                         break;
                     case R.id.nav_menu_favorite:
                         FragmentTransaction favoriteTransaction = manager.beginTransaction();
-                        favoriteTransaction.show(scoreFragment)
+                        favoriteTransaction.show(scorelistFragment)
                                 .hide(homeFragment)
                                 .hide(profileFragment)
                                 .commit();
-                        scoreFragment.setLoadingView();
-                        scoreFragment.selectTab(1);
-                        scoreFragment.sendScoreListRequest(STATE_FAVORITE);
+                        scorelistFragment.setLoadingView();
+                        scorelistFragment.selectTab(1);
+                        scorelistFragment.sendScoreListRequest(STATE_FAVORITE);
                         drawer.closeDrawer(Gravity.LEFT);
                         break;
                     case R.id.nav_menu_recommend:
                         FragmentTransaction recommendTransaction = manager.beginTransaction();
-                        recommendTransaction.show(scoreFragment)
+                        recommendTransaction.show(scorelistFragment)
                                 .hide(homeFragment)
                                 .hide(profileFragment)
                                 .commit();
-                        scoreFragment.setLoadingView();
-                        scoreFragment.selectTab(2);
-                        scoreFragment.sendScoreListRequest(STATE_RECOMMEND);
+                        scorelistFragment.setLoadingView();
+                        scorelistFragment.selectTab(2);
+                        scorelistFragment.sendScoreListRequest(STATE_RECOMMEND);
                         drawer.closeDrawer(Gravity.LEFT);
                         break;
                     case R.id.nav_menu_statistic:
@@ -206,12 +203,16 @@ public class MainActivity extends AppCompatActivity {
                         // test
                     case R.id.nav_menu_toolbox:
 
-                        HashMap<String, String> map = new HashMap<String, String>();
+                        Intent testIntent = new Intent(MainActivity.this, PlayingActivity.class);
+                        startActivity(testIntent);
+
+
+                        /*HashMap<String, String> map = new HashMap<String, String>();
                         map.put("token", LoginActivity.getToken());
                         JSONObject jsonObject = new JSONObject(map);
 
                         SendJsonUtil sendJsonUtil = new SendJsonUtil();
-                        sendJsonUtil.SendJsonData("http://101.76.217.74:8000/user/practice/max/", jsonObject,
+                        sendJsonUtil.SendJsonData(RequestURL.debugTest, jsonObject,
                                 new SendJsonUtil.OnJsonRespondListener() {
                                     @Override
                                     public void onRespond(JsonObject respondJson) {
@@ -219,15 +220,11 @@ public class MainActivity extends AppCompatActivity {
                                     }
 
                                     @Override
-                                    public void onParseDataException(String exception) {
-
-                                    }
+                                    public void onParseDataException(String exception) { }
 
                                     @Override
-                                    public void onConnectionFailed(String exception) {
-
-                                    }
-                                });
+                                    public void onConnectionFailed(String exception) { }
+                                });*/
 
                     default:
                         break;
@@ -329,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //处理返回结果的函数
-    @Override
+    @Override @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("ActivityResult", "requestCode="+requestCode);
@@ -342,11 +339,12 @@ public class MainActivity extends AppCompatActivity {
                     UploadImageGetJsonUtil uploadImageGetJsonUtil = new UploadImageGetJsonUtil();
 
                     uploadImageGetJsonUtil.uploadFile(photoFilePath,
-                            "file", "http://101.76.217.74:8000/user/upload/picture/",
+                            "file", RequestURL.uploadImage,
                             new UploadImageGetJsonUtil.OnUploadImageRespondListener() {
                                 @Override
                                 public void onRespond(JsonObject jsonObject) {
-                                    Log.d("Respond", jsonObject.toString());
+                                    Log.d("Respond", "SVG Received");
+                                    PlayingActivity.SVGString = jsonObject.get("svg").getAsString();
                                 }
 
                                 @Override
@@ -375,6 +373,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("LOGIN DATA: userAvatar", userAvatarUrl);
 
                     onLoginStatusChanged(userAvatarUrl, userName, userIntro);
+                    homeFragment.setBottomSpanStartDelay(500);
+                    homeFragment.requestLastHistoryForButtonSpan();
                 }
                 break;
             default:

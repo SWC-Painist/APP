@@ -13,6 +13,7 @@
         android:orientation="vertical"
         android:translationY="-30dp">
         <TextView
+            android:id="@+id/scoreitem_empty_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -22,6 +23,7 @@
             android:textStyle="bold"
             android:textColor="#B0B0B0"/>
         <TextView
+            android:id="@+id/scoreitem_empty_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

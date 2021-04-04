@@ -1,5 +1,7 @@
 package com.app.painist.ui.scorelist;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,11 +19,16 @@ import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.app.painist.LoginActivity;
 import com.app.painist.R;
+import com.app.painist.Utils.DownloadImageUtil;
+import com.app.painist.Utils.RequestURL;
 import com.app.painist.Utils.SendJsonUtil;
 import com.app.painist.ui.fragments.ScoreitemFragment;
+import com.app.painist.ui.home.HomeFragment;
+import com.app.painist.ui.profile.ProfileFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.JsonObject;
 
@@ -30,15 +37,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 public class ScorelistFragment extends Fragment {
-
-    private static final String historyUrl = "http://101.76.217.74:8000/user/history/";
-    private static final String favoriteUrl = "http://101.76.217.74:8000/user/favorite/";
-    private static final String recommendUrl = "http://101.76.217.74:8000/user/recommend/";
-
     private View errorView;
     private View emptyView;
     private View loadingFrameView;
     private View mainView;
+
+    private ScoreitemFragment scoreitemFragment;
 
     public static final int STATE_HISTORY = 0;
     public static final int STATE_FAVORITE = 1;
@@ -46,7 +50,6 @@ public class ScorelistFragment extends Fragment {
 
     private TabLayout.Tab[] scoreTabs = new TabLayout.Tab[3];
     private String[] tabNames = {"历史曲谱", "我的收藏", "猜你想练"};
-    private ScoreitemFragment scoreitemFragment;
 
     public void selectTab(int index) {
         scoreTabs[index].select();
@@ -69,6 +72,12 @@ public class ScorelistFragment extends Fragment {
 
         // Tab list
         TabLayout tabLayout = getActivity().findViewById(R.id.layout_scoretab);
+
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+
+        FragmentTransaction fragmentTransaction = manager.beginTransaction();
+        scoreitemFragment = new ScoreitemFragment();
+        fragmentTransaction.add(R.id.scoreitem, scoreitemFragment).commit();
 
         //添加tab
         for (int i = 0; i < tabNames.length; i++) {
@@ -138,15 +147,16 @@ public class ScorelistFragment extends Fragment {
 
     public void sendScoreListRequest(int scoreListState) {
         String requestUrl = "";
+        String requestTitleName = tabNames[scoreListState];
         switch (scoreListState) {
             case STATE_HISTORY:
-                requestUrl = historyUrl;
+                requestUrl = RequestURL.history;
                 break;
             case STATE_FAVORITE:
-                requestUrl = favoriteUrl;
+                requestUrl = RequestURL.favorite;
                 break;
             case STATE_RECOMMEND:
-                requestUrl = recommendUrl;
+                requestUrl = RequestURL.recommend;
                 break;
         }
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -177,7 +187,7 @@ public class ScorelistFragment extends Fragment {
                     Log.d("Respond", "SUCCESS");
                     if (respondJson.get("1") == null) {
                         Log.d("Respond", "EMPTY!");
-                        setEmptyView();
+                        setEmptyView(requestTitleName + "为空", "快开始练习吧！");
                     } else {
                         Log.d("Json Get", respondJson.get("1").toString());
                         setMainView(respondJson);
@@ -207,30 +217,29 @@ public class ScorelistFragment extends Fragment {
         errorView.setVisibility(View.GONE);
     }
 
-    public void setEmptyView() {
+    public void setEmptyView(String emptyTitle, String emptySubtitle) {
         emptyView.setVisibility(View.VISIBLE);
         loadingFrameView.setVisibility(View.GONE);
         mainView.setVisibility(View.GONE);
         errorView.setVisibility(View.GONE);
+        ((TextView) emptyView.findViewById(R.id.scoreitem_empty_title)).setText(emptyTitle);
+        ((TextView) emptyView.findViewById(R.id.scoreitem_empty_subtitle)).setText(emptySubtitle);
     }
 
     public void setMainView(JsonObject data) {
-
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        ScoreitemFragment scorelistFragment = (ScoreitemFragment) manager.findFragmentById(R.id.scoreitem_fragment);
-
+        scoreitemFragment.clearScoreItem();
         int count = 1;
         while (data.get(String.valueOf(count)) != null) {
             JsonObject dataItem = data.get(String.valueOf(count)).getAsJsonObject();
             String scoreName = dataItem.get("name").getAsString();
-            String scoreTotleScore = dataItem.get("total_score").getAsString();
+            String scoreTotalScore = dataItem.get("total_score").getAsString();
             String[] scorePracticeDate = dataItem.get("last_practice").getAsString().split("T");
             String scoreDate = "上次练习时间：" + scorePracticeDate[0];
-            scorelistFragment.addScoreItem(null, scoreName, scoreTotleScore, scoreDate);
 
+            // 传入bitmapUrl当作参数 内部函数会自动下载对应图片并通过回调函数贴图
+            scoreitemFragment.addScoreItem(dataItem.get("url").getAsString(), scoreName, scoreTotalScore, scoreDate);
             count++;
         }
-
         mainView.setVisibility(View.VISIBLE);
         emptyView.setVisibility(View.GONE);
         loadingFrameView.setVisibility(View.GONE);

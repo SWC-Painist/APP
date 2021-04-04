@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.renderscript.Sampler;
 import android.util.Log;
+import android.view.animation.Interpolator;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -11,6 +12,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -27,6 +29,10 @@ import java.util.List;
 
 public class SendJsonUtil {
     URL target;
+
+    /**
+     * 发送Json数据到指定Url，在服务器返回后执行指定操作
+     */
     public void SendJsonData(String url, JSONObject jsonObject, OnJsonRespondListener listener){
         new Thread(new Runnable() {
             @Override
@@ -35,6 +41,10 @@ public class SendJsonUtil {
                 toSendJsonData(url, jsonObject, listener);
             }
         }).start();
+    }
+
+    public interface JsonRespondCompleteChecker {
+        boolean isComplete(JsonObject respondJson);
     }
 
     public class RespondCompleteFlag{
@@ -46,8 +56,125 @@ public class SendJsonUtil {
     }
 
     private final RespondCompleteFlag flag = new RespondCompleteFlag();
-    private final static long waitingTime = 1000;
+    private final long waitingTime = 1000;
 
+    private int sendTimes;
+    private float lastValue;    // 如果上一次的值大于这一次则说明动画被重启
+
+    /**
+     * 发送Json数据到指定Url，每隔interval发送一次，直到checker返回true或者发送次数超过failedTimes；在服务器返回后执行指定操作
+     */
+    public void SendJsonDataUntil(String url, JSONObject jsonObject,
+                                  OnRepeatJsonRespondListener listener,
+                                  JsonRespondCompleteChecker checker,
+                                  long interval, int failedTimes) {
+        flag.completeFlag = false;
+        flag.handledFlag = false;
+        flag.resultCode = 1;
+        flag.jsonObject = null;
+        flag.errorString = null;
+
+        if (failedTimes == 0) return;
+
+        ValueAnimator timer = new ValueAnimator();
+        timer.setDuration(interval);
+        timer.setInterpolator((Interpolator) input -> input);
+        timer.setFloatValues(0, 1.0f);
+        timer.setRepeatCount(ValueAnimator.INFINITE);
+        timer.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                /*Log.d("Animation", "Value=" + String.valueOf((float) animation.getAnimatedValue())
+                        + " sendTime=" + String.valueOf(sendTimes));*/
+                synchronized (flag) {
+                    if (flag.handledFlag) return;
+                    if (flag.completeFlag)
+                    {
+                        Log.e("GOT FLAG!", "Return");
+                        flag.handledFlag = true;
+                        animation.end();
+                        // Add analyse here
+                        return;
+                    }
+                }
+
+                if (lastValue > (float) animation.getAnimatedValue()) {
+                    sendTimes++;
+
+                    // 开始新线程传输数据
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("Repeat Thread", "Running");
+                            try {
+                                jsonObject.put("time", String.valueOf(sendTimes));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Log.e("JSON Exception", "sendTimes=" + sendTimes);
+                            }
+                            toSendJsonData(url, jsonObject, new OnJsonRespondListener() {
+                                @Override
+                                public void onRespond(JsonObject respondJson) {
+                                    boolean checkerState = checker.isComplete(respondJson);
+                                    Log.d("Checker State", String.valueOf(checkerState));
+
+                                    if (checkerState) {
+                                        listener.onRespondSuccess(respondJson);
+                                    } else {
+                                        listener.onRespondOnce(respondJson);
+                                    }
+
+                                    synchronized (flag) {
+                                        if (checkerState)
+                                        {
+                                            flag.completeFlag = true;
+                                        }
+                                        flag.resultCode = 0;
+                                        flag.jsonObject = respondJson;
+                                    }
+                                }
+
+                                @Override
+                                public void onParseDataException(String exception) {
+                                    listener.onParseDataException(exception);
+                                    synchronized (flag) {
+                                        flag.completeFlag = false;
+                                        flag.resultCode = -1;
+                                        flag.errorString = exception;
+                                    }
+                                }
+
+                                @Override
+                                public void onConnectionFailed(String exception) {
+                                    listener.onConnectionFailed(exception);
+                                    synchronized (flag) {
+                                        flag.completeFlag = false;
+                                        flag.resultCode = -2;
+                                        flag.errorString = exception;
+                                    }
+                                }
+                            });
+                        }
+                    }).start();
+
+                    if (sendTimes < failedTimes) {
+                        Log.e("Animation", "Restart");
+                    }
+                    else {
+                        Log.e("Animation", "Failed");
+                        if (!flag.completeFlag)
+                            listener.onConnectionTimeOut("连接失败");
+                    }
+                }
+                lastValue = (float) animation.getAnimatedValue();
+            }
+        });
+        timer.start();
+    }
+
+    /**
+     * 发送Json数据到指定Url，在服务器返回后<b>在原线程上</b>执行指定操作
+     */
     public void SendJsonDataSynchronously(String url, JSONObject jsonObject, OnJsonRespondListener listener) {
         flag.completeFlag = false;
         flag.handledFlag = false;
@@ -59,6 +186,7 @@ public class SendJsonUtil {
         ValueAnimator timer = new ValueAnimator();
         timer.setDuration(waitingTime);
         timer.setIntValues(0, (int) waitingTime);
+        timer.setInterpolator((Interpolator) input -> input);
         timer.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -130,6 +258,8 @@ public class SendJsonUtil {
      * @param listener 回调函数
      */
     private void toSendJsonData(String url, JSONObject jsonObject, OnJsonRespondListener listener) {
+        Log.d("Send Json: URL", url);
+        Log.d("Send Json: JSON", jsonObject.toString());
         String result = "";
         try {
             target = new URL(url);
@@ -195,5 +325,12 @@ public class SendJsonUtil {
 
     public interface OnJsonRespondListener extends OnRespondListener {
         void onRespond(JsonObject respondJson);
+    }
+
+    public interface OnRepeatJsonRespondListener extends OnRespondListener {
+        void onRespondOnce(JsonObject respondJson);
+        void onRespondSuccess(JsonObject respondJson);
+        void onConnectionFailed(String exception);
+        void onConnectionTimeOut(String exception);
     }
 }

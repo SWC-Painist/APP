@@ -4,9 +4,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -27,6 +30,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.app.painist.MainActivity;
 import com.app.painist.R;
+import com.app.painist.Utils.DownloadImageUtil;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -65,6 +69,11 @@ public class ScoreitemFragment extends Fragment {
         });
     }
 
+    public void clearScoreItem() {
+        LinearLayout container = (LinearLayout) getActivity().findViewById(R.id.scoreitem_container);
+        container.removeAllViews();
+    }
+
     public void addScoreItem(Bitmap bitmap, String title, String introText1, String introText2) {
 
         LinearLayout container = (LinearLayout) getActivity().findViewById(R.id.scoreitem_container);
@@ -76,16 +85,9 @@ public class ScoreitemFragment extends Fragment {
             container.addView(spliter);
         }
 
-        LayoutInflater layoutInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = layoutInflater.inflate(R.layout.scoreitem_sample, null);
+        View newScoreItem = generateNewScoreItem(getActivity(), bitmap, title, introText1, introText2);
 
-        if (bitmap != null)
-            ((ImageView) layout.findViewById(R.id.scoreitem_avatar)).setImageBitmap(bitmap);
-        ((TextView) layout.findViewById(R.id.scoreitem_title)).setText(title);
-        ((TextView) layout.findViewById(R.id.scoreitem_intro_text1)).setText("- " + introText1);
-        ((TextView) layout.findViewById(R.id.scoreitem_intro_text2)).setText("- " + introText2);
-
-        layout.setOnClickListener(new View.OnClickListener() {
+        newScoreItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Open Practice Mode
@@ -117,11 +119,108 @@ public class ScoreitemFragment extends Fragment {
             }
         });*/
 
-        container.addView(layout);
+        container.addView(newScoreItem);
         scoreItemCount++;
     }
 
-    private void setItemSelected(LinearLayout selected) {
+    public void addScoreItem(String bitmapUrl, String title, String introText1, String introText2) {
+
+        LinearLayout container = (LinearLayout) getActivity().findViewById(R.id.scoreitem_container);
+
+        if (scoreItemCount != 0) {
+            LayoutInflater spliterInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View spliter = spliterInflater.inflate(R.layout.scoreitem_split_line, null);
+
+            container.addView(spliter);
+        }
+
+        View newScoreItem = generateNewScoreItem(getActivity(), bitmapUrl, title, introText1, introText2);
+
+        newScoreItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Open Practice Mode
+                setItemSelected((LinearLayout) v);
+            }
+        });
+
+        /*layout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getContext(), "长按生效", Toast.LENGTH_SHORT).show();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+                builder.setTitle("删除曲谱");
+                builder.setMessage("确定将该曲谱从历史记录中删除？");
+                builder.setCancelable(false);
+                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) { }
+                });
+
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) { }
+                });
+
+                builder.show();
+
+                return true;
+            }
+        });*/
+
+        container.addView(newScoreItem);
+        scoreItemCount++;
+    }
+
+    // NOTE: 返回的View不包含事件响应
+    public static View generateNewScoreItem(Activity attachedActivity, Bitmap bitmap, String title, String introText1, String introText2) {
+
+        View layout = ((LayoutInflater) attachedActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.scoreitem_sample, null);
+
+        if (bitmap != null)
+            ((ImageView) layout.findViewById(R.id.scoreitem_avatar)).setImageBitmap(bitmap);
+        ((TextView) layout.findViewById(R.id.scoreitem_title)).setText(title);
+        ((TextView) layout.findViewById(R.id.scoreitem_intro_text1)).setText("- " + introText1);
+        ((TextView) layout.findViewById(R.id.scoreitem_intro_text2)).setText("- " + introText2);
+
+        return layout;
+    }
+
+    public static View generateNewScoreItem(Activity attachedActivity, String bitmapUrl, String title, String introText1, String introText2) {
+
+        View layout = ((LayoutInflater) attachedActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.scoreitem_sample, null);
+        Bitmap scoreItemErrror = BitmapFactory.decodeResource(attachedActivity.getResources(), R.mipmap.scoreitem_error);
+
+        if (bitmapUrl != null) {
+            DownloadImageUtil downloadImageUtil = new DownloadImageUtil();
+            downloadImageUtil.downloadImageSynchronously(bitmapUrl, new DownloadImageUtil.OnImageRespondListener() {
+                @Override
+                public void onRespond(Bitmap respondBitmap) {
+                    ((ImageView) layout.findViewById(R.id.scoreitem_avatar)).setImageBitmap(respondBitmap);
+                }
+
+                @Override
+                public void onParseDataException(String exception) {
+                    ((ImageView) layout.findViewById(R.id.scoreitem_avatar)).setImageBitmap(scoreItemErrror);
+                }
+
+                @Override
+                public void onConnectionFailed(String exception) {
+                    ((ImageView) layout.findViewById(R.id.scoreitem_avatar)).setImageBitmap(scoreItemErrror);
+                }
+            });
+        }
+
+        ((TextView) layout.findViewById(R.id.scoreitem_title)).setText(title);
+        ((TextView) layout.findViewById(R.id.scoreitem_intro_text1)).setText("- " + introText1);
+        ((TextView) layout.findViewById(R.id.scoreitem_intro_text2)).setText("- " + introText2);
+
+        return layout;
+    }
+
+    public void setItemSelected(LinearLayout selected) {
         if (selectedBaseLayout != null) {
             selectedBaseLayout.removeAllViews();
             selectedBaseLayout.addView(selectedSubLayout);
@@ -146,5 +245,9 @@ public class ScoreitemFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    public interface OnScoreMipmapReceivedListener {
+        void onScoreMipmapReceived(Bitmap bitmap);
     }
 }

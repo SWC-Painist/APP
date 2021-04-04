@@ -1,0 +1,30 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="200dp"
+            android:height="200dp"
+            android:viewportWidth="200"
+            android:viewportHeight="200">
+            <path
+                android:name="count_down_circle"
+                android:pathData="M 100 12.5 C 148.3 12.5 187.5 51.7 187.5 100 C 187.5 148.3 148.3 187.5 100 187.5 C 51.7 187.5 12.5 148.3 12.5 100 C 12.5 51.7 51.7 12.5 100 12.5"
+                android:strokeColor="#989898"
+                android:strokeWidth="12"
+                android:strokeLineCap="round"/>
+        </vector>
+    </aapt:attr>
+    <target android:name="count_down_circle">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="trimPathStart"
+                android:duration="1000"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:anim/linear_interpolator"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

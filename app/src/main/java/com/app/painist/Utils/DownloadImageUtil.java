@@ -1,5 +1,6 @@
 package com.app.painist.Utils;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,8 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,9 +40,97 @@ public class DownloadImageUtil {
         }).start();
     }
 
+    public class RespondCompleteFlag {
+        boolean completeFlag = false;
+        boolean handledFlag = false;
+        int resultCode = 1; // 0: success (negative: failed / -2: connection error)
+        Bitmap bitmapObject = null;
+        String errorString = null;
+    }
+
+    private final DownloadImageUtil.RespondCompleteFlag flag = new DownloadImageUtil.RespondCompleteFlag();
+    private final static long waitingTime = 2000;
+
+    public void downloadImageSynchronously(String uriPic, OnImageRespondListener listener) {
+        flag.completeFlag = false;
+        flag.handledFlag = false;
+        flag.resultCode = 1;
+        flag.bitmapObject = null;
+        flag.errorString = null;
+
+        // 轮询：使用ValueAnimator作计时器
+        ValueAnimator timer = new ValueAnimator();
+        timer.setDuration(waitingTime);
+        timer.setIntValues(0, (int) waitingTime);
+        timer.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                // 在轮询时锁状态位
+                synchronized (flag)
+                {
+                    if (flag.handledFlag) return;
+                    if (flag.completeFlag)
+                    {
+                        if (flag.resultCode == 0)
+                            listener.onRespond(flag.bitmapObject);
+                        else if (flag.resultCode == -1)
+                            listener.onParseDataException(flag.errorString);
+                        else if (flag.resultCode == -2)
+                            listener.onConnectionFailed(flag.errorString);
+                        flag.handledFlag = true;
+                        // if (animation.isRunning()) animation.end();
+                        return;
+                    }
+                }
+
+                if ((int) animation.getAnimatedValue() >= (int) waitingTime) {
+                    listener.onConnectionFailed("：连接超时");
+                    return;
+                }
+            }
+        });
+        timer.start();
+
+        // 新线程：执行json数据发送与接收
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("Thread", "Running");
+                getImageFromUrl(uriPic, new DownloadImageUtil.OnImageRespondListener() {
+                    @Override
+                    public void onRespond(Bitmap respondBitmap) {
+                        synchronized (flag) {
+                            flag.completeFlag = true;
+                            flag.resultCode = 0;
+                            flag.bitmapObject = respondBitmap;
+                        }
+                    }
+
+                    @Override
+                    public void onParseDataException(String exception) {
+                        synchronized (flag) {
+                            flag.completeFlag = true;
+                            flag.resultCode = -1;
+                            flag.errorString = exception;
+                        }
+                    }
+
+                    @Override
+                    public void onConnectionFailed(String exception) {
+                        synchronized (flag) {
+                            flag.completeFlag = true;
+                            flag.resultCode = -2;
+                            flag.errorString = exception;
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
+
     private void getImageFromUrl(String uriPic, OnImageRespondListener listener) {
         URL imageUrl = null;
-        String downloadUrl = "http://101.76.217.74:8000/user/download/picture/?photo=";
+        String downloadUrl = RequestURL.main + "download/picture/?photo=";
         Bitmap bitmap = null;
         try {
             Log.d("URIPIC", uriPic);

@@ -2,36 +2,36 @@ package com.app.painist;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.transition.AutoTransition;
 import android.transition.ChangeBounds;
-import android.transition.ChangeTransform;
-import android.transition.Explode;
-import android.transition.Fade;
 import android.transition.Scene;
 import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.app.painist.ui.home.HomeFragment;
+import com.app.painist.Utils.RequestURL;
+import com.app.painist.Utils.SendJsonUtil;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonObject;
 
-import org.w3c.dom.Text;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 public class LoadingActivity extends AppCompatActivity {
 
@@ -44,14 +44,35 @@ public class LoadingActivity extends AppCompatActivity {
     private float processBarValue;
     private boolean loadingComplete;
 
+    ValueAnimator processBarValueAnimator;
+
     @Override @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setFullScreen();
         setContentView(R.layout.activity_loading);
 
-        processBarText = "加载中";
+        processBarText = "上传中";
         processBarValue = 0f;
+
+        processBarValueAnimator = new ValueAnimator();
+        processBarValueAnimator.setFloatValues(0.0f, 0.19f);
+        processBarValueAnimator.setDuration(3000);
+        processBarValueAnimator.setInterpolator(input -> input);
+        processBarValueAnimator.addListener(new ValueAnimator.AnimatorListener() {
+            @Override public void onAnimationStart(Animator animation) { }
+            @Override public void onAnimationRepeat(Animator animation) { }
+            @Override public void onAnimationEnd(Animator animation) { setProcessBarComplete(); }
+            @Override public void onAnimationCancel(Animator animation) { setProcessBarFailed(); }
+        });
+        processBarValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                processBarValue = (float) animation.getAnimatedValue();
+                updateProcessBar();
+            }
+        });
+        processBarValueAnimator.start();
 
         ViewGroup sceneRoot = (ViewGroup) findViewById(R.id.loading_settings);
         foldScene = Scene.getSceneForLayout(sceneRoot, R.layout.activity_loading_fold, this);
@@ -63,14 +84,13 @@ public class LoadingActivity extends AppCompatActivity {
         spanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (isFold) {
                     TransitionManager.go(unfoldScene, transition);
                 } else {
                     TransitionManager.go(foldScene, transition);
                 }
                 TextView spanButton = (TextView) findViewById(R.id.loading_settings_more_options_label);
-                spanButton.setOnClickListener(this::onClick);
+                spanButton.setOnClickListener(this);
                 isFold = !isFold;
             }
         });
@@ -83,45 +103,106 @@ public class LoadingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (loadingComplete)
                 {
+                    String scoreName = "";
+                    String practiceMode = "";
+                    String practiceGoal = "";
+                    String addScoreToFavorite = "";
+
+                    scoreName = ((EditText) findViewById(R.id.loading_settings_name_edit_text)).getText().toString();
+
+                    try {practiceMode = ((Button) findViewById(R.id.practice_mode)).getText().toString(); }
+                    catch (NullPointerException ignored) {}
+                    try {practiceGoal = ((Button) findViewById(R.id.practice_goal)).getText().toString(); }
+                    catch (NullPointerException ignored) {}
+                    try {addScoreToFavorite = ((CheckBox) findViewById(R.id.add_to_favorite)).isChecked()? "true": "false"; }
+                    catch (NullPointerException ignored) {}
+
+                    HashMap<String, String> hashMap = new HashMap<>();
+                    hashMap.put("score_name", scoreName);
+                    hashMap.put("practice_mode", practiceMode);
+                    hashMap.put("practice_goal", practiceGoal);
+                    hashMap.put("add_to_favorite", addScoreToFavorite);
+                    JSONObject json = new JSONObject(hashMap);
+
+                    SendJsonUtil uploadImageInfo = new SendJsonUtil();
+                    uploadImageInfo.SendJsonData(RequestURL.uploadImageInfo, json, new SendJsonUtil.OnJsonRespondListener() {
+                        @Override
+                        public void onRespond(JsonObject respondJson) {
+                            Log.e("曲谱名称上传成功", "Success");
+                        }
+
+                        @Override
+                        public void onParseDataException(String exception) {
+                            Log.e("解析数据时出错", exception);
+                        }
+
+                        @Override
+                        public void onConnectionFailed(String exception) {
+                            Log.e("无法连接到服务器", exception);
+                        }
+                    });
+
                     // 禁止从练习界面再按返回键返回加载界面
                     // 即将所有Activity从栈区中移除
                     Intent intent = new Intent();
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.setClass(LoadingActivity.this, PlayingActivity.class);
                     startActivity(intent);
-                    // Check if we're running on Android 5.0 or higher
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        // Apply activity transition
-                    } else {
-                        // Swap without transition
-                    }
-
                 }
             }
         });
 
-        /*FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        fragmentTransaction.add(R.id.loading_settings,new HomeFragment()).commit();*/
+        updateProcessBar();
 
-        SeekBar seekBar = findViewById(R.id.test_seek_bar);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("value", "omr");
+        JSONObject jsonObject = new JSONObject(map);
+        SendJsonUtil sendJsonUtil = new SendJsonUtil();
+        sendJsonUtil.SendJsonDataUntil(RequestURL.getOMRProgress, jsonObject, new SendJsonUtil.OnRepeatJsonRespondListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                setProcessBarValue(progress * 1.0f / 100);
-                if (progress == 100) {
-                    setProcessBarComplete();
+            public void onParseDataException(String exception) {
+                Snackbar.make(findViewById(R.id.loading),
+                        "解析数据时出错" + exception, Snackbar.LENGTH_SHORT).show();
+                setProcessBarFailed();
+            }
+
+            @Override
+            public void onRespondOnce(JsonObject respondJson) {
+                if (!processBarText.equals("识谱中")) {
+                    processBarText = "识谱中";
+                    processBarValueAnimator.setFloatValues(0.2f, 0.9f);
+                    processBarValueAnimator.setDuration(15000 + processBarValueAnimator.getCurrentPlayTime());
                 }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
+            public void onRespondSuccess(JsonObject respondJson) {
+                if (!processBarText.equals("下载中")) {
+                    processBarText = "下载中";
+                    float currentValue = (float) processBarValueAnimator.getAnimatedValue();
+                    processBarValueAnimator.setFloatValues(currentValue, 1f);
+                    processBarValueAnimator.setDuration(1000 + processBarValueAnimator.getCurrentPlayTime());
+                }
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { }
-        });
+            public void onConnectionFailed(String exception) {
+                Snackbar.make(findViewById(R.id.loading),
+                        "无法连接至服务器" + exception, Snackbar.LENGTH_SHORT).show();
+            }
 
-
+            @Override
+            public void onConnectionTimeOut(String exception) {
+                Snackbar.make(findViewById(R.id.loading),
+                        "无法连接至服务器" + exception, Snackbar.LENGTH_LONG).show();
+                // setProcessBarFailed();
+            }
+        }, new SendJsonUtil.JsonRespondCompleteChecker() {
+            @Override
+            public boolean isComplete(JsonObject respondJson) {
+                return respondJson.get("status").getAsString().equals("success");
+            }
+        }, 1000, 11);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -135,12 +216,7 @@ public class LoadingActivity extends AppCompatActivity {
         getWindow().setAttributes(params);
     }
 
-    // Ratio between 0 and 1
-    public void setProcessBarValue(float ratio) {
-        processBarValue = ratio;
-        TextView textView = findViewById(R.id.process_bar_label);
-        textView.setText(processBarText+" "+String.format("%.0f", processBarValue * 100)+"%");
-
+    private void setProcessBarTextPosition(float ratio) {
         final float fixedRatio = 0.175f;
 
         float left = (ratio - fixedRatio) / (1 - fixedRatio);
@@ -159,6 +235,9 @@ public class LoadingActivity extends AppCompatActivity {
                 (0, ViewGroup.LayoutParams.MATCH_PARENT);
         rightParams.weight = right;
         rightConstaint.setWeightSum(1); rightConstaint.setLayoutParams(rightParams);
+    }
+
+    private void setProcessBarLinePosition(float ratio) {
 
         // Update bottom bar-slide
         LinearLayout slide = findViewById(R.id.process_bar_slide);
@@ -172,26 +251,52 @@ public class LoadingActivity extends AppCompatActivity {
                 (0, ViewGroup.LayoutParams.MATCH_PARENT);
         slideOtherParams.weight = 1 - ratio;
         slideOther.setWeightSum(1); slideOther.setLayoutParams(slideOtherParams);
-
-        Log.d("SetProcessBarValue", "ratio("+left+":"+right+")");
     }
 
-    public void setProcessBarText(String text) {
-        processBarText = text;
+    // Use current processBarValue
+    private void updateProcessBarText() {
         TextView textView = findViewById(R.id.process_bar_label);
         textView.setText(processBarText+" "+String.format("%.0f", processBarValue * 100)+"%");
     }
 
+    // Ratio between 0 and 1
+    // 当收到服务器数据时调用此API 更新进度条进度
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void updateProcessBar() {
+        Drawable drawable = getApplicationContext().getDrawable(R.drawable.round_button_loading);
+        findViewById(R.id.process_bar).setBackground(drawable);
+        updateProcessBarText();
+        setProcessBarLinePosition(processBarValue);
+        setProcessBarTextPosition(processBarValue);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setProcessBarComplete() {
         loadingComplete = true;
-        ImageView processBarButton = findViewById(R.id.process_bar);
-        AnimationDrawable loadingAnimation = (AnimationDrawable) processBarButton.getDrawable();
-        loadingAnimation.start();
+        Drawable drawable = getApplicationContext().getDrawable(R.drawable.round_button_complete);
+        findViewById(R.id.process_bar).setBackground(drawable);
         TextView textView = findViewById(R.id.process_bar_label);
         textView.setText("开始练习！");
         textView.setTextColor(0xFF0AA500);
 
         LinearLayout slide = findViewById(R.id.process_bar_slide);
         slide.setBackgroundColor(0xFF0DD100);
+        setProcessBarTextPosition(1.0f);
+        setProcessBarLinePosition(1.0f);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void setProcessBarFailed() {
+        loadingComplete = false;
+        Drawable drawable = getApplicationContext().getDrawable(R.drawable.round_button_failed);
+        findViewById(R.id.process_bar).setBackground(drawable);
+        TextView textView = findViewById(R.id.process_bar_label);
+        textView.setText("加载失败");
+        textView.setTextColor(0xFFE00000);
+
+        LinearLayout slide = findViewById(R.id.process_bar_slide);
+        slide.setBackgroundColor(0xFFFF2020);
+        setProcessBarTextPosition(0.0f);
+        setProcessBarLinePosition(1.0f);
     }
 }

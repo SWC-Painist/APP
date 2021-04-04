@@ -5,10 +5,16 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Picture;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.PictureDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -21,12 +27,19 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.app.painist.Utils.ConverterUtil;
+import com.bumptech.glide.Glide;
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGParseException;
+
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -50,17 +63,19 @@ public class PlayingActivity extends AppCompatActivity {
         public String octave;
     }
 
+    private TextView countDownText;
+    private ImageView countDownBackground;
+
+    private int countDownNumber = 5;
+    private ValueAnimator countDownAnimator;
+
     @Override @RequiresApi(api = Build.VERSION_CODES.O)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         playingView = new PlayingView(this);
         setFullScreen();
-
         setContentView(R.layout.activity_playing);
-/*        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        addContentView(playingView, params);*/
 
         practiceHintCardRight = findViewById(R.id.practice_hint_card_right);
         practiceHintCardLeft = findViewById(R.id.practice_hint_card_left);
@@ -70,10 +85,49 @@ public class PlayingActivity extends AppCompatActivity {
         practiceModeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ImageView playingImage = (ImageView) findViewById(R.id.playing_score);
 
+                Bitmap bitmap = ConverterUtil.SVGString2Bitmap(SVGString, playingImage.getHeight());
+                Log.d("Bitmap", bitmap.getWidth() + ", " + bitmap.getHeight());
+                Log.d("ImageView", playingImage.getWidth() + ", " + playingImage.getHeight());
+                playingImage.setImageBitmap(Bitmap.createScaledBitmap(bitmap,
+                        (int) (bitmap.getWidth() * 2.8f), (int) (bitmap.getHeight() * 2.8f), false));
+                // playingImage.setImageBitmap(bitmap);
             }
         });
 
+        countDownBackground = (ImageView) findViewById(R.id.playing_count_down_background);
+
+        countDownText = (TextView) findViewById(R.id.playing_count_down);
+        countDownText.setText(String.valueOf(countDownNumber));
+
+        countDownAnimator = new ValueAnimator();
+        countDownAnimator.setDuration(1000);
+        countDownAnimator.setInterpolator(input -> input);
+        countDownAnimator.setIntValues(0, 1);
+        countDownAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) { }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                countDownNumber--;
+                if (countDownNumber > 0) {
+                    countDownText.setText(String.valueOf(countDownNumber));
+                    ((Animatable) countDownBackground.getDrawable()).start();
+                    countDownAnimator.start();
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) { }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) { }
+        });
+
+        ((Animatable) countDownBackground.getDrawable()).start();
+        countDownAnimator.start();
     }
 
     private void setPracticeHintCardNote(ViewGroup hintCard, PlayingNote[] notes) {
@@ -146,4 +200,9 @@ public class PlayingActivity extends AppCompatActivity {
         }
         return 0f;
     }
+
+    public static String SVGString;
+
+    // Tools for rendering SVG
+
 }

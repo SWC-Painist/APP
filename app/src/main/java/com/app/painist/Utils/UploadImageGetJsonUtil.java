@@ -117,14 +117,10 @@ public class UploadImageGetJsonUtil {
                 String inputline = "";
                 result = "";
                 while ((inputline = bufferedReader.readLine()) != null)
-                {
-                    Log.d("Receive", inputline);
                     result += inputline;
-                }
                 inputStreamReader.close();
 
                 if (result != null) {
-                    Log.d("Result", "Result = " + result);
                     JsonElement respond = null;
                     try {
                         respond = (new JsonParser().parse(result.toString()));

@@ -85,7 +85,6 @@
         android:id="@+id/continue_practice_notification"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:paddingTop="500dp"
         android:orientation="vertical"
         android:layout_gravity="bottom">
         <LinearLayout
@@ -101,7 +100,7 @@
                 android:src="@drawable/down_bar">
             </ImageView>
             <ImageView
-                android:id="@+id/span_button"
+                android:id="@+id/bottom_span_button"
                 android:layout_width="45dp"
                 android:layout_height="12dp"
                 android:paddingLeft="15dp"
@@ -126,25 +125,13 @@
             android:textSize="18sp">
 
         </TextView>
-
-        <include layout="@layout/scoreitem_sample"/>
+        <FrameLayout
+            android:id="@+id/bottom_span_score_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/scoreitem_sample"/>
+        </FrameLayout>
 
     </LinearLayout>
-<!--    <com.google.android.material.appbar.AppBarLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:theme="@style/Theme.Painist.AppBarOverlay">-->
-
-<!--        <androidx.appcompat.widget.Toolbar-->
-<!--            android:id="@+id/toolbar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="?attr/actionBarSize"-->
-<!--            android:background="?attr/colorPrimary"-->
-<!--            android:gravity="center_horizontal"-->
-<!--            android:textAlignment="center"-->
-<!--            app:title="MAIN FRAGMENT"-->
-<!--            app:popupTheme="@style/Theme.Painist.PopupOverlay"/>-->
-
-<!--    </com.google.android.material.appbar.AppBarLayout>-->
 
 </FrameLayout >

@@ -2,6 +2,7 @@ package com.app.painist.ui.home;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,12 +14,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.renderscript.Sampler;
+import android.text.Layout;
 import android.view.Gravity;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Button;
@@ -33,6 +36,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -41,6 +45,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.app.painist.BackgroundNoteFragment;
 import com.app.painist.EvaluationActivity;
 import com.app.painist.EvaluationView;
+import com.app.painist.LoginActivity;
 import com.app.painist.MainActivity;
 import com.app.painist.PlayingActivity;
 import com.app.painist.MainActivity;
@@ -48,10 +53,19 @@ import com.app.painist.R;
 import com.app.painist.TakePhotoActivity;
 import com.app.painist.Utils.AudioRecordUtil;
 import com.app.painist.Utils.DownloadImageUtil;
+import com.app.painist.Utils.RequestURL;
+import com.app.painist.Utils.SendJsonUtil;
+import com.app.painist.ui.fragments.ScoreitemFragment;
+import com.app.painist.ui.scorelist.ScorelistFragment;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class HomeFragment extends Fragment {
 
@@ -124,24 +138,25 @@ public class HomeFragment extends Fragment {
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         fragmentTransaction.add(R.id.background_note_fragment, new BackgroundNoteFragment()).commit();
 
-        bottomSpan = getActivity().findViewById(R.id.continue_practice_notification);
-
+        bottomSpan = requireActivity().findViewById(R.id.continue_practice_notification);
+        bottomSpan.setTranslationY(1000);
         bottomSpanAnimator = new ValueAnimator();
 
         isSpan = true;
         bottomSpanAnimator.setDuration((long) (duration * 1000));
-        bottomSpanAnimator.setStartDelay(3000);
         bottomSpanAnimator.setFloatValues(paddingMax, paddingMin);
         bottomSpanAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value = (float) animation.getAnimatedValue();
-                bottomSpan.setPadding(0, (int)value, 0, 0);
+                bottomSpan.setTranslationY((int)value);
             }
         });
-        bottomSpanAnimator.start();
+        // 请求最近的一条练习记录
+        requestLastHistoryForButtonSpan();
+        setBottomSpanStartDelay(3000);
 
-        spanButton = getActivity().findViewById(R.id.span_button);
+        spanButton = requireActivity().findViewById(R.id.bottom_span_button);
         spanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,6 +177,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
         // Button To Open Left-Navigation Menu
         ImageView menuButton = getActivity().findViewById(R.id.menu_button);
         menuButton.setOnClickListener(new View.OnClickListener() {
@@ -172,6 +188,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Photo button shade
         ImageView photoButtonShade = getActivity().findViewById(R.id.photo_button_shade);
         ValueAnimator shadeAlphaAnimator = new ValueAnimator();
         shadeAlphaAnimator.setDuration(800);
@@ -210,8 +227,66 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    private void requestPermission() {
 
+    public void setBottomSpanStartDelay(long delay) {
+        bottomSpanAnimator.setStartDelay(delay);
+    }
+
+    public void requestLastHistoryForButtonSpan() {
+
+        SendJsonUtil requestBottomSpanHistory = new SendJsonUtil();
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("token", LoginActivity.getToken());
+        JSONObject jsonObject = new JSONObject(map);
+        requestBottomSpanHistory.SendJsonDataSynchronously(RequestURL.history, jsonObject, new SendJsonUtil.OnJsonRespondListener() {
+            @Override
+            public void onRespond(JsonObject respondJson) {
+                String respondStatus = "";
+                try {
+                    respondStatus = respondJson.get("state").getAsString();
+                } catch (NullPointerException e) {
+                    Log.e("RECEIVED DATA PARSING", "key 'state' missing");
+                }
+                if (respondStatus.equals("success")) {
+                    if (respondJson.get("1") == null) {
+                        Log.d("RECEIVED DATA", "用户练习历史为空");
+                    } else {
+                        // 在接收到json文件时立即解析
+                        // 解析完成即播放弹出动画；在此期间请求ScoreMipmap，收到后添加到图片位置中
+
+                        JsonObject dataItem = respondJson.get("1").getAsJsonObject();
+                        String scoreName = dataItem.get("name").getAsString();
+                        String scoreTotleScore = "练习熟练度：" + dataItem.get("total_score").getAsString();
+                        String[] scorePracticeDate = dataItem.get("last_practice").getAsString().split("T");
+                        String scoreDate = "上次练习时间：" + scorePracticeDate[0];
+
+                        View newView = ScoreitemFragment.generateNewScoreItem(getActivity(), respondJson.get("1")
+                                .getAsJsonObject().get("url").getAsString(), scoreName, scoreTotleScore, scoreDate);
+
+                        FrameLayout bottomSpanScoreContainer = getActivity().findViewById(R.id.bottom_span_score_item);
+                        bottomSpanScoreContainer.removeAllViews();
+                        bottomSpanScoreContainer.addView(newView);
+                        bottomSpanAnimator.start();
+                    }
+                } else {
+                    Log.d("RECEIVED DATA", "用户未登陆，无法加载上次练习");
+                }
+
+            }
+
+            @Override
+            public void onParseDataException(String exception) {
+                Log.e("REQUEST DATA", "解析数据时出错" + exception);
+            }
+
+            @Override
+            public void onConnectionFailed(String exception) {
+                Log.e("REQUEST DATA", "无法连接至服务器" + exception);
+            }
+        });
+    }
+
+    private void requestPermission() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             //请求权限
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
