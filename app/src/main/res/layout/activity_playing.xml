@@ -7,11 +7,20 @@
     android:layout_height="match_parent"
     tools:context=".LoadingActivity">
 
-    <ImageView
-        android:id="@+id/playing_score"
-        android:layout_width="match_parent"
-        android:layout_height="5000dp"
-        android:contentDescription="Playing Score" />
+    <LinearLayout
+        android:id="@+id/playing_score_container"
+        android:layout_width="10000dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/playing_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleX="2.2"
+            android:scaleY="2.2"
+            android:contentDescription="Playing Score" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/loading_settings_layout"
@@ -51,7 +60,24 @@
             android:layout_marginLeft="20dp"
             android:layout_marginBottom="7dp"
             android:layout_marginRight="7dp">
-            <include layout="@layout/hint_card_note_2"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+            <TextView
+                android:id="@+id/practice_hint_card_right_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="右手弹奏"
+                android:textSize="22sp"/>
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/vertical_line_dark"/>
+            </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -63,7 +89,24 @@
             android:layout_marginLeft="20dp"
             android:layout_marginBottom="7dp"
             android:layout_marginRight="7dp">
-            <include layout="@layout/hint_card_note_3"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/practice_hint_card_left_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="左手弹奏"
+                    android:textSize="22sp"/>
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/vertical_line_dark"/>
+            </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
 
@@ -72,7 +115,7 @@
         android:layout_centerInParent="true"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:src="@drawable/count_down_animation"/>
+        android:src="@drawable/count_down_animation_total"/>
 
     <FrameLayout
         android:id="@+id/playing_count_down_frame"
@@ -89,4 +132,12 @@
             android:textColor="#505050"
             android:fontFamily="@font/cuyuan" />
     </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/playing_recording_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include layout="@layout/fragment_playing_recording_frame"/>
+    </FrameLayout>
+
 </RelativeLayout>

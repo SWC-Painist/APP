@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.app.painist.MainActivity;
 import com.app.painist.R;
-import com.app.painist.ui.setting.activity.SettingPersonInformationActivity;
 
 public class SettingFragment extends Fragment {
 
@@ -36,15 +35,5 @@ public class SettingFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(SettingViewModel.class);
-        // TODO: Use the ViewModel
-        SettingPersonInformation = getActivity().findViewById(R.id.information);
-        SettingPersonInformation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),SettingPersonInformationActivity.class);
-                startActivity(intent);
-            }
-        });
     }
-
 }

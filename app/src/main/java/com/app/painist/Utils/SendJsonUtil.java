@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -125,8 +126,7 @@ public class SendJsonUtil {
                                     }
 
                                     synchronized (flag) {
-                                        if (checkerState)
-                                        {
+                                        if (checkerState) {
                                             flag.completeFlag = true;
                                         }
                                         flag.resultCode = 0;
@@ -162,8 +162,10 @@ public class SendJsonUtil {
                     }
                     else {
                         Log.e("Animation", "Failed");
-                        if (!flag.completeFlag)
-                            listener.onConnectionTimeOut("连接失败");
+                        if (!flag.completeFlag) {
+                            listener.onConnectionTimeOut("：连接失败");
+                            animation.end();
+                        }
                     }
                 }
                 lastValue = (float) animation.getAnimatedValue();
@@ -314,11 +316,11 @@ public class SendJsonUtil {
                 dataOutputStream.close();
                 httpURLConnection.disconnect();
             } catch (IOException e) {
-                e.printStackTrace();
+                // e.printStackTrace();
                 listener.onConnectionFailed("：未连网");
             }
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             listener.onConnectionFailed("：URL错误");
         }
     }

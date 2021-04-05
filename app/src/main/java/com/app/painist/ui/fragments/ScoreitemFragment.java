@@ -70,6 +70,7 @@ public class ScoreitemFragment extends Fragment {
     }
 
     public void clearScoreItem() {
+        scoreItemCount = 0;
         LinearLayout container = (LinearLayout) getActivity().findViewById(R.id.scoreitem_container);
         container.removeAllViews();
     }

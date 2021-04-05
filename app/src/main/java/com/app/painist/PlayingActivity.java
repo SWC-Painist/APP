@@ -1,7 +1,5 @@
 package com.app.painist;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,59 +7,43 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Picture;
 import android.graphics.drawable.Animatable;
-import android.graphics.drawable.PictureDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.app.painist.Utils.ConverterUtil;
-import com.bumptech.glide.Glide;
-import com.caverock.androidsvg.SVG;
-import com.caverock.androidsvg.SVGParseException;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
+import com.app.painist.Utils.AudioRecordUtil;
+import com.app.painist.Utils.DownloadImageUtil;
+import com.app.painist.Utils.RequestURL;
+import com.app.painist.Utils.UploadFileGetJsonUtil;
+import com.app.painist.Utils.ViewScroller;
+import com.google.gson.JsonObject;
 
 public class PlayingActivity extends AppCompatActivity {
 
-    public Button playingStateButton;
+    private final AudioRecordUtil audioRecordUtil = AudioRecordUtil.getInstance();
 
-    private PlayingView playingView;
-
-    private RelativeLayout practiceHintCardRight;
-    private RelativeLayout practiceHintCardLeft;
-
-    private String practiceMode;
-    private boolean selecting;
+    public static String imageURL;
+    public static Bitmap imageBitmap;
 
     class PlayingNote {
         public String flatOrSharp;
         public String value;
         public String octave;
     }
+
+    private ViewScroller viewScroller;
 
     private TextView countDownText;
     private ImageView countDownBackground;
@@ -73,29 +55,30 @@ public class PlayingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        playingView = new PlayingView(this);
+        PlayingView playingView = new PlayingView(this);
         setFullScreen();
         setContentView(R.layout.activity_playing);
 
-        practiceHintCardRight = findViewById(R.id.practice_hint_card_right);
-        practiceHintCardLeft = findViewById(R.id.practice_hint_card_left);
-
         Button practiceModeButton = findViewById(R.id.practice_mode_button);
-        practiceMode = (String) practiceModeButton.getText();
-        practiceModeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageView playingImage = (ImageView) findViewById(R.id.playing_score);
+        viewScroller = new ViewScroller();
 
-                Bitmap bitmap = ConverterUtil.SVGString2Bitmap(SVGString, playingImage.getHeight());
-                Log.d("Bitmap", bitmap.getWidth() + ", " + bitmap.getHeight());
-                Log.d("ImageView", playingImage.getWidth() + ", " + playingImage.getHeight());
-                playingImage.setImageBitmap(Bitmap.createScaledBitmap(bitmap,
-                        (int) (bitmap.getWidth() * 2.8f), (int) (bitmap.getHeight() * 2.8f), false));
-                // playingImage.setImageBitmap(bitmap);
+        /* 加载乐谱图片 */
+        updateScoreImage();
+
+        /* 设置图片滚动 */
+        View mainView = findViewById(R.id.playing);
+        mainView.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("Bitmap", imageBitmap.getWidth()+" x "+imageBitmap.getHeight());
+                Log.d("Main", mainView.getWidth()+" x "+mainView.getHeight());
+                viewScroller.addViewScrolling(findViewById(R.id.playing_score_container),
+                        imageBitmap.getWidth(), imageBitmap.getHeight());
+                viewScroller.scrollToLeft();
             }
         });
 
+        /* 倒计时背景相关 */
         countDownBackground = (ImageView) findViewById(R.id.playing_count_down_background);
 
         countDownText = (TextView) findViewById(R.id.playing_count_down);
@@ -106,28 +89,114 @@ public class PlayingActivity extends AppCompatActivity {
         countDownAnimator.setInterpolator(input -> input);
         countDownAnimator.setIntValues(0, 1);
         countDownAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) { }
+            @Override public void onAnimationStart(Animator animation) { }
+            @Override public void onAnimationCancel(Animator animation) { }
+            @Override public void onAnimationRepeat(Animator animation) { }
 
             @Override
             public void onAnimationEnd(Animator animation) {
                 countDownNumber--;
                 if (countDownNumber > 0) {
                     countDownText.setText(String.valueOf(countDownNumber));
-                    ((Animatable) countDownBackground.getDrawable()).start();
                     countDownAnimator.start();
+                } else {
+                    setPlayingRecordingFrame(true);
+                    countDownText.setVisibility(View.GONE);
+                    final float scaleConstant = 2.3f;
+                    countDownBackground.setScaleType(ImageView.ScaleType.CENTER);
+                    ValueAnimator countDownBackgroundScaler = new ValueAnimator();
+                    countDownBackgroundScaler.setFloatValues(0f, 1f);
+                    countDownBackgroundScaler.setDuration(1200);
+                    countDownBackgroundScaler.setInterpolator(input -> input);
+                    countDownBackgroundScaler.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            float value = (float) animation.getAnimatedValue();
+                            float scale = (float) Math.pow(scaleConstant * value - 1, 2);
+                            countDownBackground.setScaleX(scale * 0.6f + 1f);
+                            countDownBackground.setScaleY(scale * 0.6f + 1f);
+                            float alpha = (value - 1) * scaleConstant / (1 - scaleConstant);
+                            if (alpha > 1) alpha = 1;
+                            else if (alpha < 0) alpha = 0;
+                            countDownBackground.setAlpha(alpha);
+                            // Log.d("Anim", "Value = "+value+" Scale = "+scale * 0.6f + 1f+" Alpha = "+alpha);
+                        }
+                    });
+                    countDownBackgroundScaler.start();
                 }
             }
-
-            @Override
-            public void onAnimationCancel(Animator animation) { }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) { }
         });
 
+        setPlayingRecordingFrame(false);
         ((Animatable) countDownBackground.getDrawable()).start();
         countDownAnimator.start();
+
+        /* 录音相关 */
+        ValueAnimator audioRecordCountDown = new ValueAnimator();
+        audioRecordCountDown.setDuration(4000);
+        audioRecordCountDown.setIntValues(0, 1);
+        audioRecordCountDown.addListener(new Animator.AnimatorListener() {
+            @Override public void onAnimationEnd(Animator animation) {
+                audioRecordUtil.startRecord();
+                audioRecordUtil.recordData();
+            }
+            @Override public void onAnimationStart(Animator animation) { }
+            @Override public void onAnimationCancel(Animator animation) { }
+            @Override public void onAnimationRepeat(Animator animation) { }
+        });
+        audioRecordCountDown.start();
+
+        ImageView endRecordingButton = findViewById(R.id.end_recording_button);
+        endRecordingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                audioRecordUtil.stopRecord();
+                audioRecordUtil.convertWaveFile();
+                uploadWavUpdateImage();
+            }
+        });
+    }
+
+    private void updateScoreImage() {
+        ImageView playingImage = (ImageView) findViewById(R.id.playing_score);
+        playingImage.setImageBitmap(imageBitmap);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        viewScroller.updateTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
+    public void uploadWavUpdateImage() {
+        UploadFileGetJsonUtil uploadWav = new UploadFileGetJsonUtil();
+        uploadWav.uploadFile(audioRecordUtil.getWavFile(), "video",
+            RequestURL.uploadAudio, new UploadFileGetJsonUtil.OnUploadImageRespondListener() {
+                @Override public void onRespond(JsonObject jsonObject) {
+                    Log.d("Update Bitmap", "JSON Received" + jsonObject.toString());
+                    String state = jsonObject.get("state").getAsString();
+                    String newImageUrl = jsonObject.get("url").getAsString();
+                    DownloadImageUtil downloadImage = new DownloadImageUtil();
+                    downloadImage.downloadImage(newImageUrl, new DownloadImageUtil.OnImageRespondListener() {
+                        @Override public void onRespond(Bitmap respondBitmap) {
+                            Log.d("Update Bitmap", "Bitmap Received");
+                            imageBitmap = respondBitmap;
+                            updateScoreImage();
+                        }
+                        @Override public void onParseDataException(String exception) { }
+                        @Override public void onConnectionFailed(String exception) { }
+                    });
+                }
+                @Override public void onParseDataException(String exception) { }
+                @Override public void onConnectionFailed(String exception) { }
+            });
+        setPlayingRecordingFrame(false);
+    }
+
+    private void setPlayingRecordingFrame(boolean visibility) {
+        if (visibility)
+            findViewById(R.id.playing_recording_frame).setVisibility(View.VISIBLE);
+        else findViewById(R.id.playing_recording_frame).setVisibility(View.INVISIBLE);
     }
 
     private void setPracticeHintCardNote(ViewGroup hintCard, PlayingNote[] notes) {
@@ -200,9 +269,4 @@ public class PlayingActivity extends AppCompatActivity {
         }
         return 0f;
     }
-
-    public static String SVGString;
-
-    // Tools for rendering SVG
-
 }

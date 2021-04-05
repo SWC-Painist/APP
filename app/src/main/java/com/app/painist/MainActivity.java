@@ -18,8 +18,7 @@ import android.widget.TextView;
 
 
 import com.app.painist.Utils.RequestURL;
-import com.app.painist.Utils.SendJsonUtil;
-import com.app.painist.Utils.UploadImageGetJsonUtil;
+import com.app.painist.Utils.UploadFileGetJsonUtil;
 import com.app.painist.ui.home.HomeFragment;
 import com.app.painist.ui.profile.ProfileFragment;
 import com.app.painist.ui.scorelist.ScorelistFragment;
@@ -43,15 +42,10 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONObject;
-
 import java.io.File;
-import java.util.HashMap;
 
 import static com.app.painist.LoginActivity.USER_LOGIN;
-import static com.app.painist.R.id.main_fragment;
 import static com.app.painist.R.id.nav_host_fragment;
-import static com.app.painist.R.id.scorelist;
 import static com.app.painist.ui.home.HomeFragment.TAKE_PHOTO;
 import static com.app.painist.ui.scorelist.ScorelistFragment.STATE_FAVORITE;
 import static com.app.painist.ui.scorelist.ScorelistFragment.STATE_HISTORY;
@@ -334,29 +328,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
-                    File outputImage = new File(photoFilePath);
-                    if (!outputImage.exists()) { break; }
-                    UploadImageGetJsonUtil uploadImageGetJsonUtil = new UploadImageGetJsonUtil();
-
-                    uploadImageGetJsonUtil.uploadFile(photoFilePath,
-                            "file", RequestURL.uploadImage,
-                            new UploadImageGetJsonUtil.OnUploadImageRespondListener() {
-                                @Override
-                                public void onRespond(JsonObject jsonObject) {
-                                    Log.d("Respond", "SVG Received");
-                                    PlayingActivity.SVGString = jsonObject.get("svg").getAsString();
-                                }
-
-                                @Override
-                                public void onParseDataException(String exception) {
-                                    Log.d("Respond", exception);
-                                }
-
-                                @Override
-                                public void onConnectionFailed(String exception) {
-                                    Log.d("Respond", exception);
-                                }
-                            });
+                    LoadingActivity.imageToUploadUri = photoFilePath;
 
                     Intent intent = new Intent(MainActivity.this, LoadingActivity.class);
                     startActivity(intent);

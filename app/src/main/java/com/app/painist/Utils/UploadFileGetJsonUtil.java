@@ -16,12 +16,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
-public class UploadImageGetJsonUtil {
+public class UploadFileGetJsonUtil {
     private static final String BOUNDARY =  UUID.randomUUID().toString(); // 边界标识 随机生成
     private static final String PREFIX = "--";
     private static final String LINE_END = "\r\n";
@@ -52,6 +54,16 @@ public class UploadImageGetJsonUtil {
             e.printStackTrace();
             return;
         }
+    }
+
+    public void uploadFile(File file, String fileKey, String RequestURL,
+                           OnUploadImageRespondListener listener) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                toUploadFile(file, fileKey, RequestURL, listener);
+            }
+        }).start();
     }
 
     private void toUploadFile(File file, String fileKey, String RequestURL,
@@ -147,6 +159,9 @@ public class UploadImageGetJsonUtil {
         } catch (MalformedURLException e) {
             e.printStackTrace();
             listener.onConnectionFailed("：URL错误");
+        } catch (SocketTimeoutException e) {
+            e.printStackTrace();
+            listener.onConnectionFailed("：连接超时");
         } catch (IOException e) {
             e.printStackTrace();
             listener.onConnectionFailed("：未连网");

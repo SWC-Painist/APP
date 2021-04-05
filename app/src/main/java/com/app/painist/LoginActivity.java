@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     private LoginFragment loginFragment;
     private RegisterFragment registerFragment;
 
-    private static String token;
+    private static String token = "";
 
     public void switchToLoginFragment() {
         // 将用户名和密码一同复制

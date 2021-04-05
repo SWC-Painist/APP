@@ -238,5 +238,9 @@ public class AudioRecordUtil {
             }
         }).start();
     }
+
+    public File getWavFile() {
+        return wavFile;
+    }
 }
 

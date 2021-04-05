@@ -12,28 +12,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ImageFormat;
-import android.graphics.PixelFormat;
-import android.hardware.Camera;
-import android.hardware.camera2.CameraManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.app.painist.Utils.RecordUtil;
-import com.app.painist.Utils.UploadFileUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class TakePhotoActivity extends AppCompatActivity {
@@ -56,8 +47,6 @@ public class TakePhotoActivity extends AppCompatActivity {
                 requestPermission();
             }
         });
-        //设置默认图片
-        setDefualtImage();
     }
     private void requestPermission() {
 
@@ -136,16 +125,5 @@ public class TakePhotoActivity extends AppCompatActivity {
                 break;
         }
 
-    }
-
-    //设置保存拍照图片——>再次关闭app重新打开显示为上次拍照照片
-    private void setDefualtImage() {
-        File outputImage = new File(filePath);
-        if (!outputImage.exists()) {
-            return;
-        }
-        picture.setImageBitmap(BitmapFactory.decodeFile(filePath));
-        UploadFileUtil uploadFileUtil = new UploadFileUtil();
-        uploadFileUtil.uploadFile(filePath,"file","http://101.76.217.74:8000/user/upload/picture/",null);
     }
 }

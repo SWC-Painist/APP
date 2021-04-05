@@ -13,6 +13,8 @@ public class RequestURL {
     public final static String uploadImage = main + "upload/picture/";
     public final static String uploadImageInfo = main + "upload/picture_info/";
 
+    public final static String uploadAudio = main + "upload/video/";
+
     // OMR Algorithm: Asking for progress
     public final static String getOMRProgress = main + "ask_progress/";
 

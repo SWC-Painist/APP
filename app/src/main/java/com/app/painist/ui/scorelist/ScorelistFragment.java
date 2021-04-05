@@ -190,7 +190,7 @@ public class ScorelistFragment extends Fragment {
                         setEmptyView(requestTitleName + "为空", "快开始练习吧！");
                     } else {
                         Log.d("Json Get", respondJson.get("1").toString());
-                        setMainView(respondJson);
+                        setMainView(respondJson, scoreListState);
                     }
                 } else {
                     Log.d("Respond", "UNLOGIN");
@@ -226,15 +226,21 @@ public class ScorelistFragment extends Fragment {
         ((TextView) emptyView.findViewById(R.id.scoreitem_empty_subtitle)).setText(emptySubtitle);
     }
 
-    public void setMainView(JsonObject data) {
+    public void setMainView(JsonObject data, int scoreListState) {
         scoreitemFragment.clearScoreItem();
         int count = 1;
         while (data.get(String.valueOf(count)) != null) {
             JsonObject dataItem = data.get(String.valueOf(count)).getAsJsonObject();
             String scoreName = dataItem.get("name").getAsString();
-            String scoreTotalScore = dataItem.get("total_score").getAsString();
-            String[] scorePracticeDate = dataItem.get("last_practice").getAsString().split("T");
-            String scoreDate = "上次练习时间：" + scorePracticeDate[0];
+            String scoreTotalScore = "练习得分：" + dataItem.get("total_score").getAsString();
+            String scoreDate = "";
+            if (scoreListState == STATE_HISTORY) {
+                String[] scorePracticeDate = dataItem.get("last_practice").getAsString().split("T");
+                scoreDate = "上次练习时间：" + scorePracticeDate[0];
+            } else if (scoreListState == STATE_FAVORITE) {
+                String[] scorePracticeDate = dataItem.get("last_time").getAsString().split("T");
+                scoreDate = "收藏时间：" + scorePracticeDate[0];
+            }
 
             // 传入bitmapUrl当作参数 内部函数会自动下载对应图片并通过回调函数贴图
             scoreitemFragment.addScoreItem(dataItem.get("url").getAsString(), scoreName, scoreTotalScore, scoreDate);

@@ -152,6 +152,7 @@ public class DownloadImageUtil {
             conn.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
+            listener.onConnectionFailed("图片下载失败");
         }
     }
 

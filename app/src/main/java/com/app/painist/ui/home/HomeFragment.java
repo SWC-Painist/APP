@@ -98,7 +98,6 @@ public class HomeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         AudioRecordUtil.verifyAudioPermissions(getActivity());
-        AudioRecordUtil audioRecordUtil = AudioRecordUtil.getInstance();
 
         /*beginaudio = getActivity().findViewById(R.id.begin);
         endaudio = getActivity().findViewById(R.id.end);
