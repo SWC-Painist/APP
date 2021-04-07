@@ -2,6 +2,7 @@ package com.app.painist.ui.home;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -73,6 +75,7 @@ public class HomeFragment extends Fragment {
     private Button TakePhotoButton,beginaudio,endaudio,getimg;
 
     public static final int TAKE_PHOTO = 1;//声明一个请求码，用于识别返回的结果
+    public static final int GET_STORAGE = 2;
     private ImageView picture;
     private Uri imageUri;
     private final String filePath = Environment.getExternalStorageDirectory() + File.separator + "temp_music_score.jpg";
@@ -98,40 +101,6 @@ public class HomeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         AudioRecordUtil.verifyAudioPermissions(getActivity());
-
-        /*beginaudio = getActivity().findViewById(R.id.begin);
-        endaudio = getActivity().findViewById(R.id.end);
-
-        beginaudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                audioRecordUtil.startRecord();
-                audioRecordUtil.recordData();
-            }
-        });
-        endaudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                audioRecordUtil.stopRecord();
-                audioRecordUtil.convertWaveFile();
-            }
-        });
-        getimg = getActivity().findViewById(R.id.getimg);
-
-        getimg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DownloadImageUtil downloadImageUtil = new DownloadImageUtil();
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Bitmap bitmap = downloadImageUtil.getImageFromUrl("http://121.5.30.197:8080/BooksAdministration/img/null.jpg");
-                        downloadImageUtil.saveImg(bitmap,"123123.jpg");
-                    }
-                }).start();
-            }
-        });*/
 
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
@@ -301,30 +270,26 @@ public class HomeFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults != null && grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             switch (requestCode) {
-                case 1: {
+                case TAKE_PHOTO:
                     requestCamera();
-                }
-                break;
+                    break;
+                case GET_STORAGE:
+                    if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                        Toast.makeText(getActivity(), "无法访问存储空间，请开启应用权限", Toast.LENGTH_LONG).show();
+                    }
+                    break;
             }
         }
     }
     private void requestCamera() {
         File outputImage = new File(filePath);
-                /*
-                创建一个File文件对象，用于存放摄像头拍下的图片，我们把这个图片命名为output_image.jpg
-                并把它存放在应用关联缓存目录下，调用getExternalCacheDir()可以得到这个目录，为什么要
-                用关联缓存目录呢？由于android6.0开始，读写sd卡列为了危险权限，使用的时候必须要有权限，
-                应用关联目录则可以跳过这一步
-                 */
-        try //判断图片是否存在，存在则删除在创建，不存在则直接创建
-        {
+        try {   //判断图片是否存在，存在则删除在创建，不存在则直接创建
             if (!outputImage.getParentFile().exists()) {
                 outputImage.getParentFile().mkdirs();
             }
             if (outputImage.exists()) {
                 outputImage.delete();
             }
-
             outputImage.createNewFile();
 
             if (Build.VERSION.SDK_INT >= 24) {

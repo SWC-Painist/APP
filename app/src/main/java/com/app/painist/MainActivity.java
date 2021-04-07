@@ -1,7 +1,10 @@
 package com.app.painist;
 import androidx.annotation.RequiresApi;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -15,9 +18,11 @@ import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.app.painist.Utils.RequestURL;
+import com.app.painist.Utils.SendJsonUtil;
 import com.app.painist.Utils.UploadFileGetJsonUtil;
 import com.app.painist.ui.home.HomeFragment;
 import com.app.painist.ui.profile.ProfileFragment;
@@ -33,6 +38,7 @@ import com.google.android.material.tabs.TabLayout;*/
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
@@ -42,10 +48,14 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONObject;
+
 import java.io.File;
+import java.util.HashMap;
 
 import static com.app.painist.LoginActivity.USER_LOGIN;
 import static com.app.painist.R.id.nav_host_fragment;
+import static com.app.painist.ui.home.HomeFragment.GET_STORAGE;
 import static com.app.painist.ui.home.HomeFragment.TAKE_PHOTO;
 import static com.app.painist.ui.scorelist.ScorelistFragment.STATE_FAVORITE;
 import static com.app.painist.ui.scorelist.ScorelistFragment.STATE_HISTORY;
@@ -66,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        requestPermission();
         setContentView(R.layout.activity_main);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -196,12 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // test
                     case R.id.nav_menu_toolbox:
-
-                        Intent testIntent = new Intent(MainActivity.this, PlayingActivity.class);
-                        startActivity(testIntent);
-
-
-                        /*HashMap<String, String> map = new HashMap<String, String>();
+                        HashMap<String, String> map = new HashMap<String, String>();
                         map.put("token", LoginActivity.getToken());
                         JSONObject jsonObject = new JSONObject(map);
 
@@ -218,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onConnectionFailed(String exception) { }
-                                });*/
+                                });
 
                     default:
                         break;
@@ -226,20 +232,32 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        /*try {
-            int permission = ActivityCompat.checkSelfPermission(this, "android.permission.WRITE_EXTERNAL_STORAGE");
-
-            if (permission != PackageManager.PERMISSION_GRANTED) {
-                // 没有写的权限，去申请写的权限，申请权限
-                ActivityCompat.requestPermissions(this, new String[] {"android.permission.READ_EXTERNAL_STORAGE",
-                        "android.permission.WRITE_EXTERNAL_STORAGE"}, 1);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
     }
+
+    private static boolean hasPermissions(Context context, String... permissions) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void requestPermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            String[] PERMISSIONS = {android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            if (!hasPermissions(this, PERMISSIONS)) {
+                ActivityCompat.requestPermissions((Activity) this, PERMISSIONS, GET_STORAGE);
+            } else {
+                //do here
+            }
+        } else {
+            //do here
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
