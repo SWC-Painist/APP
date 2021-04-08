@@ -1,2 +1,5 @@
+include ':CVUnit'
+include ':com.coloros.ocs.base'
+include ':AudioUnit'
 include ':app'
 rootProject.name = "Painist"

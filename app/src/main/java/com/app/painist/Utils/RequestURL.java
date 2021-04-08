@@ -14,6 +14,7 @@ public class RequestURL {
     public final static String uploadImageInfo = main + "upload/picture_info/";
 
     public final static String uploadAudio = main + "upload/video/";
+    public final static String checkAudio = main + "check/video/";
 
     // OMR Algorithm: Asking for progress
     public final static String getOMRProgress = main + "ask_progress/";

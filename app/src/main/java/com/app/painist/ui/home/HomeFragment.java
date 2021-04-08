@@ -69,29 +69,36 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
+import static android.provider.MediaStore.ACTION_IMAGE_CAPTURE;
+
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
-    private Button TakePhotoButton,beginaudio,endaudio,getimg;
-
-    public static final int TAKE_PHOTO = 1;//声明一个请求码，用于识别返回的结果
-    public static final int GET_STORAGE = 2;
-    private ImageView picture;
-    private Uri imageUri;
-    private final String filePath = Environment.getExternalStorageDirectory() + File.separator + "temp_music_score.jpg";
+    public static final int TAKE_PHOTO = 10001;//声明一个请求码，用于识别返回的结果
+    public static final int GET_STORAGE = 10002;
+    /*private final String filePath = "data" + File.separator
+            + "data" + File.separator
+            + "com.app.painist" + File.separator
+            + "temp_music_score.jpg";*/
 
     private final float paddingMin = 0;
     private final float paddingMax = 480f;
     private final float duration = 0.6f;
+
     private boolean isSpan;
     private ValueAnimator bottomSpanAnimator;
     private LinearLayout bottomSpan;
     private ImageView spanButton;
 
+    private static final String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+    };
+    private static final int REQUEST_EXTERNAL_STORAGE_AND_CAMERA = 1;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+        HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         return root;
     }
@@ -144,7 +151,6 @@ public class HomeFragment extends Fragment {
                 bottomSpanAnimator.start();
             }
         });
-
 
         // Button To Open Left-Navigation Menu
         ImageView menuButton = getActivity().findViewById(R.id.menu_button);
@@ -255,34 +261,40 @@ public class HomeFragment extends Fragment {
     }
 
     private void requestPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            //请求权限
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+        Log.d("CALL", "Permission");
+        // Get all necessary permission
+        boolean permission = true;
+        for (int i = 0 ;i < PERMISSIONS_STORAGE.length;i++) {
+            if (ActivityCompat.checkSelfPermission(requireContext(), PERMISSIONS_STORAGE[i])
+                    != PackageManager.PERMISSION_GRANTED) {
+                Log.d("failed permission", PERMISSIONS_STORAGE[i]);
+                permission = false;
+                break;
+            }
+        }
+        Log.d("permission", String.valueOf(permission));
+        if (!permission) {
+            ActivityCompat.requestPermissions(requireActivity(), PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE_AND_CAMERA);
         } else {
-            //调用
-            Log.d("REQUEST CAMERA", "REQUEST CAMERA");
             requestCamera();
         }
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults != null && grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            switch (requestCode) {
-                case TAKE_PHOTO:
-                    requestCamera();
-                    break;
-                case GET_STORAGE:
-                    if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                        Toast.makeText(getActivity(), "无法访问存储空间，请开启应用权限", Toast.LENGTH_LONG).show();
-                    }
-                    break;
+        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (requestCode == REQUEST_EXTERNAL_STORAGE_AND_CAMERA) {
+                Log.d("Request Result", "Camera");
+                requestCamera();
             }
         }
     }
     private void requestCamera() {
-        File outputImage = new File(filePath);
+        int i = (int) (Math.random() * 100000);
+        File outputImage = new File(MainActivity.mExternalFileDir, MainActivity.photoName);
+
         try {   //判断图片是否存在，存在则删除在创建，不存在则直接创建
             if (!outputImage.getParentFile().exists()) {
                 outputImage.getParentFile().mkdirs();
@@ -290,21 +302,33 @@ public class HomeFragment extends Fragment {
             if (outputImage.exists()) {
                 outputImage.delete();
             }
+            outputImage.mkdirs();
             outputImage.createNewFile();
 
-            if (Build.VERSION.SDK_INT >= 24) {
-                imageUri = FileProvider.getUriForFile(getActivity(),
-                        "com.example.mydemo.fileprovider", outputImage);
-            } else {
-                imageUri = Uri.fromFile(outputImage);
-            }
+            Uri imageUri;
+            imageUri = FileProvider.getUriForFile(requireContext(),
+                    "com.app.painist.fileprovider", outputImage);
+
+            Log.d("ImageURI Authority", imageUri.getAuthority());
+            Log.d("ImageURI Enc-Path", imageUri.getEncodedPath());
+            Log.d("ImageURI Path", imageUri.getPath());
+            Log.d("ImageURI String", imageUri.toString());
             //使用隐示的Intent，系统会找到与它对应的活动，即调用摄像头，并把它存储
-            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            getActivity().startActivityForResult(intent, TAKE_PHOTO);
+
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+            /*Bundle newExtras = new Bundle();
+            newExtras.putParcelable(MediaStore.EXTRA_OUTPUT, imageUri);
+            cameraIntent.putExtras(newExtras);*/
+
+            if (cameraIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+                requireActivity().startActivityForResult(cameraIntent, TAKE_PHOTO);
+            }
+            // requireActivity().startActivityForResult(camera, TAKE_PHOTO);
             //调用会返回结果的开启方式，返回成功的话，则把它显示出来
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

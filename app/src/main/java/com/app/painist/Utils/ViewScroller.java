@@ -1,10 +1,12 @@
 package com.app.painist.Utils;
 
+import android.animation.ValueAnimator;
 import android.view.MotionEvent;
 import android.view.View;
 
 public class ViewScroller {
     private View attachedView;
+    private ValueAnimator scrollingAnimator;
 
     public boolean fixedX = false;
     public boolean fixedY = true;
@@ -107,5 +109,56 @@ public class ViewScroller {
     public void scrollToRight() {
         attachedView.scrollBy(maxRight - totalX, 0);
         totalX = maxRight;
+    }
+
+    private int getScrolledDistance() {
+        return totalX;
+    }
+
+    private void scroll(int deltaX) {
+        scrollTo(totalX + deltaX);
+    }
+
+    private void scrollTo(int toX) {
+        if (toX > maxRight) {
+            toX = maxRight;
+        }
+        if (toX < maxLeft) {
+            toX = maxLeft;
+        }
+        attachedView.scrollBy(toX - totalX, 0);
+        totalX = toX;
+    }
+
+    public void addScrollingAnimation(int speed) {
+        scrollingAnimator = new ValueAnimator();
+        scrollingAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        scrollingAnimator.setInterpolator(input -> input);
+        scrollingAnimator.setFloatValues(0, 1);
+        scrollingAnimator.setDuration(1000);
+        scrollingAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                /*float scrolled = getScrolledDistance();
+                float value = (float) animation.getAnimatedValue();
+                if (scrolled > (value + scrolledPage) * speed + maxLeft) {
+                    scrolledPage++;
+                }
+                scrollTo((int) ((value + scrolledPage) * speed + maxLeft));*/
+                scroll(speed);
+            }
+        });
+    }
+
+    public void pauseScrollingAnimation() {
+        scrollingAnimator.pause();
+    }
+
+    public void continueScrollingAnimation() {
+        scrollingAnimator.resume();
+    }
+
+    public void startScrollingAnimation() {
+        scrollingAnimator.start();
     }
 }

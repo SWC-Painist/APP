@@ -198,7 +198,6 @@ public class ScorelistFragment extends Fragment {
                 }
             }
         });
-        Log.d("Update", "FLAG");
     }
 
     public void setErrorView(String errorTitle, String errorSubTitle) {

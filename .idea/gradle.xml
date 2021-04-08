@@ -12,7 +12,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/AudioUnit" />
+            <option value="$PROJECT_DIR$/CVUnit" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/com.coloros.ocs.base" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

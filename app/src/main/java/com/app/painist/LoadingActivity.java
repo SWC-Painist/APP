@@ -78,13 +78,18 @@ public class LoadingActivity extends AppCompatActivity {
 
     private void uploadPhotoGetScoreImage (String uploadImageUri) {
         File outputImage = new File(uploadImageUri);
-        if (!outputImage.exists()) { return; }
+        if (!outputImage.exists()) {
+            Log.e("FILE NOT FOUND", "Upload file not exist: " + uploadImageUri);
+            return;
+        }
+
         UploadFileGetJsonUtil uploadFileGetJsonUtil = new UploadFileGetJsonUtil();
         uploadFileGetJsonUtil.uploadFile(uploadImageUri, "file", RequestURL.uploadImage,
             new UploadFileGetJsonUtil.OnUploadImageRespondListener() {
                 @Override
                 public void onRespond(JsonObject jsonObject) {
                     Log.d("Respond", jsonObject.toString());
+                    PlayingActivity.imageURL = jsonObject.get("url").getAsString();
                     LoadingActivity.imageTempUrl = jsonObject.get("temp_url").getAsString();
 
                     // TODO 这里应该更新为PNG字段
@@ -96,7 +101,7 @@ public class LoadingActivity extends AppCompatActivity {
                         @Override
                         public void onRespond(Bitmap respondBitmap) {
                             if (respondBitmap != null) {
-                                Log.d("Received Bitmap", respondBitmap.toString());
+                                Log.e("Received Bitmap", respondBitmap.toString());
                                 PlayingActivity.imageBitmap = respondBitmap;
                             }
                             else this.onParseDataException("：乐谱图片格式错误");

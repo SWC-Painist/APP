@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.app.painist.MainActivity;
 import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
@@ -156,45 +157,22 @@ public class DownloadImageUtil {
         }
     }
 
-
-    public static void saveBitmap(Bitmap bitmap, String address) {
-        try {
-            String dir = Environment.getExternalStorageDirectory().toString() + "/Painist";
-            //图片保存的文件夹名
-            File file = new File(dir);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-
-            File mFile = new File(dir + "/" + address);
-            /*if (mFile.exists()) {
-                return;
-            }*/
-            Log.d("File Path", dir + "/" + address);
-
-            FileOutputStream outputStream = new FileOutputStream(mFile);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            outputStream.flush();
-            outputStream.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void SaveImage(Bitmap bitmap, String path, Context context) {
-        String dir = Environment.getExternalStorageDirectory().toString() + "/Painist";
-        File mFile = new File(dir + "/" + path);
-        Log.d("FILE", mFile.getAbsolutePath());
-        File mDir = mFile.getParentFile();
-        Log.d("DIR", mDir.getAbsolutePath());
-        //文件夹不存在，则创建它
-        if (!mDir.exists()) {
-            Log.d("MAKE DIR", "FILE MAKE DIR");
-            mDir.mkdir();
+        File mFile = new File(MainActivity.mExternalFileDir, MainActivity.photoName);
+        try {   //判断图片是否存在，存在则删除在创建，不存在则直接创建
+            if (!mFile.getParentFile().exists()) {
+                mFile.getParentFile().mkdirs();
+            }
+            if (mFile.exists()) {
+                mFile.delete();
+            }
+            // mFile.mkdirs();
+            mFile.createNewFile();
+        } catch (IOException e) {
+            Log.d("CREATING FILE ERROR", "Error when creating file");
+            e.printStackTrace();
         }
+
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri uri = Uri.fromFile(mFile);
         intent.setData(uri);
@@ -205,10 +183,11 @@ public class DownloadImageUtil {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
             fileOutputStream.close();
 
-            MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "", "");
+            // 保存图片到相册
+            /*MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "", "");
             context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                    Uri.parse("file://" + mFile.getAbsolutePath())));
-            Log.d("saved",mFile.getAbsolutePath()+"-----"+path);
+                    Uri.parse("file://" + mFile.getAbsolutePath())));*/
+            // Log.d("saved",mFile.getAbsolutePath()+"-----"+path);
        } catch (Exception e) {
             e.printStackTrace();
         }

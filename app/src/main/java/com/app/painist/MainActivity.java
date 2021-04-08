@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.app.painist.Utils.DownloadImageUtil;
 import com.app.painist.Utils.RequestURL;
 import com.app.painist.Utils.SendJsonUtil;
 import com.app.painist.Utils.UploadFileGetJsonUtil;
@@ -63,21 +64,24 @@ import static com.app.painist.ui.scorelist.ScorelistFragment.STATE_RECOMMEND;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static String mExternalFileDir;
+    public static String photoName = "temp_image.png";
+    public static String avatarName = "user_avatar.png";
+
     private AppBarConfiguration mAppBarConfiguration;
 
     private HomeFragment homeFragment;
     private ScorelistFragment scorelistFragment;
     private ProfileFragment profileFragment;
 
-    private final String photoFilePath = Environment.getExternalStorageDirectory() + File.separator + "temp_music_score.jpg";
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        requestPermission();
         setContentView(R.layout.activity_main);
+
+        mExternalFileDir = ((Context) this).getExternalMediaDirs()[0].getAbsolutePath();
+        Log.d("FileDir", mExternalFileDir);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
@@ -234,31 +238,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private static boolean hasPermissions(Context context, String... permissions) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public void requestPermission() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            String[] PERMISSIONS = {android.Manifest.permission.READ_EXTERNAL_STORAGE,android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
-            if (!hasPermissions(this, PERMISSIONS)) {
-                ActivityCompat.requestPermissions((Activity) this, PERMISSIONS, GET_STORAGE);
-            } else {
-                //do here
-            }
-        } else {
-            //do here
-        }
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -278,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
         View headerView = findViewById(R.id.nav_view);
 
         // 更换头像
-        userAvatarUrl = Environment.getExternalStorageDirectory().toString() + "/Painist/" + userAvatarUrl;
+        userAvatarUrl = mExternalFileDir + File.pathSeparatorChar + avatarName;
         Log.d("CHANGING AVATAR", "processing...");
         ImageView userAvatarView = headerView.findViewById(R.id.nav_header_avatar);
         Bitmap userAvatarBitmap = BitmapFactory.decodeFile(userAvatarUrl);
@@ -346,8 +325,14 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
-                    LoadingActivity.imageToUploadUri = photoFilePath;
 
+                    // Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                    Bundle extras = data.getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    // imageView.setImageBitmap(imageBitmap);
+                    DownloadImageUtil.SaveImage(imageBitmap, mExternalFileDir + File.separatorChar + photoName, (Context) this);
+
+                    LoadingActivity.imageToUploadUri = mExternalFileDir + File.separatorChar + photoName;
                     Intent intent = new Intent(MainActivity.this, LoadingActivity.class);
                     startActivity(intent);
                 }
@@ -358,9 +343,6 @@ public class MainActivity extends AppCompatActivity {
                     String userName = data.getStringExtra("login_user_name");
                     String userIntro = data.getStringExtra("login_user_intro");
                     String userAvatarUrl = data.getStringExtra("login_user_avatar_url");
-                    Log.d("LOGIN DATA: userName", userName);
-                    Log.d("LOGIN DATA: userIntro", userIntro);
-                    Log.d("LOGIN DATA: userAvatar", userAvatarUrl);
 
                     onLoginStatusChanged(userAvatarUrl, userName, userIntro);
                     homeFragment.setBottomSpanStartDelay(500);

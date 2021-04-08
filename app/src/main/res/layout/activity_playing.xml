@@ -140,4 +140,18 @@
         <include layout="@layout/fragment_playing_recording_frame"/>
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/playing_checking_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include layout="@layout/fragment_playing_checking_frame"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/playing_continue_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include layout="@layout/fragment_playing_continue_frame"/>
+    </FrameLayout>
+
 </RelativeLayout>

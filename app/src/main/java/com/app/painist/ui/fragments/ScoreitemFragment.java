@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -28,6 +29,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.app.painist.LoadingScoreActivity;
 import com.app.painist.MainActivity;
 import com.app.painist.R;
 import com.app.painist.Utils.DownloadImageUtil;
@@ -75,55 +77,6 @@ public class ScoreitemFragment extends Fragment {
         container.removeAllViews();
     }
 
-    public void addScoreItem(Bitmap bitmap, String title, String introText1, String introText2) {
-
-        LinearLayout container = (LinearLayout) getActivity().findViewById(R.id.scoreitem_container);
-
-        if (scoreItemCount != 0) {
-            LayoutInflater spliterInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View spliter = spliterInflater.inflate(R.layout.scoreitem_split_line, null);
-
-            container.addView(spliter);
-        }
-
-        View newScoreItem = generateNewScoreItem(getActivity(), bitmap, title, introText1, introText2);
-
-        newScoreItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Open Practice Mode
-                setItemSelected((LinearLayout) v);
-            }
-        });
-
-        /*layout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(getContext(), "长按生效", Toast.LENGTH_SHORT).show();
-                final AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-                builder.setTitle("删除曲谱");
-                builder.setMessage("确定将该曲谱从历史记录中删除？");
-                builder.setCancelable(false);
-                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) { }
-                });
-
-                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) { }
-                });
-
-                builder.show();
-
-                return true;
-            }
-        });*/
-
-        container.addView(newScoreItem);
-        scoreItemCount++;
-    }
-
     public void addScoreItem(String bitmapUrl, String title, String introText1, String introText2) {
 
         LinearLayout container = (LinearLayout) getActivity().findViewById(R.id.scoreitem_container);
@@ -136,12 +89,13 @@ public class ScoreitemFragment extends Fragment {
         }
 
         View newScoreItem = generateNewScoreItem(getActivity(), bitmapUrl, title, introText1, introText2);
+        String dateText = introText2.split("：")[1];
 
         newScoreItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Open Practice Mode
-                setItemSelected((LinearLayout) v);
+                setItemSelected((LinearLayout) v, title, dateText);
             }
         });
 
@@ -174,20 +128,6 @@ public class ScoreitemFragment extends Fragment {
     }
 
     // NOTE: 返回的View不包含事件响应
-    public static View generateNewScoreItem(Activity attachedActivity, Bitmap bitmap, String title, String introText1, String introText2) {
-
-        View layout = ((LayoutInflater) attachedActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.scoreitem_sample, null);
-
-        if (bitmap != null)
-            ((ImageView) layout.findViewById(R.id.scoreitem_avatar)).setImageBitmap(bitmap);
-        ((TextView) layout.findViewById(R.id.scoreitem_title)).setText(title);
-        ((TextView) layout.findViewById(R.id.scoreitem_intro_text1)).setText("- " + introText1);
-        ((TextView) layout.findViewById(R.id.scoreitem_intro_text2)).setText("- " + introText2);
-
-        return layout;
-    }
-
     public static View generateNewScoreItem(Activity attachedActivity, String bitmapUrl, String title, String introText1, String introText2) {
 
         View layout = ((LayoutInflater) attachedActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
@@ -214,6 +154,7 @@ public class ScoreitemFragment extends Fragment {
             });
         }
 
+        layout.setContentDescription(bitmapUrl);
         ((TextView) layout.findViewById(R.id.scoreitem_title)).setText(title);
         ((TextView) layout.findViewById(R.id.scoreitem_intro_text1)).setText("- " + introText1);
         ((TextView) layout.findViewById(R.id.scoreitem_intro_text2)).setText("- " + introText2);
@@ -221,8 +162,15 @@ public class ScoreitemFragment extends Fragment {
         return layout;
     }
 
-    public void setItemSelected(LinearLayout selected) {
+    public void setItemSelected(LinearLayout selected, String title, String dateText) {
         if (selectedBaseLayout != null) {
+            if (selectedBaseLayout == selected) {
+                // Start practicing
+                LoadingScoreActivity.imageUrl = (String) selected.getContentDescription();
+                LoadingScoreActivity.scoreName = title;
+                Intent intent = new Intent((Context) getActivity(), LoadingScoreActivity.class);
+                startActivity(intent);
+            }
             selectedBaseLayout.removeAllViews();
             selectedBaseLayout.addView(selectedSubLayout);
         }
@@ -232,12 +180,16 @@ public class ScoreitemFragment extends Fragment {
 
         LayoutInflater layoutInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = ((LinearLayout) layoutInflater.inflate(R.layout.scoreitem_selected, null));
-                //.findViewById(R.id.scoreitem_subframe);
 
         ViewGroup.LayoutParams params = new LinearLayout.LayoutParams
                 (ViewGroup.LayoutParams.MATCH_PARENT, 280);
 
         layout.setLayoutParams(params);
+
+        String selectedItemTitle = "《" + title +"》";
+        String selectedItemTime = "上次练习：" + dateText;
+        ((TextView) layout.findViewById(R.id.selected_item_title)).setText(selectedItemTitle);
+        ((TextView) layout.findViewById(R.id.selected_item_time)).setText(selectedItemTime);
 
         selectedBaseLayout.removeAllViews();
         selectedBaseLayout.addView(layout);

@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -170,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
                                 intent.putExtra("login_user_avatar_url", data.get("user_avatar_url").getAsString());
 
                                 DownloadImageUtil.SaveImage(respondBitmap,
-                                        data.get("user_avatar_url").getAsString(),
+                                        MainActivity.mExternalFileDir + File.pathSeparatorChar + MainActivity.avatarName,
                                         getApplicationContext());
 
                                 setResult(RESULT_OK, intent);
@@ -240,7 +241,7 @@ public class LoginActivity extends AppCompatActivity {
                                     intent.putExtra("login_user_avatar_url", data.get("user_avatar_url").getAsString());
 
                                     DownloadImageUtil.SaveImage(respondBitmap,
-                                            data.get("user_avatar_url").getAsString(),
+                                            MainActivity.mExternalFileDir + File.pathSeparatorChar + MainActivity.avatarName,
                                             getApplicationContext());
 
                                     setResult(RESULT_OK, intent);
