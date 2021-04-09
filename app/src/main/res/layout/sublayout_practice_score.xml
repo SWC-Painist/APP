@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:text="《梦中的婚礼》"
+                android:text="《C大调练习曲》"
                 android:textSize="22sp"
                 android:fontFamily="@font/zongyi"/>
 
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:text="97%"
+                android:text="96%"
                 android:paddingLeft="10sp"
                 android:paddingRight="10sp"
                 android:textSize="27sp"
@@ -91,7 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:text="《幻想即兴曲》"
+                android:text="《夜曲》"
                 android:textSize="22sp"
                 android:fontFamily="@font/zongyi"/>
 
@@ -155,7 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:text="《小星星变奏曲》"
+                android:text="《变奏曲》"
                 android:textSize="22sp"
                 android:fontFamily="@font/zongyi"/>
 

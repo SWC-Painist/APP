@@ -7,9 +7,12 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import com.app.painist.Utils.RequestURL;
+import com.app.painist.Utils.SendJsonUtil;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonObject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,7 +33,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.util.HashMap;
 
 public class StatisticActivity extends AppCompatActivity {
 
@@ -54,6 +60,8 @@ public class StatisticActivity extends AppCompatActivity {
         setContentView(R.layout.activity_statistic);
 
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        getStatisticsData();
 
         fragmentList[0] = layoutInflater.inflate(R.layout.sublayout_practice_time, null);
         fragmentList[1] = layoutInflater.inflate(R.layout.sublayout_practice_count, null);
@@ -100,6 +108,120 @@ public class StatisticActivity extends AppCompatActivity {
         });
     }
 
+    private void getStatisticsData() {
+        SendJsonUtil dataFetcher;
+        HashMap<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("token", LoginActivity.getToken());
+        JSONObject tokenJson = new JSONObject(tokenMap);
+
+        /* Practice Time */
+        dataFetcher = new SendJsonUtil();
+        dataFetcher.SendJsonDataSynchronously(RequestURL.statistic.practiceTime, tokenJson, new SendJsonUtil.OnJsonRespondListener() {
+            @Override
+            public void onRespond(JsonObject respondJson) {
+                String sumTime = respondJson.get("total_time").getAsString();
+                String maxDate = respondJson.get("max_day").getAsString();
+                String maxTime = respondJson.get("max_time").getAsString();
+
+                String[] maxDateList = maxDate.split("-");
+                int maxDateYear = Integer.parseInt(maxDateList[0]);
+                int maxDateMonth = Integer.parseInt(maxDateList[1]);
+                int maxDateDay = Integer.parseInt(maxDateList[2]);
+
+                ((TextView) fragmentList[0].findViewById(R.id.sublayout_practice_time_total)).setText(sumTime);
+                ((TextView) fragmentList[0].findViewById(R.id.sublayout_practice_time_max_date_year)).setText(String.valueOf(maxDateYear));
+                ((TextView) fragmentList[0].findViewById(R.id.sublayout_practice_time_max_date_month)).setText(String.valueOf(maxDateMonth));
+                ((TextView) fragmentList[0].findViewById(R.id.sublayout_practice_time_max_date_day)).setText(String.valueOf(maxDateDay));
+                ((TextView) fragmentList[0].findViewById(R.id.sublayout_practice_time_max)).setText(maxTime);
+            }
+            @Override public void onParseDataException(String exception) { }
+            @Override public void onConnectionFailed(String exception) { }
+        });
+
+        /* Practice Files */
+        dataFetcher = new SendJsonUtil();
+        dataFetcher.SendJsonDataSynchronously(RequestURL.statistic.practiceFiles, tokenJson, new SendJsonUtil.OnJsonRespondListener() {
+            @Override
+            public void onRespond(JsonObject respondJson) {
+                String totalTimes = respondJson.get("total_times").getAsString();
+                String totalFiles = respondJson.get("total_files").getAsString();
+                String maxTimesFile = respondJson.get("max_times_file").getAsString();
+                String maxTimes = respondJson.get("max_times").getAsString();
+
+                maxTimesFile = "《" + maxTimesFile + "》";
+
+                ((TextView) fragmentList[1].findViewById(R.id.sublayout_practice_count_score)).setText(totalFiles);
+                ((TextView) fragmentList[1].findViewById(R.id.sublayout_practice_count_total)).setText(totalTimes);
+                ((TextView) fragmentList[1].findViewById(R.id.sublayout_practice_count_max_score_name)).setText(maxTimesFile);
+                ((TextView) fragmentList[1].findViewById(R.id.sublayout_practice_count_max_score_time)).setText(maxTimes);
+            }
+            @Override public void onParseDataException(String exception) { }
+            @Override public void onConnectionFailed(String exception) { }
+        });
+
+        /* Practice Score */
+        dataFetcher = new SendJsonUtil();
+        dataFetcher.SendJsonDataSynchronously(RequestURL.statistic.practiceMax, tokenJson, new SendJsonUtil.OnJsonRespondListener() {
+            @Override
+            public void onRespond(JsonObject respondJson) {
+                String bestPractice = respondJson.get("best_practice").getAsString();
+                String hardPractice = respondJson.get("hard_practice").getAsString();
+                String hardPracticeTime = respondJson.get("hard_practice_times").getAsString();
+                String mostProgress = respondJson.get("most_progress").getAsString();
+
+                bestPractice = "《" + bestPractice + "》";
+                hardPractice = "《" + hardPractice + "》";
+                mostProgress = "《" + mostProgress + "》";
+
+                ((TextView) fragmentList[2].findViewById(R.id.sublayout_practice_score_favorite)).setText(bestPractice);
+                ((TextView) fragmentList[2].findViewById(R.id.sublayout_practice_score_hardest)).setText(hardPractice);
+                ((TextView) fragmentList[2].findViewById(R.id.sublayout_practice_score_hardest_time)).setText(hardPracticeTime);
+                ((TextView) fragmentList[2].findViewById(R.id.sublayout_practice_score_advancement_fastest)).setText(mostProgress);
+            }
+            @Override public void onParseDataException(String exception) { }
+            @Override public void onConnectionFailed(String exception) { }
+        });
+
+        /* Practice Progress */
+        dataFetcher = new SendJsonUtil();
+        dataFetcher.SendJsonDataSynchronously(RequestURL.statistic.practiceProgress, tokenJson, new SendJsonUtil.OnJsonRespondListener() {
+            @Override
+            public void onRespond(JsonObject respondJson) {
+                String scoreProgress = respondJson.get("score_progress").getAsString();
+                String firstFileName = respondJson.get("first_file_name").getAsString();
+                String lastFileName = respondJson.get("last_file_name").getAsString();
+                String levelProgress = respondJson.get("level_progress").getAsString();
+
+                firstFileName = "《" + firstFileName + "》";
+                lastFileName = "《" + lastFileName + "》";
+
+                ((TextView) fragmentList[3].findViewById(R.id.sublayout_practice_advancement_fluency)).setText(scoreProgress);
+                ((TextView) fragmentList[3].findViewById(R.id.sublayout_practice_advancement_first_score)).setText(firstFileName);
+                ((TextView) fragmentList[3].findViewById(R.id.sublayout_practice_advancement_last_score)).setText(lastFileName);
+                ((TextView) fragmentList[3].findViewById(R.id.sublayout_practice_advancement_level_progress)).setText(levelProgress);
+            }
+            @Override public void onParseDataException(String exception) { }
+            @Override public void onConnectionFailed(String exception) { }
+        });
+
+        /* Practice Last Month */
+        dataFetcher = new SendJsonUtil();
+        dataFetcher.SendJsonDataSynchronously(RequestURL.statistic.practiceMonth, tokenJson, new SendJsonUtil.OnJsonRespondListener() {
+            @Override
+            public void onRespond(JsonObject respondJson) {
+                String practiceTime = respondJson.get("practice_time").getAsString();
+                String practiceTimes = respondJson.get("practice_times").getAsString();
+                String increase = respondJson.get("increase").getAsString();
+
+                ((TextView) fragmentList[4].findViewById(R.id.sublayout_last_month_score_count)).setText(practiceTime);
+                ((TextView) fragmentList[4].findViewById(R.id.sublayout_last_month_score_time)).setText(practiceTimes);
+                ((TextView) fragmentList[4].findViewById(R.id.sublayout_last_month_advancement)).setText(increase);
+            }
+            @Override public void onParseDataException(String exception) { }
+            @Override public void onConnectionFailed(String exception) { }
+        });
+    }
+
     private void switchToNextPage() {
         if (page + 1 >= fragmentList.length)
             return;
@@ -110,7 +232,7 @@ public class StatisticActivity extends AppCompatActivity {
         page++;
         nowView = fragmentList[page];
         bottomView.addView(nowView);
-        setTextGroupAnimation(nowView, textGroupNumber[page], 1000);
+        setTextGroupAnimation(nowView, textGroupNumber[page], 600);
     }
 
     private void setTextGroupAnimation(View view, int number, int speed) {

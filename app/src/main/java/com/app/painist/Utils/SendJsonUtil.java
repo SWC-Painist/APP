@@ -184,6 +184,8 @@ public class SendJsonUtil {
         flag.jsonObject = null;
         flag.errorString = null;
 
+        Log.d("Send Json: JSON", jsonObject.toString());
+
         // 轮询：使用ValueAnimator作计时器
         ValueAnimator timer = new ValueAnimator();
         timer.setDuration(waitingTime);

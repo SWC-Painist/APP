@@ -209,12 +209,14 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_menu_statistic:
                         Intent intentToStatistic = new Intent(MainActivity.this, StatisticActivity.class);
                         startActivity(intentToStatistic);
+                        break;
 
                         // test
                     case R.id.nav_menu_toolbox:
 
-                        Intent intent = new Intent(MainActivity.this, EvaluationActivity.class);
+                        /*Intent intent = new Intent(MainActivity.this, EvaluationActivity.class);
                         startActivity(intent);
+                        break;*/
 
                         /*HashMap<String, String> map = new HashMap<String, String>();
                         map.put("token", LoginActivity.getToken());

@@ -16,9 +16,15 @@ public class RequestURL {
     public final static String uploadAudio = main + "upload/video/";
     public final static String checkAudio = main + "check/video/";
 
+    public final static class statistic {
+        public final static String practice = main + "practice/";
+        public final static String practiceTime = practice + "time/";
+        public final static String practiceFiles = practice + "files/";
+        public final static String practiceProgress = practice + "progress/";
+        public final static String practiceMax = practice + "max/";
+        public final static String practiceMonth = practice + "month/";
+    }
+
     // OMR Algorithm: Asking for progress
     public final static String getOMRProgress = main + "ask_progress/";
-
-    // Debug only
-    public final static String debugTest = main + "practice/progress/";
 }

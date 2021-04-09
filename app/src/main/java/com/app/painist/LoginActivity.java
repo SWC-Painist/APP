@@ -217,7 +217,7 @@ public class LoginActivity extends AppCompatActivity {
                     JsonObject data = respondJson.get("data").getAsJsonObject();
 
                     DownloadImageUtil downloadImageUtil = new DownloadImageUtil();
-                    downloadImageUtil.downloadImageSynchronously(data.get("user_avatar_url").getAsString(),
+                        downloadImageUtil.downloadImageSynchronously(data.get("user_avatar_url").getAsString(),
                             new DownloadImageUtil.OnImageRespondListener() {
                                 @Override
                                 public void onParseDataException(String exception) {
