@@ -8,6 +8,7 @@
     tools:context=".EvaluationActivity">
 
     <LinearLayout
+        android:id="@+id/evaluation_title_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -29,6 +30,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/evaluation_main_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -83,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingTop="25dp"
+            android:paddingTop="35dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -97,14 +99,25 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="3dp"
                     android:layout_marginBottom="4dp"
+                    android:orientation="vertical"
                     android:background="@drawable/rounded_card">
 
                     <ImageView
-                        android:layout_width="150dp"
-                        android:layout_height="180dp"
+                        android:id="@+id/evaluation_mipmap"
+                        android:layout_width="240dp"
+                        android:layout_height="150dp"
                         android:layout_gravity="center"
-                        android:layout_margin="5dp"
-                        android:background="#C0C0C0"/>
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="#F0F0F0"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="再次练习"
+                        android:textSize="22sp"
+                        android:layout_gravity="center"/>
 
                 </LinearLayout>
 
@@ -134,155 +147,148 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingRight="45dp"
+                            android:paddingRight="37dp"
                             android:text="总分："
-                            android:textSize="22sp">
+                            android:textSize="19sp">
                         </TextView>
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_margin="5dp"
+                            android:layout_margin="2dp"
                             android:layout_weight="1">
-                            <ImageView
+                            <LinearLayout
                                 android:id="@+id/total_score_bar"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:src="#86C1FF"/>
-                            <FrameLayout
+                                android:background="#86C1FF"
+                                android:orientation="horizontal" />
+                            <LinearLayout
                                 android:id="@+id/total_score_bar_other"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"/>
+                                android:layout_weight="1"
+                                android:orientation="horizontal" />
                         </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="13dp"
                         android:orientation="horizontal">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="左手旋律："
-                            android:textSize="22sp">
+                            android:textSize="19sp">
                         </TextView>
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_margin="5dp"
+                            android:layout_margin="2dp"
                             android:layout_weight="1">
-                            <ImageView
+                            <LinearLayout
                                 android:id="@+id/left_score_bar"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:src="#80FFA0"/>
-                            <FrameLayout
+                                android:background="#80FFA0"
+                                android:orientation="horizontal" />
+                            <LinearLayout
                                 android:id="@+id/left_score_bar_other"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"/>
+                                android:layout_weight="1"
+                                android:orientation="horizontal" />
                         </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="13dp"
                         android:orientation="horizontal">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="右手旋律："
-                            android:textSize="22sp">
+                            android:textSize="19sp">
                         </TextView>
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_margin="5dp"
+                            android:layout_margin="2dp"
                             android:layout_weight="1">
-                            <ImageView
+                            <LinearLayout
                                 android:id="@+id/right_score_bar"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:src="#FFC282"/>
-                            <FrameLayout
+                                android:background="#FFC282"
+                                android:orientation="horizontal" />
+                            <LinearLayout
                                 android:id="@+id/right_score_bar_other"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"/>
+                                android:layout_weight="1"
+                                android:orientation="horizontal" />
                         </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="13dp"
                         android:orientation="horizontal">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="和旋得分："
-                            android:textSize="22sp">
+                            android:textSize="19sp">
                         </TextView>
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_margin="5dp"
+                            android:layout_margin="2dp"
                             android:layout_weight="1">
-                            <ImageView
+                            <LinearLayout
                                 android:id="@+id/chord_score_bar"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:src="#FF82B4"/>
-                            <FrameLayout
+                                android:background="#FF82B4"
+                                android:orientation="horizontal" />
+                            <LinearLayout
                                 android:id="@+id/chord_score_bar_other"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"/>
+                                android:layout_weight="1"
+                                android:orientation="horizontal" />
                         </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:layout_alignParentBottom="true">
-
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="比上一次的进步："
-                        android:textSize="22sp">
-                    </TextView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="25%"
-                        android:textSize="25sp">
-                    </TextView>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="再次练习"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginRight="7dp"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="20dp"
-                        android:paddingLeft="13dp"
-                        android:paddingRight="23dp"
-                        android:textSize="22sp"
-                        android:background="@drawable/rounded_card">
-                    </TextView>
-
+                        android:layout_gravity="left"
+                        android:layout_marginTop="13dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="比上一次的进步："
+                            android:textSize="19sp">
+                        </TextView>
+                        <TextView
+                            android:id="@+id/evaluation_progress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="25%"
+                            android:textSize="22sp">
+                        </TextView>
+                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>

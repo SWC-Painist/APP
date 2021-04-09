@@ -56,6 +56,7 @@ import java.util.HashMap;
 
 import static com.app.painist.LoginActivity.USER_LOGIN;
 import static com.app.painist.R.id.nav_host_fragment;
+import static com.app.painist.R.id.start;
 import static com.app.painist.ui.home.HomeFragment.GET_STORAGE;
 import static com.app.painist.ui.home.HomeFragment.TAKE_PHOTO;
 import static com.app.painist.ui.scorelist.ScorelistFragment.STATE_FAVORITE;
@@ -211,7 +212,11 @@ public class MainActivity extends AppCompatActivity {
 
                         // test
                     case R.id.nav_menu_toolbox:
-                        HashMap<String, String> map = new HashMap<String, String>();
+
+                        Intent intent = new Intent(MainActivity.this, EvaluationActivity.class);
+                        startActivity(intent);
+
+                        /*HashMap<String, String> map = new HashMap<String, String>();
                         map.put("token", LoginActivity.getToken());
                         JSONObject jsonObject = new JSONObject(map);
 
@@ -228,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onConnectionFailed(String exception) { }
-                                });
+                                });*/
 
                     default:
                         break;

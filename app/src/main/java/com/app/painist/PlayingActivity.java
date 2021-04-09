@@ -86,6 +86,7 @@ public class PlayingActivity extends AppCompatActivity {
         Button practiceModeButton = findViewById(R.id.practice_mode_button);
         viewScroller = new ViewScroller();
 
+        EvaluationActivity.mipmapUrl = imageURL;
         /* 加载乐谱图片 */
         updateScoreImage();
 
@@ -290,6 +291,11 @@ public class PlayingActivity extends AppCompatActivity {
             @Override
             public void onRespond(JsonObject respondJson) {
                 String checkedImageUrl = respondJson.get("url").getAsString();
+                EvaluationActivity.leftScore = Float.parseFloat(respondJson.get("left_score").getAsString());
+                EvaluationActivity.rightScore = Float.parseFloat(respondJson.get("right_score").getAsString());
+                EvaluationActivity.totalScore = Float.parseFloat(respondJson.get("total_score").getAsString());
+                EvaluationActivity.chordScore = Float.parseFloat(respondJson.get("chord").getAsString());
+                EvaluationActivity.progress = Float.parseFloat(respondJson.get("progress").getAsString());
                 downloadUpdatedImage(checkedImageUrl);
             }
 
