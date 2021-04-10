@@ -230,15 +230,23 @@ public class ScorelistFragment extends Fragment {
         int count = 1;
         while (data.get(String.valueOf(count)) != null) {
             JsonObject dataItem = data.get(String.valueOf(count)).getAsJsonObject();
-            String scoreName = dataItem.get("name").getAsString();
-            String scoreTotalScore = "练习得分：" + dataItem.get("total_score").getAsString();
+            String scoreName = "";
+            String scoreTotalScore = "";
             String scoreDate = "";
             if (scoreListState == STATE_HISTORY) {
+                scoreName = dataItem.get("name").getAsString();
+                scoreTotalScore = "练习得分：" + dataItem.get("total_score").getAsString();
                 String[] scorePracticeDate = dataItem.get("last_practice").getAsString().split("T");
                 scoreDate = "上次练习时间：" + scorePracticeDate[0];
             } else if (scoreListState == STATE_FAVORITE) {
+                scoreName = dataItem.get("name").getAsString();
+                scoreTotalScore = "练习得分：" + dataItem.get("total_score").getAsString();
                 String[] scorePracticeDate = dataItem.get("last_time").getAsString().split("T");
                 scoreDate = "收藏时间：" + scorePracticeDate[0];
+            } else if (scoreListState == STATE_RECOMMEND) {
+                scoreName = dataItem.get("name").getAsString();
+                scoreTotalScore = "预估难度：" + dataItem.get("level").getAsString();
+                scoreDate = "根据你的练习记录推荐";
             }
 
             // 传入bitmapUrl当作参数 内部函数会自动下载对应图片并通过回调函数贴图

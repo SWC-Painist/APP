@@ -43,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="start">
                 <TextView
+                    android:id="@+id/back_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="返回"
@@ -244,7 +245,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="和旋得分："
+                            android:text="和弦得分："
                             android:textSize="19sp">
                         </TextView>
                         <LinearLayout

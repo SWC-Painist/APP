@@ -50,7 +50,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="locked"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Painist.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

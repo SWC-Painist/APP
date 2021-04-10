@@ -46,11 +46,13 @@
 
             <TextView
                 android:id="@+id/selected_item_title"
-                android:layout_width="wrap_content"
+                android:layout_width="260dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="《梦中的婚礼》"
+                android:text="《NAME》"
                 android:textColor="#FFFFFF"
+                android:textAlignment="center"
+                android:singleLine="true"
                 android:textSize="28sp"
                 android:textStyle="bold"/>
 
@@ -61,7 +63,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:text="上次练习：2020-3-24"
+                android:text="上次练习：LAST_TIME"
                 android:textColor="#FFFFFF"
                 android:textSize="10sp"
                 android:textStyle="normal"/>

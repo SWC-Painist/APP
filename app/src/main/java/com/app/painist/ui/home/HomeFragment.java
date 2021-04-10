@@ -177,10 +177,12 @@ public class HomeFragment extends Fragment {
         shadeAlphaAnimator.start();
 
         ImageView photoButton = getActivity().findViewById(R.id.photo_button);
+        photoButton.setImageDrawable(getResources().getDrawable(R.drawable.photo_button, null));
         photoButton.setVisibility(View.VISIBLE);
         ((Animatable) photoButton.getDrawable()).start();
 
         ImageView photoButtonText = getActivity().findViewById(R.id.photo_button_text);
+        photoButtonText.setImageDrawable(getResources().getDrawable(R.drawable.photo_button_text, null));
         photoButtonText.setVisibility(View.VISIBLE);
         ((Animatable) photoButtonText.getDrawable()).start();
 

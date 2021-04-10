@@ -78,7 +78,6 @@ public class ScoreitemFragment extends Fragment {
     }
 
     public void addScoreItem(String bitmapUrl, String title, String introText1, String introText2) {
-
         LinearLayout container = (LinearLayout) getActivity().findViewById(R.id.scoreitem_container);
 
         if (scoreItemCount != 0) {
@@ -89,13 +88,12 @@ public class ScoreitemFragment extends Fragment {
         }
 
         View newScoreItem = generateNewScoreItem(getActivity(), bitmapUrl, title, introText1, introText2);
-        String dateText = introText2.split("：")[1];
 
         newScoreItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Open Practice Mode
-                setItemSelected((LinearLayout) v, title, dateText);
+                setItemSelected((LinearLayout) v, title, introText2);
             }
         });
 
@@ -166,7 +164,10 @@ public class ScoreitemFragment extends Fragment {
         if (selectedBaseLayout != null) {
             if (selectedBaseLayout == selected) {
                 // Start practicing
-                LoadingScoreActivity.imageUrl = (String) selected.getContentDescription();
+                String imageTempUrl = (String) selected.getContentDescription();
+                LoadingScoreActivity.imageUrl = imageTempUrl;
+                LoadingScoreActivity.imageTempUrl = imageTempUrl.split("/")[1];
+
                 LoadingScoreActivity.scoreName = title;
                 Intent intent = new Intent((Context) getActivity(), LoadingScoreActivity.class);
                 startActivity(intent);

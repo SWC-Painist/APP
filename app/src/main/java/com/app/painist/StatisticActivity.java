@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
@@ -60,6 +61,13 @@ public class StatisticActivity extends AppCompatActivity {
         setContentView(R.layout.activity_statistic);
 
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        findViewById(R.id.back_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         getStatisticsData();
 
@@ -194,6 +202,8 @@ public class StatisticActivity extends AppCompatActivity {
 
                 firstFileName = "《" + firstFileName + "》";
                 lastFileName = "《" + lastFileName + "》";
+                int levelProgressValue = (int) (Float.parseFloat(levelProgress) * 100);
+                levelProgress = String.valueOf(levelProgressValue) + "%";
 
                 ((TextView) fragmentList[3].findViewById(R.id.sublayout_practice_advancement_fluency)).setText(scoreProgress);
                 ((TextView) fragmentList[3].findViewById(R.id.sublayout_practice_advancement_first_score)).setText(firstFileName);
@@ -212,6 +222,9 @@ public class StatisticActivity extends AppCompatActivity {
                 String practiceTime = respondJson.get("practice_time").getAsString();
                 String practiceTimes = respondJson.get("practice_times").getAsString();
                 String increase = respondJson.get("increase").getAsString();
+
+                int increaseValue = (int) (Float.parseFloat(increase) * 100);
+                increase = String.valueOf(increaseValue) + "%";
 
                 ((TextView) fragmentList[4].findViewById(R.id.sublayout_last_month_score_count)).setText(practiceTime);
                 ((TextView) fragmentList[4].findViewById(R.id.sublayout_last_month_score_time)).setText(practiceTimes);

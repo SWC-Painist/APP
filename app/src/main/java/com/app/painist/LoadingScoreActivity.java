@@ -39,6 +39,7 @@ import java.util.HashMap;
 
 public class LoadingScoreActivity extends AppCompatActivity {
     public static String imageUrl;
+    public static String imageTempUrl;
     public static String scoreName;
 
     private String processBarText;
@@ -152,6 +153,22 @@ public class LoadingScoreActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (loadingComplete)
                 {
+                    String scoreName = "";
+                        scoreName = ((TextView) findViewById(R.id.loading_settings_name_fixed_text)).getText().toString();
+
+                    HashMap<String, String> hashMap = new HashMap<>();
+                    hashMap.put("token", LoginActivity.getToken());
+                    hashMap.put("temp_url", imageTempUrl);
+                    hashMap.put("score_name", scoreName);
+                    JSONObject json = new JSONObject(hashMap);
+
+                    SendJsonUtil uploadImageInfo = new SendJsonUtil();
+                    uploadImageInfo.SendJsonData(RequestURL.uploadImageInfo, json, new SendJsonUtil.OnJsonRespondListener() {
+                        @Override public void onRespond(JsonObject respondJson) { Log.d("曲谱名称上传成功", "Success"); }
+                        @Override public void onParseDataException(String exception) { Log.e("解析数据时出错", exception); }
+                        @Override public void onConnectionFailed(String exception) { Log.e("无法连接到服务器", exception); }
+                    });
+
                     // 禁止从练习界面再按返回键返回加载界面
                     // 即将所有Activity从栈区中移除
                     Intent intent = new Intent();

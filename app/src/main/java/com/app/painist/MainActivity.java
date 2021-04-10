@@ -7,14 +7,18 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -69,6 +73,10 @@ public class MainActivity extends AppCompatActivity {
     public static String photoName = "temp_image.png";
     public static String avatarName = "user_avatar.png";
 
+    public static String userName;
+    public static String userIntro;
+    public static String userAvatarUrl;
+
     private AppBarConfiguration mAppBarConfiguration;
 
     private HomeFragment homeFragment;
@@ -80,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setSystemNavigationInvisible();
 
         mExternalFileDir = ((Context) this).getExternalMediaDirs()[0].getAbsolutePath();
         Log.d("FileDir", mExternalFileDir);
@@ -243,6 +253,19 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        onLoginStatusChanged();
+    }
+
+    private void setSystemNavigationInvisible() {
+        Window window = getWindow();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        // 状态栏（以上几行代码必须，参考setStatusBarColor|setNavigationBarColor方法源码）
+        window.setNavigationBarColor(Color.TRANSPARENT);
     }
 
     @Override
@@ -258,10 +281,17 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    public void onLoginStatusChanged(String userAvatarUrl, String userName, String userStatus) {
+    public void onLoginStatusChanged() {
         Log.d("CHANGING LOGIN STATUS", "processing...");
 
         View headerView = findViewById(R.id.nav_view);
+
+        if (userName == null || userIntro == null) {
+            Log.d("Login", "Unlogin");
+            return;
+        } else {
+            Log.d("Login", userName + ", " + userIntro);
+        }
 
         // 更换头像
         userAvatarUrl = mExternalFileDir + File.pathSeparatorChar + avatarName;
@@ -280,8 +310,8 @@ public class MainActivity extends AppCompatActivity {
         userNameView.setText(userName);
         TextView userStatusView = headerView.findViewById(R.id.nav_header_user_status);
 
-        if (!userStatus.equals("")) {
-            userStatusView.setText(userStatus);
+        if (!userIntro.equals("")) {
+            userStatusView.setText(userIntro);
         } else {
             userStatusView.setText("（未设置签名）");
         }
@@ -347,11 +377,11 @@ public class MainActivity extends AppCompatActivity {
             case USER_LOGIN:
                 if (resultCode == RESULT_OK) {
                     Log.d("LOGIN RESULT", "OK");
-                    String userName = data.getStringExtra("login_user_name");
-                    String userIntro = data.getStringExtra("login_user_intro");
-                    String userAvatarUrl = data.getStringExtra("login_user_avatar_url");
+                    userName = data.getStringExtra("login_user_name");
+                    userIntro = data.getStringExtra("login_user_intro");
+                    userAvatarUrl = data.getStringExtra("login_user_avatar_url");
 
-                    onLoginStatusChanged(userAvatarUrl, userName, userIntro);
+                    onLoginStatusChanged();
                     homeFragment.setBottomSpanStartDelay(500);
                     homeFragment.requestLastHistoryForButtonSpan();
                 }

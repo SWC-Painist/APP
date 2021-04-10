@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,6 +46,15 @@ public class EvaluationActivity extends AppCompatActivity {
         updateScoreBar();
 
         findViewById(R.id.evaluation_main_frame).setAlpha(0.0f);
+
+        /* 设置返回键 */
+        findViewById(R.id.back_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent backIntent = new Intent(EvaluationActivity.this, MainActivity.class);
+                startActivity(backIntent);
+            }
+        });
 
         evaluationView.setTranslationY(150);
 
